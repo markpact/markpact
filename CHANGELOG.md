@@ -1,3 +1,17 @@
+## [0.1.19] - 2026-02-18
+
+### Summary
+
+fix(docs): multi-language support with 3 supporting modules
+
+### Core
+
+- update src/markpact/__init__.py
+- update src/markpact/auto_fix.py
+- update src/markpact/docker_runner.py
+- update src/markpact/sandbox.py
+
+
 ## [0.1.18] - 2026-02-18
 
 ### Summary

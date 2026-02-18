@@ -1,23 +1,12 @@
 """Docker sandbox runner for Markpact"""
 
-import socket
 import subprocess
 import sys
 import time
 from pathlib import Path
 from typing import Optional
 
-
-def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:
-    """Find a free port starting from start_port."""
-    for port in range(start_port, start_port + max_attempts):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            try:
-                s.bind(('0.0.0.0', port))
-                return port
-            except OSError:
-                continue
-    raise RuntimeError(f"Could not find free port in range {start_port}-{start_port + max_attempts}")
+from .sandbox import find_free_port
 
 
 def stop_existing_container(container_name: str, verbose: bool = False) -> bool:

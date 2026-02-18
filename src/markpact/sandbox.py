@@ -1,7 +1,20 @@
 """Sandbox management"""
 
 import os
+import socket
 from pathlib import Path
+
+
+def find_free_port(start_port: int = 8000, max_attempts: int = 100) -> int:
+    """Find a free port starting from start_port."""
+    for port in range(start_port, start_port + max_attempts):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
+                s.bind(('0.0.0.0', port))
+                return port
+            except OSError:
+                continue
+    raise RuntimeError(f"Could not find free port in range {start_port}-{start_port + max_attempts}")
 
 
 class Sandbox:
