@@ -1,3 +1,23 @@
+## [0.1.17] - 2026-02-18
+
+### Summary
+
+refactor(goal): deep code analysis engine with 7 supporting modules
+
+### Build
+
+- update pyproject.toml
+
+### Config
+
+- config: update goal.yaml
+
+### Other
+
+- update project.functions.toon
+- update project.toon
+
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

@@ -4,7 +4,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/markpact.svg)](https://pypi.org/project/markpact/)
 [![Python](https://img.shields.io/pypi/pyversions/markpact.svg)](https://pypi.org/project/markpact/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Tests](https://github.com/wronai/markpact/actions/workflows/tests.yml/badge.svg)](https://github.com/wronai/markpact/actions)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
@@ -442,3 +442,11 @@ def root():
 ```bash markpact:run
 uvicorn app.main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8088}
 ```
+
+## License
+
+Apache License 2.0 - see [LICENSE](LICENSE) for details.
+
+## Author
+
+Created by **Tom Sapletta** - [tom@sapletta.com](mailto:tom@sapletta.com)

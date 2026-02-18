@@ -1,20 +1,20 @@
 project: markpact
-generated: "2026-01-15T15:15:42.450679"
+generated: "2026-02-18T19:09:30.981530"
 modules[22]{path,lang,items}:
   tests/test_notebook_converter.py,python,14
   tests/test_generator.py,python,9
-  tests/test_parser.py,python,5
+  tests/test_parser.py,python,8
   tests/test_sandbox.py,python,5
   tests/__init__.py,python,0
   tests/test_converter.py,python,12
   tests/test_runner.py,python,7
   tests/test_examples.py,python,1
-  tests/test_cli.py,python,8
+  tests/test_cli.py,python,9
   src/markpact/tester.py,python,10
   src/markpact/config.py,python,12
   src/markpact/sandbox.py,python,8
   src/markpact/cli.py,python,2
-  src/markpact/docker_runner.py,python,6
+  src/markpact/docker_runner.py,python,9
   src/markpact/generator.py,python,7
   src/markpact/runner.py,python,3
   src/markpact/__init__.py,python,0
@@ -27,81 +27,85 @@ modules[22]{path,lang,items}:
 function_details:
   tests/test_notebook_converter.py:
     functions[14]{name,kind,sig,loc,async,lines,cc,does}:
-      test_detect_format_jupyter,function,() -> None,22-24,false,3,1,Test detection of Jupyter notebook format.
-      test_detect_format_rmarkdown,function,() -> None,27-30,false,4,1,Test detection of R Markdown format.
-      test_detect_format_quarto,function,() -> None,33-35,false,3,1,Test detection of Quarto format.
-      test_detect_format_unknown,function,() -> None,38-41,false,4,1,Test detection of unknown format.
-      test_get_supported_formats,function,() -> None,44-50,false,7,1,Test getting list of supported formats.
-      test_parse_jupyter,function,"(tmp_path:Path) -> None",53-87,false,35,1,Test parsing Jupyter notebook.
-      test_extract_dependencies,function,() -> None,90-112,false,23,1,Test extracting dependencies from notebook.
-      test_suggest_run_command_fastapi,function,() -> None,115-129,false,15,1,Test run command suggestion for FastAPI.
-      test_suggest_run_command_streamlit,function,() -> None,132-146,false,15,1,Test run command suggestion for Streamlit.
-      test_suggest_run_command_flask,function,() -> None,149-163,false,15,1,Test run command suggestion for Flask.
-      test_notebook_to_markpact,function,() -> None,166-193,false,28,1,Test converting notebook to markpact format.
-      test_convert_notebook_jupyter,function,"(tmp_path:Path) -> None",196-230,false,35,1,Test full conversion of Jupyter notebook.
-      test_convert_notebook_file_not_found,function,() -> None,233-236,false,4,1,Test error handling for missing notebook file.
-      test_convert_notebook_unsupported_format,function,"(tmp_path:Path) -> None",239-245,false,7,1,Test error handling for unsupported format.
+      test_detect_format_jupyter,function,(),22-24,false,3,1,Test detection of Jupyter notebook format.
+      test_detect_format_rmarkdown,function,(),27-30,false,4,1,Test detection of R Markdown format.
+      test_detect_format_quarto,function,(),33-35,false,3,1,Test detection of Quarto format.
+      test_detect_format_unknown,function,(),38-41,false,4,1,Test detection of unknown format.
+      test_get_supported_formats,function,(),44-50,false,7,1,Test getting list of supported formats.
+      test_parse_jupyter,function,"(tmp_path:Path)",53-87,false,35,1,Test parsing Jupyter notebook.
+      test_extract_dependencies,function,(),90-112,false,23,1,Test extracting dependencies from notebook.
+      test_suggest_run_command_fastapi,function,(),115-129,false,15,1,Test run command suggestion for FastAPI.
+      test_suggest_run_command_streamlit,function,(),132-146,false,15,1,Test run command suggestion for Streamlit.
+      test_suggest_run_command_flask,function,(),149-163,false,15,1,Test run command suggestion for Flask.
+      test_notebook_to_markpact,function,(),166-193,false,28,1,Test converting notebook to markpact format.
+      test_convert_notebook_jupyter,function,"(tmp_path:Path)",196-230,false,35,1,Test full conversion of Jupyter notebook.
+      test_convert_notebook_file_not_found,function,(),233-236,false,4,1,Test error handling for missing notebook file.
+      test_convert_notebook_unsupported_format,function,"(tmp_path:Path)",239-245,false,7,1,Test error handling for unsupported format.
   tests/test_generator.py:
     functions[9]{name,kind,sig,loc,async,lines,cc,does}:
-      test_generator_config_defaults,function,() -> None,15-20,false,6,1,Test default configuration values
-      test_generator_config_from_env,function,() -> None,23-35,false,13,1,Test configuration from environment variables
-      test_get_example_prompt,function,() -> None,38-42,false,5,1,Test getting example prompts by name
-      test_get_example_prompt_unknown,function,() -> None,45-48,false,4,1,Test getting unknown prompt returns the input
-      test_list_example_prompts,function,() -> None,51-57,false,7,1,Test listing example prompts
-      test_system_prompt_contains_format,function,() -> None,60-64,false,5,1,Test system prompt contains markpact format instructions
-      test_example_prompts_dict,function,() -> None,67-73,false,7,2,Test EXAMPLE_PROMPTS dictionary
-      test_generate_contract_integration,function,() -> None,77-93,false,17,1,Integration test for contract generation (skipped by default)
-      test_generate_contract_mock,function,() -> None,96-130,false,35,1,Test generate_contract with mocked litellm
+      test_generator_config_defaults,function,(),15-20,false,6,1,Test default configuration values
+      test_generator_config_from_env,function,(),23-35,false,13,1,Test configuration from environment variables
+      test_get_example_prompt,function,(),38-42,false,5,1,Test getting example prompts by name
+      test_get_example_prompt_unknown,function,(),45-48,false,4,1,Test getting unknown prompt returns the input
+      test_list_example_prompts,function,(),51-57,false,7,1,Test listing example prompts
+      test_system_prompt_contains_format,function,(),60-64,false,5,1,Test system prompt contains markpact format instructions
+      test_example_prompts_dict,function,(),67-73,false,7,2,Test EXAMPLE_PROMPTS dictionary
+      test_generate_contract_integration,function,(),77-93,false,17,1,Integration test for contract generation (skipped by default)
+      test_generate_contract_mock,function,(),96-130,false,35,1,Test generate_contract with mocked litellm
   tests/test_parser.py:
-    functions[5]{name,kind,sig,loc,async,lines,cc,does}:
-      test_parse_file_block,function,() -> None,6-14,false,9,1,checks parse file block
-      test_parse_deps_block,function,() -> None,17-26,false,10,1,checks parse deps block
-      test_parse_run_block,function,() -> None,29-36,false,8,1,checks parse run block
-      test_parse_multiple_blocks,function,() -> None,39-55,false,17,2,checks parse multiple blocks
-      test_empty_meta,function,() -> None,58-64,false,7,1,checks empty meta
+    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
+      test_parse_file_block,function,(),6-14,false,9,1,checks parse file block
+      test_parse_file_block_new_header,function,(),17-26,false,10,1,checks parse file block new header
+      test_parse_deps_block,function,(),29-38,false,10,1,checks parse deps block
+      test_parse_deps_block_new_header,function,(),41-51,false,11,1,checks parse deps block new header
+      test_parse_run_block,function,(),54-61,false,8,1,checks parse run block
+      test_parse_run_block_new_header,function,(),64-73,false,10,1,checks parse run block new header
+      test_parse_multiple_blocks,function,(),76-92,false,17,2,checks parse multiple blocks
+      test_empty_meta,function,(),95-101,false,7,1,checks empty meta
   tests/test_sandbox.py:
     functions[5]{name,kind,sig,loc,async,lines,cc,does}:
-      test_sandbox_creation,function,() -> None,9-12,false,4,1,checks sandbox creation
-      test_write_file,function,() -> None,15-20,false,6,1,checks write file
-      test_write_requirements,function,() -> None,23-29,false,7,1,checks write requirements
-      test_venv_paths,function,() -> None,32-37,false,6,1,checks venv paths
-      test_clean,function,() -> None,40-46,false,7,1,checks clean
+      test_sandbox_creation,function,(),9-12,false,4,1,checks sandbox creation
+      test_write_file,function,(),15-20,false,6,1,checks write file
+      test_write_requirements,function,(),23-29,false,7,1,checks write requirements
+      test_venv_paths,function,(),32-37,false,6,1,checks venv paths
+      test_clean,function,(),40-46,false,7,1,checks clean
   tests/test_converter.py:
     functions[12]{name,kind,sig,loc,async,lines,cc,does}:
-      test_detect_deps_python,function,() -> None,10-15,false,6,1,checks detect deps python
-      test_detect_deps_with_versions,function,() -> None,18-22,false,5,1,checks detect deps with versions
-      test_detect_file_python,function,() -> None,25-29,false,5,1,checks detect file python
-      test_detect_file_javascript,function,() -> None,32-36,false,5,1,checks detect file javascript
-      test_detect_run_command,function,() -> None,39-42,false,4,1,checks detect run command
-      test_detect_run_python,function,() -> None,45-48,false,4,1,checks detect run python
-      test_suggest_filename_fastapi,function,() -> None,51-54,false,4,1,checks suggest filename fastapi
-      test_suggest_filename_class,function,() -> None,57-60,false,4,1,checks suggest filename class
-      test_suggest_filename_html,function,() -> None,63-66,false,4,2,checks suggest filename html
-      test_convert_simple_markdown,function,() -> None,69-90,false,22,2,checks convert simple markdown
-      test_convert_already_markpact,function,() -> None,93-101,false,9,1,checks convert already markpact
-      test_convert_preserves_non_code,function,() -> None,104-119,false,16,1,checks convert preserves non code
+      test_detect_deps_python,function,(),10-15,false,6,1,checks detect deps python
+      test_detect_deps_with_versions,function,(),18-22,false,5,1,checks detect deps with versions
+      test_detect_file_python,function,(),25-29,false,5,1,checks detect file python
+      test_detect_file_javascript,function,(),32-36,false,5,1,checks detect file javascript
+      test_detect_run_command,function,(),39-42,false,4,1,checks detect run command
+      test_detect_run_python,function,(),45-48,false,4,1,checks detect run python
+      test_suggest_filename_fastapi,function,(),51-54,false,4,1,checks suggest filename fastapi
+      test_suggest_filename_class,function,(),57-60,false,4,1,checks suggest filename class
+      test_suggest_filename_html,function,(),63-66,false,4,2,checks suggest filename html
+      test_convert_simple_markdown,function,(),69-90,false,22,2,checks convert simple markdown
+      test_convert_already_markpact,function,(),93-101,false,9,1,checks convert already markpact
+      test_convert_preserves_non_code,function,(),104-119,false,16,1,checks convert preserves non code
   tests/test_runner.py:
     functions[7]{name,kind,sig,loc,async,lines,cc,does}:
-      test_run_cmd_simple,function,() -> None,11-23,false,13,1,Test running a simple command
-      test_run_cmd_with_venv,function,() -> None,26-43,false,18,1,Test run_cmd uses venv when available
-      test_ensure_venv_creates_venv,function,() -> None,46-55,false,10,2,Test ensure_venv creates venv if not exists
-      test_ensure_venv_skips_if_disabled,function,() -> None,58-66,false,9,1,Test ensure_venv respects MARKPACT_NO_VENV
-      test_ensure_venv_skips_if_exists,function,() -> None,69-81,false,13,1,Test ensure_venv skips if venv already exists
-      test_install_deps_empty,function,() -> None,84-91,false,8,1,Test install_deps with empty list
-      test_install_deps_writes_requirements,function,() -> None,94-112,false,19,1,Test install_deps writes requirements.txt
+      test_run_cmd_simple,function,(),11-23,false,13,1,Test running a simple command
+      test_run_cmd_with_venv,function,(),26-43,false,18,1,Test run_cmd uses venv when available
+      test_ensure_venv_creates_venv,function,(),46-55,false,10,2,Test ensure_venv creates venv if not exists
+      test_ensure_venv_skips_if_disabled,function,(),58-66,false,9,1,Test ensure_venv respects MARKPACT_NO_VENV
+      test_ensure_venv_skips_if_exists,function,(),69-81,false,13,1,Test ensure_venv skips if venv already exists
+      test_install_deps_empty,function,(),84-91,false,8,1,Test install_deps with empty list
+      test_install_deps_writes_requirements,function,(),94-112,false,19,1,Test install_deps writes requirements.txt
   tests/test_examples.py:
     functions[1]{name,kind,sig,loc,async,lines,cc,does}:
-      test_examples_dry_run,function,"(tmp_path:Path) -> None",18-27,false,10,4,checks examples dry run
+      test_examples_dry_run,function,"(tmp_path:Path)",18-27,false,10,4,checks examples dry run
   tests/test_cli.py:
-    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
-      test_cli_help,function,(capsys) -> None,9-19,false,11,2,Test --help flag
-      test_cli_version,function,(capsys) -> None,22-31,false,10,2,Test --version flag
-      test_cli_file_not_found,function,(capsys) -> None,34-40,false,7,1,Test error when file not found
-      test_cli_dry_run,function,() -> None,43-60,false,18,1,Test --dry-run flag
-      test_cli_convert_only,function,(capsys) -> None,63-77,false,15,1,Test --convert-only flag
-      test_cli_auto_no_markpact,function,(capsys) -> None,80-104,false,25,1,Test --auto flag with non-markpact file
-      test_cli_save_converted,function,() -> None,107-119,false,13,1,Test --save-converted flag
-      test_cli_quiet_mode,function,() -> None,122-131,false,10,1,Test --quiet flag
+    functions[9]{name,kind,sig,loc,async,lines,cc,does}:
+      test_cli_help,function,(capsys),9-19,false,11,2,Test --help flag
+      test_cli_version,function,(capsys),22-31,false,10,2,Test --version flag
+      test_cli_file_not_found,function,(capsys),34-40,false,7,1,Test error when file not found
+      test_cli_dry_run,function,(),43-60,false,18,1,Test --dry-run flag
+      test_cli_dry_run_new_header,function,(),63-80,false,18,1,Test --dry-run flag with new markpact fence header syntax
+      test_cli_convert_only,function,(capsys),83-97,false,15,1,Test --convert-only flag
+      test_cli_auto_no_markpact,function,(capsys),100-124,false,25,1,Test --auto flag with non-markpact file
+      test_cli_save_converted,function,(),127-139,false,13,1,Test --save-converted flag
+      test_cli_quiet_mode,function,(),142-151,false,10,1,Test --quiet flag
   src/markpact/tester.py:
     functions[10]{name,kind,sig,loc,async,lines,cc,does}:
       wait_for_service,function,"(url:str, timeout:int=30, interval:float=0.5) -> bool",54-66,false,13,4,Wait for a service to become available.
@@ -113,7 +117,7 @@ function_details:
       TestSuite.passed,method,() -> int,33-34,false,2,3,passed
       TestSuite.failed,method,() -> int,37-38,false,2,3,failed
       TestSuite.total,method,() -> int,41-42,false,2,1,total
-      TestSuite.print_summary,method,() -> None,44-51,false,8,3,logs summary
+      TestSuite.print_summary,method,(),44-51,false,8,3,logs summary
   src/markpact/config.py:
     functions[12]{name,kind,sig,loc,async,lines,cc,does}:
       get_env_path,function,() -> Path,49-51,false,3,1,Get the .env file path (can be overridden by MARKPACT_ENV_PATH)
@@ -130,26 +134,29 @@ function_details:
       list_providers,function,() -> str,190-204,false,15,3,List available provider presets
   src/markpact/sandbox.py:
     functions[8]{name,kind,sig,loc,async,lines,cc,does}:
-      Sandbox.__init__,method,"(path:Any=None) -> None",10-12,false,3,2,creates
+      Sandbox.__init__,method,"(path:Any=None)",10-12,false,3,2,creates
       Sandbox.venv_bin,method,() -> Path,15-16,false,2,1,venv bin
       Sandbox.venv_pip,method,() -> Path,19-20,false,2,1,venv pip
       Sandbox.venv_python,method,() -> Path,23-24,false,2,1,venv python
-      Sandbox.has_venv,method,() -> bool,26-27,false,2,1,has venv
+      Sandbox.has_venv,method,() -> bool,26-27,false,2,1,checks venv
       Sandbox.write_file,method,"(rel_path:str, content:str) -> Path",29-34,false,6,1,"Write file to sandbox, creating directories as needed"
       Sandbox.write_requirements,method,"(deps:list[str]) -> Path",36-40,false,5,1,Write requirements.txt
-      Sandbox.clean,method,() -> None,42-46,false,5,2,Remove sandbox directory
+      Sandbox.clean,method,(),42-46,false,5,2,Remove sandbox directory
   src/markpact/cli.py:
     functions[2]{name,kind,sig,loc,async,lines,cc,does}:
-      handle_config_cli,function,"(argv:list[str]) -> int",15-86,false,72,12,Handle config subcommand with its own parser
-      main,function,"(argv:Any=None) -> int",89-515,false,427,103,main
+      handle_config_cli,function,"(argv:list[str]) -> int",16-87,false,72,12,Handle config subcommand with its own parser
+      main,function,"(argv:Any=None) -> int",90-516,false,427,103,main
   src/markpact/docker_runner.py:
-    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
-      generate_dockerfile,function,"(sandbox_path:Path, deps:list[str], run_command:str) -> Path",29-66,false,38,3,Generate a Dockerfile for the markpact project.
-      build_and_run_docker,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, verbose:bool=True) -> int",69-114,false,46,6,Build and run Docker container from sandbox.
-      check_docker_available,function,() -> bool,117-126,false,10,2,Check if Docker is available.
-      run_docker_with_logs,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, follow_logs:bool=True, verbose:bool=True) -> subprocess.Popen",129-159,false,31,2,Start Docker container and return process for log monitoring.
-      stream_docker_logs,function,"(process:Any, timeout:Optional[int]=None) -> None",162-185,false,24,8,Stream logs from Docker container.
-      run_docker_with_tests,function,"(sandbox_path:Path, test_body:str, image_name:str='markpact-app', port:int=8000, verbose:bool=True) -> tuple[int, \"TestSuite\"]",188-255,false,68,10,"Build, run Docker container, execute tests, and return results."
+    functions[9]{name,kind,sig,loc,async,lines,cc,does}:
+      find_free_port,function,"(start_port:int=8000, max_attempts:int=100) -> int",11-20,false,10,3,Find a free port starting from start_port.
+      stop_existing_container,function,"(container_name:str, verbose:bool=False) -> bool",23-34,false,12,4,Stop and remove existing container if it exists.
+      generate_dockerfile,function,"(sandbox_path:Path, deps:list[str], run_command:str) -> Path",56-93,false,38,3,Generate a Dockerfile for the markpact project.
+      is_port_free,function,"(port:int) -> bool",96-103,false,8,2,Check if a port is free.
+      build_and_run_docker,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, verbose:bool=True, auto_find_port:bool=True) -> int",106-173,false,68,11,Build and run Docker container from sandbox.
+      check_docker_available,function,() -> bool,176-185,false,10,2,Check if Docker is available.
+      run_docker_with_logs,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, follow_logs:bool=True, verbose:bool=True, auto_find_port:bool=True) -> tuple[subprocess.Popen, int]",188-231,false,44,5,Start Docker container and return process for log monitoring.
+      stream_docker_logs,function,"(process:Any, timeout:Optional[int]=None)",234-257,false,24,8,Stream logs from Docker container.
+      run_docker_with_tests,function,"(sandbox_path:Path, test_body:str, image_name:str='markpact-app', port:int=8000, verbose:bool=True, auto_find_port:bool=True) -> tuple[int, \"TestSuite\"]",260-343,false,84,15,"Build, run Docker container, execute tests, and return results."
   src/markpact/generator.py:
     functions[7]{name,kind,sig,loc,async,lines,cc,does}:
       _fix_unclosed_blocks,function,"(content:str) -> str",143-161,false,19,7,Fix unclosed code blocks in generated content.
@@ -180,8 +187,8 @@ function_details:
       get_supported_formats,function,"() -> dict[str, str]",630-638,false,9,1,Get dictionary of supported notebook formats.
   src/markpact/parser.py:
     functions[2]{name,kind,sig,loc,async,lines,cc,does}:
-      parse_blocks,function,"(text:str) -> list[Block]",24-33,false,10,3,"Parse all markpact:* codeblocks from markdown text"
-      Block.get_path,method,() -> str | None,18-21,false,4,2,Extract path= from meta
+      parse_blocks,function,"(text:str) -> list[Block]",25-35,false,11,4,"Parse all markpact:* codeblocks from markdown text"
+      Block.get_path,method,() -> str | None,19-22,false,4,2,Extract path= from meta
   src/markpact/auto_fix.py:
     functions[8]{name,kind,sig,loc,async,lines,cc,does}:
       find_free_port,function,"(start_port:int=8000, max_attempts:int=100) -> int",13-22,false,10,3,Find a free port starting from start_port.
@@ -206,7 +213,7 @@ function_details:
       extract_version_from_readme,function,"(readme_path:Path) -> Optional[str]",305-322,false,18,4,"Extract version from README markpact:publish block."
       update_version_in_readme,function,"(readme_path:Path, new_version:str) -> bool",325-340,false,16,2,Update version in README file.
       get_license_classifier,function,"(license_name:str) -> str",347-359,false,13,1,Map license name to PyPI classifier.
-      generate_pyproject_toml,function,"(config, sandbox, base_path=None, verbose=True) -> None",362-434,false,73,12,Generate pyproject.toml for PyPI publishing.
+      generate_pyproject_toml,function,"(config, sandbox, base_path=None, verbose=True)",362-434,false,73,12,Generate pyproject.toml for PyPI publishing.
       publish_pypi,function,"(config:PublishConfig, sandbox:Sandbox, test:bool=False, verbose:bool=True, source_readme_path:Optional[Path]=None) -> PublishResult",438-703,false,266,85,Publish package to PyPI.
       generate_package_json,function,"(config:PublishConfig, sandbox:Sandbox) -> Path",710-760,false,51,11,Generate package.json for npm publishing.
       publish_npm,function,"(config:PublishConfig, sandbox:Sandbox, registry:str='https://registry.npmjs.org', verbose:bool=True) -> PublishResult",763-810,false,48,6,Publish package to npm registry.
@@ -215,7 +222,7 @@ function_details:
       publish_github_packages,function,"(config:PublishConfig, sandbox:Sandbox, package_type:str='npm', verbose:bool=True) -> PublishResult",944-970,false,27,3,Publish to GitHub Packages.
       parse_publish_block,function,"(block_body:str, meta:str='') -> PublishConfig",977-1022,false,46,11,Parse publish block content into config.
       publish,function,"(config:PublishConfig, sandbox:Sandbox, bump:Optional[str]=None, verbose:bool=True, source_readme_path:Optional[Path]=None) -> PublishResult",1025-1068,false,44,9,Publish to specified registry.
-      PublishConfig.__post_init__,method,() -> None,27-29,false,3,2,creates init
+      PublishConfig.__post_init__,method,(),27-29,false,3,2,creates init
   src/markpact/converter.py:
     functions[4]{name,kind,sig,loc,async,lines,cc,does}:
       detect_block_type,function,"(lang:str, body:str) -> tuple[str, str, float, str]",90-130,false,41,19,Detect the markpact block type based on language and content.
