@@ -1,9 +1,9 @@
 """Markpact – Executable Markdown Runtime"""
 
-__version__ = "0.1.17"
+__version__ = "0.1.18"
 
 from .converter import convert_markdown_to_markpact, ConversionResult
-from .parser import parse_blocks
+from .parser import Block, parse_blocks
 from .runner import run_cmd, ensure_venv
 from .sandbox import Sandbox
 
@@ -18,6 +18,7 @@ except ImportError:
     EXAMPLE_PROMPTS = {}
 
 __all__ = [
+    "Block",
     "parse_blocks",
     "run_cmd",
     "ensure_venv",

@@ -1,3 +1,23 @@
+## [0.1.18] - 2026-02-18
+
+### Summary
+
+feat(goal): multi-language support with 5 supporting modules
+
+### Core
+
+- update src/markpact/__init__.py
+- update src/markpact/parser.py
+
+### Build
+
+- update pyproject.toml
+
+### Config
+
+- config: update goal.yaml
+
+
 ## [0.1.17] - 2026-02-18
 
 ### Summary

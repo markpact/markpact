@@ -4,13 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "markpact"
-version = "0.1.17"
+version = "0.1.18"
 description = "Executable Markdown Runtime – run and manage entire projects directly from a single README.md file using specialized markpact code blocks and isolated Docker sandboxes."
 readme = "README.md"
 license = "Apache-2.0"
 authors = [
-    { name = "wronai" },
-    "Tom Sapletta <tom@sapletta.com>",
+    { name = "Tom Sapletta", email = "tom@sapletta.com" },
 ]
 keywords = ["markdown", "executable", "readme", "runtime", "sandbox"]
 classifiers = [
