@@ -76,6 +76,27 @@ def root():
 uvicorn app.main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8000}
 ```
 
+### Orchestration block (pipeline steps — WHO does WHAT):
+```yaml markpact:orchestration
+pipeline:
+  name: project-name
+  steps:
+    - name: validate_input
+      actor: script
+    - name: ai_review
+      actor: llm
+    - name: human_approval
+      actor: human
+      config: {channel: web, timeout: 7200}
+    - name: deploy
+      actor: script
+```
+
+### State block (current process state):
+```json markpact:state
+{"phase":"init","health":null,"success_count":0,"error_count":0}
+```
+
 ### Test block (HTTP tests for the API):
 ```text markpact:test http
 # Health check
@@ -109,6 +130,20 @@ Brief description.
 
 ---
 
+```yaml markpact:orchestration
+pipeline:
+  name: project-name
+  steps:
+    - name: validate
+      actor: script
+    - name: deploy
+      actor: script
+```
+
+```json markpact:state
+{"phase":"init","health":null,"success_count":0,"error_count":0}
+```
+
 ```text markpact:deps python
 dep1
 dep2
@@ -134,8 +169,11 @@ GET /endpoint/1 EXPECT 200
 
 IMPORTANT RULES:
 1. ALWAYS include a GET /health endpoint returning {"status": "ok"}
-2. ALWAYS include a markpact:test block with HTTP tests
-3. Close ALL code blocks with ```
+2. ALWAYS include markpact:orchestration block with pipeline steps (actors: script, llm, human)
+3. ALWAYS include markpact:state block with initial state {"phase":"init"}
+4. ALWAYS include a markpact:test block with HTTP tests
+5. Close ALL code blocks with ```
+6. The orchestration block MUST be the FIRST markpact block in the output
 
 Generate ONLY the README.md content. Start with # Title."""
 

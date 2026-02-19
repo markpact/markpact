@@ -1,6 +1,6 @@
 ![img_2.png](img_2.png)
 
-# markpact
+# markpact - + GitOps meets AI Agents — all in one README.
 
 [![PyPI version](https://img.shields.io/pypi/v/markpact.svg)](https://pypi.org/project/markpact/)
 [![Python](https://img.shields.io/pypi/pyversions/markpact.svg)](https://pypi.org/project/markpact/)
@@ -21,6 +21,8 @@ Markpact to narzędzie, które zamienia plik README.md w **wykonywalny kontrakt 
 |---------|------|
 | **Executable README** | Uruchom cały projekt z jednego pliku README.md |
 | **LLM Generation** | Wygeneruj projekt z opisu tekstowego: `markpact -p "REST API"` |
+| **Live Demo** | Interaktywne demo z generowaniem PDF: `python demos/demo_live.py` |
+| **PDF Generation** | Automatyczne tworzenie PDF dokumentacji (7 stron) |
 | **Multi-language** | Python, Node.js, Go, Rust, PHP, TypeScript, React |
 | **Publishing** | Publikuj do PyPI, npm, Docker Hub jedną komendą |
 | **Docker Sandbox** | Uruchom w izolowanym kontenerze: `--docker` |
@@ -54,6 +56,45 @@ markpact -p "URL shortener with FastAPI and SQLite" -o url-test/README.md --run
 
 # Lub z gotowego przykładu
 markpact -e todo-api -o todo/README.md --run
+```
+
+## 🎬 Demo Live - Generowanie z LLM w czasie rzeczywistym
+
+Spróbuj interaktywnego demo, które generuje kompletny projekt z promptu i tworzy PDF dokumentacji:
+
+```bash
+# Wejdź do katalogu markpact
+cd /home/tom/github/wronai/markpact
+
+# Uruchom demo z własnym promptem
+python demos/demo_live.py --prompt "Build a chat API with WebSocket"
+
+# Lub użyj gotowego przykładu
+python demos/demo_live.py --example todo-api
+
+# Lista dostępnych przykładów
+python demos/demo_live.py --list
+```
+
+**Co robi demo:**
+1. **Generuje kontrakt** z LLM (Ollama/OpenRouter/OpenAI)
+2. **Parsuje bloki** `markpact:*` z wygenerowanego README
+3. **Waliduje** wszystkie wymagane bloki
+4. **Tworzy PDF** z pełną dokumentacją (7 stron)
+5. **Zapisuje wyniki** do `generated/live/`
+
+**Wymagania:**
+```bash
+pip install markpact[llm] fpdf2
+```
+
+**Przykład wyjścia:**
+```
+[PASS] LLM wygenerował kontrakt  81.1s, 2177 znaków
+[PASS] Znaleziono 4 bloków  0.0ms
+[PASS] Zaleznosci: 3 pakietów  fastapi, uvicorn, websockets
+[PASS] Plik: app/main.py  36 linii
+[PASS] PDF zapisany: generated/live/markpact_live_custom.pdf  13 KB, 7 stron
 ```
 
 ## 🤖 Generowanie z LLM
@@ -128,6 +169,7 @@ markpact --from-notebook notebook.ipynb --convert-only
 ## 📚 Dokumentacja
 
 - [Pełna dokumentacja](docs/README.md)
+- [Demo Live Guide](demos/README.md) ⭐ **NEW** - Interaktywne demo z PDF
 - [Generowanie z LLM](docs/generator.md) ⭐ **NEW**
 - [Kontrakt markpact:*](docs/contract.md)
 - [CI/CD Integration](docs/ci-cd.md)
@@ -137,6 +179,7 @@ markpact --from-notebook notebook.ipynb --convert-only
 
 | Przykład | Opis | Uruchomienie |
 |----------|------|--------------|
+| [Demo Live](demos/demo_live.py) | **Interaktywne generowanie z LLM + PDF** | `python demos/demo_live.py --prompt "Chat API"` |
 | [FastAPI Todo](examples/fastapi-todo/) | REST API z bazą danych | `markpact examples/fastapi-todo/README.md` |
 | [Flask Blog](examples/flask-blog/) | Aplikacja webowa z szablonami | `markpact examples/flask-blog/README.md` |
 | [CLI Tool](examples/cli-tool/) | Narzędzie linii poleceń | `markpact examples/cli-tool/README.md` |
@@ -268,7 +311,11 @@ if __name__ == "__main__":
 ### Opcja A: Pakiet pip (zalecane)
 
 ```bash
+# Podstawowa instalacja
 pip install markpact
+
+# Z LLM i PDF generation (dla demo)
+pip install markpact[llm] fpdf2
 ```
 
 Użycie:
@@ -277,6 +324,9 @@ Użycie:
 markpact README.md                    # uruchom projekt
 markpact README.md --dry-run          # podgląd bez wykonywania
 markpact README.md -s ./my-sandbox    # własny katalog sandbox
+
+# Demo live z LLM
+python demos/demo_live.py --prompt "Twój prompt"
 ```
 
 ### Opcja B: Instalacja lokalna (dev)

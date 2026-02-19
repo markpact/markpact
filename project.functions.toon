@@ -1,5 +1,5 @@
 project: markpact
-generated: "2026-02-18T19:09:30.981530"
+generated: "2026-02-18T19:27:40.384510"
 modules[22]{path,lang,items}:
   tests/test_notebook_converter.py,python,14
   tests/test_generator.py,python,9
@@ -12,15 +12,15 @@ modules[22]{path,lang,items}:
   tests/test_cli.py,python,9
   src/markpact/tester.py,python,10
   src/markpact/config.py,python,12
-  src/markpact/sandbox.py,python,8
+  src/markpact/sandbox.py,python,9
   src/markpact/cli.py,python,2
-  src/markpact/docker_runner.py,python,9
+  src/markpact/docker_runner.py,python,8
   src/markpact/generator.py,python,7
   src/markpact/runner.py,python,3
   src/markpact/__init__.py,python,0
   src/markpact/notebook_converter.py,python,12
-  src/markpact/parser.py,python,2
-  src/markpact/auto_fix.py,python,8
+  src/markpact/parser.py,python,3
+  src/markpact/auto_fix.py,python,7
   src/markpact/publisher.py,python,22
   src/markpact/converter.py,python,4
 
@@ -133,30 +133,30 @@ function_details:
       show_config,function,() -> str,167-187,false,21,6,Show current configuration as formatted string
       list_providers,function,() -> str,190-204,false,15,3,List available provider presets
   src/markpact/sandbox.py:
-    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
-      Sandbox.__init__,method,"(path:Any=None)",10-12,false,3,2,creates
-      Sandbox.venv_bin,method,() -> Path,15-16,false,2,1,venv bin
-      Sandbox.venv_pip,method,() -> Path,19-20,false,2,1,venv pip
-      Sandbox.venv_python,method,() -> Path,23-24,false,2,1,venv python
-      Sandbox.has_venv,method,() -> bool,26-27,false,2,1,checks venv
-      Sandbox.write_file,method,"(rel_path:str, content:str) -> Path",29-34,false,6,1,"Write file to sandbox, creating directories as needed"
-      Sandbox.write_requirements,method,"(deps:list[str]) -> Path",36-40,false,5,1,Write requirements.txt
-      Sandbox.clean,method,(),42-46,false,5,2,Remove sandbox directory
+    functions[9]{name,kind,sig,loc,async,lines,cc,does}:
+      find_free_port,function,"(start_port:int=8000, max_attempts:int=100) -> int",8-17,false,10,3,Find a free port starting from start_port.
+      Sandbox.__init__,method,"(path:Any=None)",23-25,false,3,2,creates
+      Sandbox.venv_bin,method,() -> Path,28-29,false,2,1,venv bin
+      Sandbox.venv_pip,method,() -> Path,32-33,false,2,1,venv pip
+      Sandbox.venv_python,method,() -> Path,36-37,false,2,1,venv python
+      Sandbox.has_venv,method,() -> bool,39-40,false,2,1,checks venv
+      Sandbox.write_file,method,"(rel_path:str, content:str) -> Path",42-47,false,6,1,"Write file to sandbox, creating directories as needed"
+      Sandbox.write_requirements,method,"(deps:list[str]) -> Path",49-53,false,5,1,Write requirements.txt
+      Sandbox.clean,method,(),55-59,false,5,2,Remove sandbox directory
   src/markpact/cli.py:
     functions[2]{name,kind,sig,loc,async,lines,cc,does}:
       handle_config_cli,function,"(argv:list[str]) -> int",16-87,false,72,12,Handle config subcommand with its own parser
       main,function,"(argv:Any=None) -> int",90-516,false,427,103,main
   src/markpact/docker_runner.py:
-    functions[9]{name,kind,sig,loc,async,lines,cc,does}:
-      find_free_port,function,"(start_port:int=8000, max_attempts:int=100) -> int",11-20,false,10,3,Find a free port starting from start_port.
-      stop_existing_container,function,"(container_name:str, verbose:bool=False) -> bool",23-34,false,12,4,Stop and remove existing container if it exists.
-      generate_dockerfile,function,"(sandbox_path:Path, deps:list[str], run_command:str) -> Path",56-93,false,38,3,Generate a Dockerfile for the markpact project.
-      is_port_free,function,"(port:int) -> bool",96-103,false,8,2,Check if a port is free.
-      build_and_run_docker,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, verbose:bool=True, auto_find_port:bool=True) -> int",106-173,false,68,11,Build and run Docker container from sandbox.
-      check_docker_available,function,() -> bool,176-185,false,10,2,Check if Docker is available.
-      run_docker_with_logs,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, follow_logs:bool=True, verbose:bool=True, auto_find_port:bool=True) -> tuple[subprocess.Popen, int]",188-231,false,44,5,Start Docker container and return process for log monitoring.
-      stream_docker_logs,function,"(process:Any, timeout:Optional[int]=None)",234-257,false,24,8,Stream logs from Docker container.
-      run_docker_with_tests,function,"(sandbox_path:Path, test_body:str, image_name:str='markpact-app', port:int=8000, verbose:bool=True, auto_find_port:bool=True) -> tuple[int, \"TestSuite\"]",260-343,false,84,15,"Build, run Docker container, execute tests, and return results."
+    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
+      stop_existing_container,function,"(container_name:str, verbose:bool=False) -> bool",12-23,false,12,4,Stop and remove existing container if it exists.
+      generate_dockerfile,function,"(sandbox_path:Path, deps:list[str], run_command:str) -> Path",45-82,false,38,3,Generate a Dockerfile for the markpact project.
+      is_port_free,function,"(port:int) -> bool",85-92,false,8,2,Check if a port is free.
+      build_and_run_docker,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, verbose:bool=True, auto_find_port:bool=True) -> int",95-162,false,68,11,Build and run Docker container from sandbox.
+      check_docker_available,function,() -> bool,165-174,false,10,2,Check if Docker is available.
+      run_docker_with_logs,function,"(sandbox_path:Path, image_name:str='markpact-app', port:int=8000, follow_logs:bool=True, verbose:bool=True, auto_find_port:bool=True) -> tuple[subprocess.Popen, int]",177-220,false,44,5,Start Docker container and return process for log monitoring.
+      stream_docker_logs,function,"(process:Any, timeout:Optional[int]=None)",223-246,false,24,8,Stream logs from Docker container.
+      run_docker_with_tests,function,"(sandbox_path:Path, test_body:str, image_name:str='markpact-app', port:int=8000, verbose:bool=True, auto_find_port:bool=True) -> tuple[int, \"TestSuite\"]",249-332,false,84,15,"Build, run Docker container, execute tests, and return results."
   src/markpact/generator.py:
     functions[7]{name,kind,sig,loc,async,lines,cc,does}:
       _fix_unclosed_blocks,function,"(content:str) -> str",143-161,false,19,7,Fix unclosed code blocks in generated content.
@@ -186,19 +186,19 @@ function_details:
       convert_notebook,function,"(input_path:Path, output_path:Optional[Path]=None, verbose:bool=True) -> str",597-627,false,31,5,Convert a notebook file to markpact format.
       get_supported_formats,function,"() -> dict[str, str]",630-638,false,9,1,Get dictionary of supported notebook formats.
   src/markpact/parser.py:
-    functions[2]{name,kind,sig,loc,async,lines,cc,does}:
-      parse_blocks,function,"(text:str) -> list[Block]",25-35,false,11,4,"Parse all markpact:* codeblocks from markdown text"
-      Block.get_path,method,() -> str | None,19-22,false,4,2,Extract path= from meta
+    functions[3]{name,kind,sig,loc,async,lines,cc,does}:
+      parse_blocks,function,"(text:str) -> list[Block]",38-65,false,28,6,"Parse all markpact:* codeblocks from markdown text."
+      Block.get_path,method,() -> str | None,27-30,false,4,2,Extract path= from meta
+      Block.get_meta_value,method,"(key:str) -> Optional[str]",32-35,false,4,2,Extract a key=value pair from the meta string.
   src/markpact/auto_fix.py:
-    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
-      find_free_port,function,"(start_port:int=8000, max_attempts:int=100) -> int",13-22,false,10,3,Find a free port starting from start_port.
-      detect_error_type,function,"(error_output:str) -> Optional[str]",25-35,false,11,5,Detect the type of error from output.
-      fix_port_in_readme,function,"(readme_path:Path, new_port:int) -> bool",38-61,false,24,3,Update the port in a README file.
-      run_with_auto_fix,function,"(cmd:str, sandbox:Sandbox, readme_path:Optional[Path]=None, verbose:bool=True, max_retries:int=3) -> int",64-148,false,85,14,Run command with automatic error detection and fixing.
-      add_missing_dependency,function,"(readme_path:Path, module_name:str) -> bool",151-167,false,17,3,Add a missing dependency to the README deps block.
-      extract_module_name,function,"(error_output:str) -> Optional[str]",170-176,false,7,2,Extract missing module name from ModuleNotFoundError.
-      fix_with_llm,function,"(readme_path:Path, error_output:str, error_type:str, verbose:bool=True) -> bool",179-236,false,58,8,Use LLM to fix errors in the README.
-      run_with_auto_fix_llm,function,"(cmd:str, sandbox:Sandbox, readme_path:Optional[Path]=None, verbose:bool=True, max_retries:int=3, use_llm:bool=False) -> int",239-344,false,106,29,Run command with automatic error detection and fixing (with optional LLM).
+    functions[7]{name,kind,sig,loc,async,lines,cc,does}:
+      detect_error_type,function,"(error_output:str) -> Optional[str]",12-22,false,11,5,Detect the type of error from output.
+      fix_port_in_readme,function,"(readme_path:Path, new_port:int) -> bool",25-48,false,24,3,Update the port in a README file.
+      run_with_auto_fix,function,"(cmd:str, sandbox:Sandbox, readme_path:Optional[Path]=None, verbose:bool=True, max_retries:int=3) -> int",51-135,false,85,14,Run command with automatic error detection and fixing.
+      add_missing_dependency,function,"(readme_path:Path, module_name:str) -> bool",138-154,false,17,3,Add a missing dependency to the README deps block.
+      extract_module_name,function,"(error_output:str) -> Optional[str]",157-163,false,7,2,Extract missing module name from ModuleNotFoundError.
+      fix_with_llm,function,"(readme_path:Path, error_output:str, error_type:str, verbose:bool=True) -> bool",166-223,false,58,8,Use LLM to fix errors in the README.
+      run_with_auto_fix_llm,function,"(cmd:str, sandbox:Sandbox, readme_path:Optional[Path]=None, verbose:bool=True, max_retries:int=3, use_llm:bool=False) -> int",226-331,false,106,29,Run command with automatic error detection and fixing (with optional LLM).
   src/markpact/publisher.py:
     functions[22]{name,kind,sig,loc,async,lines,cc,does}:
       _slugify,function,"(name:str) -> str",42-46,false,5,2,slugify
