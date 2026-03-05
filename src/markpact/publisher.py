@@ -435,97 +435,79 @@ packages = ["markpact_example_pypi"]
 
 
 
-def publish_pypi(
-    config: PublishConfig,
-    sandbox: Sandbox,
-    test: bool = False,
-    verbose: bool = True,
-    source_readme_path: Optional[Path] = None,
-) -> PublishResult:
-    """Publish package to PyPI."""
-    
-    if verbose:
-        print(f"[markpact] Publishing {config.name} v{config.version} to {'TestPyPI' if test else 'PyPI'}...")
-
-    # Validate package name: PyPI normalizes underscores to hyphens; warn if underscores are present
+def _normalize_package_name(config: PublishConfig, verbose: bool) -> None:
+    """Normalize package name for PyPI (underscores to hyphens)."""
     if "_" in config.name:
         if verbose:
             print(f"[markpact] NOTE: Package name '{config.name}' contains underscores. PyPI normalizes them to hyphens.")
-        # Normalize to hyphens for consistency
         config.name = config.name.replace("_", "-")
         if verbose:
             print(f"[markpact] Normalized name to: {config.name}")
-    
-    # For Python packages, files should be in the package directory
+
+
+def _determine_base_path(config: PublishConfig, sandbox: Sandbox, verbose: bool) -> Path:
+    """Determine base path for package files."""
     package_dir = sandbox.path / config.name
-    # Also check with underscores (PyPI normalizes them)
     package_dir_underscores = sandbox.path / config.name.replace("-", "_")
     if verbose:
         print(f"[markpact] DEBUG: package_dir_underscores = {package_dir_underscores}")
         print(f"[markpact] DEBUG: package_dir_underscores.exists() = {package_dir_underscores.exists()}")
     if package_dir.exists() or package_dir_underscores.exists():
-        # Files are in package subdirectory (e.g., markpact_example_pypi/)
-        base_path = package_dir_underscores if package_dir_underscores.exists() else package_dir
-    else:
-        # Files are in sandbox root
-        base_path = sandbox.path
+        return package_dir_underscores if package_dir_underscores.exists() else package_dir
+    return sandbox.path
 
-    # Generate pyproject.toml (always ensure it reflects current config)
-    generate_pyproject_toml(config, sandbox, base_path, verbose)
 
-    # Auto-install missing build backend if needed (e.g., hatchling)
-    pyproject_path = base_path / "pyproject.toml"
-    if pyproject_path.exists():
-        build_backend = None
-        # Try to parse TOML (Python 3.11+ has tomllib; fallback to tomli or regex)
+def _detect_build_backend(pyproject_path: Path) -> str | None:
+    """Detect build backend from pyproject.toml."""
+    try:
+        import tomllib
+        with pyproject_path.open("rb") as f:
+            data = tomllib.load(f)
+        return data.get("build-system", {}).get("build-backend")
+    except ImportError:
         try:
-            import tomllib
+            import tomli
             with pyproject_path.open("rb") as f:
-                data = tomllib.load(f)
-            build_backend = data.get("build-system", {}).get("build-backend")
+                data = tomli.load(f)
+            return data.get("build-system", {}).get("build-backend")
         except ImportError:
-            try:
-                import tomli
-                with pyproject_path.open("rb") as f:
-                    data = tomli.load(f)
-                build_backend = data.get("build-system", {}).get("build-backend")
-            except ImportError:
-                # Fallback: simple regex for build-backend
-                content = pyproject_path.read_text()
-                m = re.search(r"build-backend\s*=\s*['\"]([^'\"]+)['\"]", content)
-                if m:
-                    build_backend = m.group(1)
-        except Exception:
-            # If TOML parsing fails, fallback to regex
-            try:
-                content = pyproject_path.read_text()
-                m = re.search(r"build-backend\s*=\s*['\"]([^'\"]+)['\"]", content)
-                if m:
-                    build_backend = m.group(1)
-            except Exception:
-                pass
+            content = pyproject_path.read_text()
+            m = re.search(r"build-backend\s*=\s*['\"]([^'\"]+)['\"]", content)
+            if m:
+                return m.group(1)
+    except Exception:
+        content = pyproject_path.read_text()
+        m = re.search(r"build-backend\s*=\s*['\"]([^'\"]+)['\"]", content)
+        if m:
+            return m.group(1)
+    return None
 
-        if build_backend == "hatchling.build":
-            try:
-                import hatchling
-            except ImportError:
-                if verbose:
-                    print("[markpact] Installing missing build backend: hatchling")
-                install_result = subprocess.run(
-                    [sys.executable, "-m", "pip", "install", "hatchling"],
-                    capture_output=True,
-                    text=True,
-                )
-                if install_result.returncode != 0 and verbose:
-                    print("[markpact] WARNING: Failed to auto-install hatchling:")
-                    print(install_result.stderr[-500:] if install_result.stderr else install_result.stdout[-500:])
-    
-    
-    # Copy README.md from source to sandbox if it exists
+
+def _ensure_build_backend(build_backend: str | None, verbose: bool) -> None:
+    """Install missing build backend if needed."""
+    if build_backend == "hatchling.build":
+        try:
+            import hatchling
+        except ImportError:
+            if verbose:
+                print("[markpact] Installing missing build backend: hatchling")
+            install_result = subprocess.run(
+                [sys.executable, "-m", "pip", "install", "hatchling"],
+                capture_output=True,
+                text=True,
+            )
+            if install_result.returncode != 0 and verbose:
+                print("[markpact] WARNING: Failed to auto-install hatchling:")
+                print(install_result.stderr[-500:] if install_result.stderr else install_result.stdout[-500:])
+
+
+def _copy_readme(source_readme_path: Path | None, base_path: Path, config: PublishConfig, verbose: bool) -> None:
+    """Copy README from source to sandbox or create minimal one."""
     if verbose:
         print(f"[markpact] DEBUG: source_readme_path = {source_readme_path}")
         print(f"[markpact] DEBUG: source_readme_path.exists() = {source_readme_path.exists() if source_readme_path else 'None'}")
         print(f"[markpact] DEBUG: base_path = {base_path}")
+    
     if source_readme_path and source_readme_path.exists():
         if verbose:
             print(f"[markpact] Copying README from {source_readme_path}")
@@ -540,12 +522,13 @@ def publish_pypi(
     else:
         if verbose:
             print(f"[markpact] Creating minimal README in sandbox")
-        # Create README.md in sandbox if not exists
         readme = base_path / "README.md"
         if not readme.exists():
             readme.write_text(f"# {config.name}\n\n{config.description}\n")
-    
-    # Build package
+
+
+def _build_package(base_path: Path, verbose: bool) -> subprocess.CompletedProcess | None:
+    """Build package and return result. Returns None on success, result on failure."""
     if verbose:
         print("[markpact] Building package...")
     
@@ -564,44 +547,34 @@ def publish_pypi(
             print("--- STDERR ---")
             print(build_result.stderr[-1000:] if build_result.stderr else "(empty)")
             print("--- END ---")
-            # Common hint for missing build tool
             if "No module named 'build'" in (build_result.stdout or "") or "No module named 'build'" in (build_result.stderr or ""):
                 print("[markpact] HINT: 'build' package not found. Install it with: pip install build")
             elif "Cannot import 'hatchling.build'" in (build_result.stdout or "") or "Backend 'hatchling.build' is not available" in (build_result.stdout or ""):
                 print("[markpact] HINT: 'hatchling' backend not found. Install it with: pip install hatchling")
-        return PublishResult(
-            success=False,
-            registry="pypi",
-            message=f"Build failed: {_format_subprocess_failure(build_result)}",
-            version=config.version,
-        )
-    
-    # Upload to PyPI
-    if verbose:
-        print("[markpact] Uploading to PyPI...")
+        return build_result
+    return None
 
+
+def _check_pypi_credentials(test: bool, verbose: bool) -> tuple[bool, Path | None]:
+    """Check PyPI credentials and return (has_creds, pypirc_path)."""
     env = os.environ.copy()
     env.setdefault("TWINE_NON_INTERACTIVE", "1")
-
     token_env = "MARKPACT_TESTPYPI_TOKEN" if test else "MARKPACT_PYPI_TOKEN"
     token = env.get(token_env, "").strip()
     if token:
         env.setdefault("TWINE_USERNAME", "__token__")
         env.setdefault("TWINE_PASSWORD", token)
-
-    # Early hint if no credentials are present
+    
     has_env_creds = bool(env.get("TWINE_USERNAME")) and bool(env.get("TWINE_PASSWORD"))
     pypirc_path = Path.home().joinpath(".pypirc")
     has_pypirc = pypirc_path.exists()
-
+    
     if has_pypirc and verbose:
         print(f"[markpact] Found ~/.pypirc at: {pypirc_path}")
-
-    # Validate ~/.pypirc format (common issue: indented username/password)
+    
     if has_pypirc:
         try:
             import configparser
-
             cp = configparser.ConfigParser()
             cp.read(pypirc_path)
             section = "testpypi" if test else "pypi"
@@ -614,44 +587,48 @@ def publish_pypi(
                 if verbose:
                     print(f"[markpact] ~/.pypirc section [{section}] parsed:")
                     print(f"    username = {u}")
-                    # Mask password for logs
                     masked = (p[:8] + "...") if len(p) > 8 else ("***" if p else "(empty)")
                     print(f"    password = {masked}")
                 if not u or not p:
-                    print(
-                        f"[markpact] NOTE: ~/.pypirc section [{section}] is missing username/password. "
-                        f"Ensure the INI keys are NOT indented (no leading spaces)."
-                    )
+                    print(f"[markpact] NOTE: ~/.pypirc section [{section}] is missing username/password. Ensure the INI keys are NOT indented.")
         except Exception as e:
             if verbose:
                 print(f"[markpact] WARNING: Failed to parse ~/.pypirc: {e}")
-            # Don't block publishing on parse issues; twine may still handle it
-            pass
+    
+    if not has_env_creds and not has_pypirc and verbose:
+        where = "TestPyPI" if test else "PyPI"
+        print(f"[markpact] NOTE: No Twine credentials detected for {where}.")
+        print(f"[markpact] TIP: set {token_env}=pypi-... or configure ~/.pypirc")
+    
+    return has_env_creds or has_pypirc, pypirc_path
 
-    if not has_env_creds and not has_pypirc:
-        if verbose:
-            where = "TestPyPI" if test else "PyPI"
-            print(f"[markpact] NOTE: No Twine credentials detected for {where}.")
-            print(f"[markpact] TIP: set {token_env}=pypi-... or configure ~/.pypirc")
+
+def _upload_to_pypi(base_path: Path, test: bool, config: PublishConfig, pypirc_path: Path | None, verbose: bool) -> PublishResult | None:
+    """Upload package to PyPI. Returns None on success, PublishResult on failure."""
+    if verbose:
+        print("[markpact] Uploading to PyPI...")
+    
+    env = os.environ.copy()
+    env.setdefault("TWINE_NON_INTERACTIVE", "1")
+    token_env = "MARKPACT_TESTPYPI_TOKEN" if test else "MARKPACT_PYPI_TOKEN"
+    token = env.get(token_env, "").strip()
+    if token:
+        env.setdefault("TWINE_USERNAME", "__token__")
+        env.setdefault("TWINE_PASSWORD", token)
     
     upload_cmd = [sys.executable, "-m", "twine", "upload"]
     if test:
         upload_cmd.extend(["--repository", "testpypi"])
-
-    # Explicitly pass config file if present (avoids HOME/env edge cases)
-    if has_pypirc:
+    if pypirc_path and pypirc_path.exists():
         upload_cmd.extend(["--config-file", str(pypirc_path)])
-
-    # Verbose twine output for diagnostics
     if verbose:
         upload_cmd.append("--verbose")
-
     upload_cmd.append("dist/*")
-
+    
     if verbose:
         print(f"[markpact] Running twine command:")
         print(f"    {' '.join(upload_cmd)}")
-
+    
     upload_result = subprocess.run(
         " ".join(upload_cmd),
         shell=True,
@@ -670,29 +647,73 @@ def publish_pypi(
             print("--- STDERR ---")
             print(upload_result.stderr[-2000:] if upload_result.stderr else "(empty)")
             print("--- END ---")
-
-        # Detect common PyPI errors and provide actionable hints
+        
         payload = _format_subprocess_failure(upload_result)
         stdout = (upload_result.stdout or "")
         hint = f"Hint: configure ~/.pypirc or set TWINE_USERNAME/TWINE_PASSWORD (or {token_env}).\nTarget: {where}"
         if "File already exists" in payload or "file-name-reuse" in payload or "File already exists" in stdout:
-            hint = (
-                f"Hint: a file for this version already exists on {where}. "
-                f"Try bumping the version with --bump patch/minor/major or change version in the markpact:publish block."
-            )
+            hint = f"Hint: a file for this version already exists on {where}. Try bumping the version with --bump patch/minor/major."
         elif "too similar to an existing project" in payload or "too similar to an existing project" in stdout:
-            hint = (
-                f"Hint: the package name is too similar to an existing project on {where}. "
-                f"Change the 'name =' in the markpact:publish block to something more unique."
-            )
-
+            hint = f"Hint: the package name is too similar to an existing project on {where}. Change the 'name =' in the markpact:publish block."
+        
         return PublishResult(
             success=False,
             registry="pypi",
             message=f"Upload failed: {payload}\n{hint}",
             version=config.version,
         )
+    return None
+
+
+def publish_pypi(
+    config: PublishConfig,
+    sandbox: Sandbox,
+    test: bool = False,
+    verbose: bool = True,
+    source_readme_path: Optional[Path] = None,
+) -> PublishResult:
+    """Publish package to PyPI."""
     
+    if verbose:
+        print(f"[markpact] Publishing {config.name} v{config.version} to {'TestPyPI' if test else 'PyPI'}...")
+
+    # Step 1: Normalize package name
+    _normalize_package_name(config, verbose)
+    
+    # Step 2: Determine base path
+    base_path = _determine_base_path(config, sandbox, verbose)
+
+    # Step 3: Generate pyproject.toml
+    generate_pyproject_toml(config, sandbox, base_path, verbose)
+
+    # Step 4: Ensure build backend
+    pyproject_path = base_path / "pyproject.toml"
+    if pyproject_path.exists():
+        build_backend = _detect_build_backend(pyproject_path)
+        _ensure_build_backend(build_backend, verbose)
+
+    # Step 5: Copy README
+    _copy_readme(source_readme_path, base_path, config, verbose)
+
+    # Step 6: Build package
+    build_result = _build_package(base_path, verbose)
+    if build_result:
+        return PublishResult(
+            success=False,
+            registry="pypi",
+            message=f"Build failed: {_format_subprocess_failure(build_result)}",
+            version=config.version,
+        )
+
+    # Step 7: Check credentials
+    _, pypirc_path = _check_pypi_credentials(test, verbose)
+
+    # Step 8: Upload
+    upload_result = _upload_to_pypi(base_path, test, config, pypirc_path, verbose)
+    if upload_result:
+        return upload_result
+
+    # Success
     url = f"https://{'test.' if test else ''}pypi.org/project/{config.name}/"
     return PublishResult(
         success=True,

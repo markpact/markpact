@@ -175,6 +175,136 @@ def _detect_run_command(files: list[Path]) -> Optional[str]:
     return None
 
 
+def _collect_files(
+    src: Path,
+    output_path: Path,
+    exclude_patterns: set[str],
+    include_patterns: Optional[list[str]],
+    verbose: bool
+) -> list[Path]:
+    """Collect files to pack, applying exclude/include filters."""
+    files_to_pack: list[Path] = []
+    for file_path in sorted(src.rglob("*")):
+        if not file_path.is_file():
+            continue
+        
+        # Skip output file
+        if file_path.resolve() == output_path.resolve():
+            continue
+        
+        # Check if file is inside source dir (in case of symlinks)
+        try:
+            rel_path = file_path.relative_to(src)
+        except ValueError:
+            continue
+        
+        # Apply exclude patterns
+        if not _should_include(rel_path, exclude_patterns):
+            continue
+        
+        # Apply include patterns if specified
+        if include_patterns:
+            matched = any(fnmatch.fnmatch(str(rel_path), p) for p in include_patterns)
+            if not matched:
+                continue
+        
+        files_to_pack.append(file_path)
+    
+    if verbose:
+        print(f"[markpact] Found {len(files_to_pack)} files to pack")
+    
+    return files_to_pack
+
+
+def _generate_readme_content(
+    files_to_pack: list[Path],
+    src: Path,
+    project_title: str,
+    desc: str,
+    run_command: Optional[str],
+    dry_run: bool
+) -> tuple[list[str], list[dict]]:
+    """Generate README content and block info. Returns (lines, blocks_info)."""
+    lines: list[str] = [
+        f"# {project_title}",
+        "",
+        desc,
+        "",
+        "## Files",
+        "",
+    ]
+    
+    blocks_info: list[dict] = []
+    
+    for file_path in files_to_pack:
+        rel_path = file_path.relative_to(src)
+        lang = _get_language(file_path)
+        
+        blocks_info.append({
+            "path": str(rel_path),
+            "language": lang,
+        })
+        
+        if dry_run:
+            continue
+        
+        try:
+            content = file_path.read_text(encoding="utf-8", errors="ignore")
+        except Exception as e:
+            content = f"# Error reading file: {e}"
+        
+        lines.append(f"```\x60{lang} markpact:file path={rel_path}")
+        lines.append(content)
+        lines.append("```")
+        lines.append("")
+    
+    # Add deps section placeholder
+    lines.extend([
+        "## Dependencies",
+        "",
+        "```text markpact:deps python",
+        "# Add your dependencies here",
+        "# fastapi",
+        "# uvicorn",
+        "```",
+        "",
+    ])
+    
+    # Determine and add run command
+    final_run = run_command
+    if not final_run and not dry_run:
+        final_run = _detect_run_command(files_to_pack)
+    
+    if final_run:
+        lines.extend([
+            "## Run",
+            "",
+            "```bash markpact:run",
+            final_run,
+            "```",
+            "",
+        ])
+    
+    return lines, blocks_info
+
+
+def _write_output(
+    output_path: Path,
+    lines: list[str],
+    files_to_pack: list[Path],
+    dry_run: bool,
+    verbose: bool
+) -> None:
+    """Write output file if not dry run."""
+    if not dry_run:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text("\n".join(lines), encoding="utf-8")
+        if verbose:
+            print(f"[markpact] Written {len(files_to_pack)} file blocks to {output_path}")
+    elif verbose:
+        print(f"[markpact] Would write {len(files_to_pack)} file blocks to {output_path}")
+
+
 def pack_directory(
     source_dir: str | Path,
     output: str | Path | None = None,
@@ -242,110 +372,18 @@ def pack_directory(
         print(f"[markpact] Packing {src} → {output_path}")
     
     # Collect files
-    files_to_pack: list[Path] = []
-    for file_path in sorted(src.rglob("*")):
-        if not file_path.is_file():
-            continue
-        
-        # Skip output file
-        if file_path.resolve() == output_path.resolve():
-            continue
-        
-        # Check if file is inside source dir (in case of symlinks)
-        try:
-            rel_path = file_path.relative_to(src)
-        except ValueError:
-            continue
-        
-        # Apply exclude patterns
-        if not _should_include(rel_path, exclude_patterns):
-            continue
-        
-        # Apply include patterns if specified
-        if include_patterns:
-            matched = any(fnmatch.fnmatch(str(rel_path), p) for p in include_patterns)
-            if not matched:
-                continue
-        
-        files_to_pack.append(file_path)
-    
-    if verbose and not dry_run:
-        print(f"[markpact] Found {len(files_to_pack)} files to pack")
+    files_to_pack = _collect_files(src, output_path, exclude_patterns, include_patterns, verbose and not dry_run)
     
     # Generate README content
     project_title = title or src.name
     desc = description or f"Project packed with markpact from {src.name}"
     
-    lines: list[str] = [
-        f"# {project_title}",
-        "",
-        desc,
-        "",
-        "## Files",
-        "",
-    ]
-    
-    blocks_info: list[dict] = []
-    
-    for file_path in files_to_pack:
-        rel_path = file_path.relative_to(src)
-        lang = _get_language(file_path)
-        
-        blocks_info.append({
-            "path": str(rel_path),
-            "language": lang,
-        })
-        
-        if dry_run:
-            continue
-        
-        try:
-            content = file_path.read_text(encoding="utf-8", errors="ignore")
-        except Exception as e:
-            if verbose:
-                print(f"[markpact] Warning: Could not read {rel_path}: {e}")
-            content = f"# Error reading file: {e}"
-        
-        lines.append(f"```\x60{lang} markpact:file path={rel_path}")
-        lines.append(content)
-        lines.append("```")
-        lines.append("")
-    
-    # Add deps section placeholder (user can fill in)
-    lines.extend([
-        "## Dependencies",
-        "",
-        "```text markpact:deps python",
-        "# Add your dependencies here",
-        "# fastapi",
-        "# uvicorn",
-        "```",
-        "",
-    ])
-    
-    # Determine run command
-    final_run = run_command
-    if not final_run and not dry_run:
-        final_run = _detect_run_command(files_to_pack)
-    
-    if final_run:
-        lines.extend([
-            "## Run",
-            "",
-            f"```bash markpact:run",
-            final_run,
-            "```",
-            "",
-        ])
+    lines, blocks_info = _generate_readme_content(
+        files_to_pack, src, project_title, desc, run_command, dry_run
+    )
     
     # Write output
-    if not dry_run:
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text("\n".join(lines), encoding="utf-8")
-        if verbose:
-            print(f"[markpact] Written {len(files_to_pack)} file blocks to {output_path}")
-    elif verbose:
-        print(f"[markpact] Would write {len(files_to_pack)} file blocks to {output_path}")
+    _write_output(output_path, lines, files_to_pack, dry_run, verbose)
     
     return PackResult(
         source_dir=src,
