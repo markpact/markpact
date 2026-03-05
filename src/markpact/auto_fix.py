@@ -223,6 +223,81 @@ Instructions:
     return False
 
 
+def _setup_env_with_venv(sandbox: Sandbox) -> dict:
+    """Setup environment variables with virtualenv if available."""
+    env = os.environ.copy()
+    if sandbox.venv_bin.exists():
+        env["VIRTUAL_ENV"] = str(sandbox.venv_bin.parent)
+        env["PATH"] = f"{sandbox.venv_bin}:{env.get('PATH', '')}"
+    return env
+
+
+def _run_subprocess(cmd: str, sandbox: Sandbox, env: dict) -> subprocess.CompletedProcess:
+    """Run subprocess with proper error handling."""
+    return subprocess.run(
+        cmd,
+        shell=True,
+        cwd=sandbox.path,
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+
+
+def _handle_port_error(
+    cmd: str,
+    env: dict,
+    readme_path: Optional[Path],
+    verbose: bool
+) -> tuple[str, dict, bool]:
+    """Handle port in use error. Returns (new_cmd, new_env, fixed)."""
+    new_port = find_free_port()
+    print(f"\n[markpact] Port in use. Trying port {new_port}...")
+    
+    if readme_path and readme_path.exists():
+        if fix_port_in_readme(readme_path, new_port):
+            print(f"[markpact] Updated README with new port: {new_port}")
+    
+    new_cmd = re.sub(r'\$\{MARKPACT_PORT:-\d+\}', str(new_port), cmd)
+    new_cmd = re.sub(r'--port\s+\d+', f'--port {new_port}', new_cmd)
+    env["MARKPACT_PORT"] = str(new_port)
+    
+    return new_cmd, env, True
+
+
+def _handle_missing_module_error(
+    error_output: str,
+    sandbox: Sandbox,
+    readme_path: Optional[Path],
+    verbose: bool
+) -> bool:
+    """Handle missing module error. Returns True if fixed."""
+    module_name = extract_module_name(error_output)
+    if module_name and readme_path and readme_path.exists():
+        print(f"\n[markpact] Missing module: {module_name}")
+        if add_missing_dependency(readme_path, module_name):
+            print(f"[markpact] Added {module_name} to dependencies")
+            # Re-install dependencies
+            from .runner import install_deps
+            install_deps([module_name], sandbox, verbose)
+            return True
+    return False
+
+
+def _try_llm_fix(
+    error_type: str,
+    error_output: str,
+    readme_path: Optional[Path],
+    verbose: bool
+) -> bool:
+    """Attempt LLM-based fix. Returns True if fixed."""
+    if not readme_path or not readme_path.exists():
+        return False
+    
+    print(f"\n[markpact] Attempting LLM fix for {error_type}...")
+    return fix_with_llm(readme_path, error_output, error_type, verbose)
+
+
 def run_with_auto_fix_llm(
     cmd: str,
     sandbox: Sandbox,
@@ -244,11 +319,7 @@ def run_with_auto_fix_llm(
     Returns:
         Exit code (0 for success)
     """
-    env = os.environ.copy()
-    if sandbox.venv_bin.exists():
-        env["VIRTUAL_ENV"] = str(sandbox.venv_bin.parent)
-        env["PATH"] = f"{sandbox.venv_bin}:{env.get('PATH', '')}"
-    
+    env = _setup_env_with_venv(sandbox)
     current_cmd = cmd
     
     for attempt in range(max_retries + 1):
@@ -256,14 +327,7 @@ def run_with_auto_fix_llm(
             print(f"[markpact] RUN: {current_cmd}" + (f" (attempt {attempt + 1})" if attempt > 0 else ""))
         
         try:
-            result = subprocess.run(
-                current_cmd,
-                shell=True,
-                cwd=sandbox.path,
-                env=env,
-                capture_output=True,
-                text=True,
-            )
+            result = _run_subprocess(current_cmd, sandbox, env)
         except KeyboardInterrupt:
             if verbose:
                 print("\n[markpact] Stopped by user (Ctrl+C)")
@@ -292,36 +356,15 @@ def run_with_auto_fix_llm(
         
         # Port in use - simple fix
         if error_type == "port_in_use":
-            new_port = find_free_port()
-            print(f"\n[markpact] Port in use. Trying port {new_port}...")
-            
-            if readme_path and readme_path.exists():
-                if fix_port_in_readme(readme_path, new_port):
-                    print(f"[markpact] Updated README with new port: {new_port}")
-            
-            current_cmd = re.sub(r'\$\{MARKPACT_PORT:-\d+\}', str(new_port), cmd)
-            current_cmd = re.sub(r'--port\s+\d+', f'--port {new_port}', current_cmd)
-            env["MARKPACT_PORT"] = str(new_port)
-            fixed = True
+            current_cmd, env, fixed = _handle_port_error(cmd, env, readme_path, verbose)
         
         # Missing module - add dependency
         elif error_type == "missing_module":
-            module_name = extract_module_name(combined_output)
-            if module_name and readme_path and readme_path.exists():
-                print(f"\n[markpact] Missing module: {module_name}")
-                if add_missing_dependency(readme_path, module_name):
-                    print(f"[markpact] Added {module_name} to dependencies")
-                    # Re-install dependencies
-                    from .runner import install_deps
-                    install_deps([module_name], sandbox, verbose)
-                    fixed = True
+            fixed = _handle_missing_module_error(combined_output, sandbox, readme_path, verbose)
         
         # LLM fix for other errors
-        elif use_llm and readme_path and readme_path.exists():
-            print(f"\n[markpact] Attempting LLM fix for {error_type}...")
-            if fix_with_llm(readme_path, combined_output, error_type, verbose):
-                # Re-parse and re-run
-                fixed = True
+        elif use_llm:
+            fixed = _try_llm_fix(error_type, combined_output, readme_path, verbose)
         
         if not fixed:
             if verbose:

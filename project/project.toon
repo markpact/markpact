@@ -1,18 +1,18 @@
-# markpact | 24f 6503L | python:24
+# markpact | 24f 6497L | python:24
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
 M[24]:
-  src/markpact/packer.py,311
   demos/demo_live_markpact.py,702
-  src/markpact/__init__.py,28
+  src/markpact/__init__.py,32
   src/markpact/auto_fix.py,245
-  src/markpact/cli.py,439
+  src/markpact/cli.py,421
   src/markpact/config.py,154
   src/markpact/converter.py,210
   src/markpact/docker_runner.py,243
   src/markpact/generator.py,243
   src/markpact/notebook_converter.py,505
+  src/markpact/packer.py,341
   src/markpact/parser.py,47
-  src/markpact/publisher.py,825
+  src/markpact/publisher.py,848
   src/markpact/runner.py,30
   src/markpact/sandbox.py,46
   src/markpact/tester.py,237
@@ -26,15 +26,6 @@ M[24]:
   tests/test_runner.py,73
   tests/test_sandbox.py,34
 D:
-  src/markpact/packer.py:
-    i: fnmatch,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
-    e: DEFAULT_EXCLUDE,LANG_EXTENSIONS,PackResult,pack_directory,print_pack_report
-    PackResult: summary(0)  # Result of packing a directory.
-    _should_include(path:Path;exclude_patterns:set[str])->bool
-    _get_language(path:Path)->str
-    _detect_run_command(files:list[Path])->Optional[str]
-    pack_directory(source_dir:Any;output:Any=None)->PackResult
-    print_pack_report(result:PackResult)->None
   demos/demo_live_markpact.py:
     i: argparse,hashlib,os,sys,time,dataclasses.{dataclass,field},markpact.{Block,parse_blocks},pathlib.Path
     e: _PL_MAP,BOLD,DIM,RED,GREEN,YELLOW,BLUE,CYAN
@@ -64,7 +55,12 @@ D:
     e: handle_pack_cli,handle_config_cli,main
     handle_pack_cli(argv:list[str])->int
     handle_config_cli(argv:list[str])->int
-    main(argv:Any=None)->int
+    _handle_list_examples(verbose:bool)->int
+    _handle_list_notebook_formats(verbose:bool)->int
+    _handle_from_notebook(args;verbose:bool)->tuple[int, Path | None]
+    _handle_llm_generation(args;verbose:bool)->tuple[int, Path | None]
+    _handle_markdown_conversion(args;original_text:str;verbose:bool)->tuple[str, bool]
+    _parse_blocks_to_state(blocks;sandbox:Sandbox;args;verbose:bool)->dict
   src/markpact/config.py:
     i: os,pathlib.Path,typing.Optional
     e: DEFAULT_ENV_PATH,DEFAULTS,PROVIDER_PRESETS,get_env_path,ensure_config_dir,load_env,save_env,init_env
@@ -118,6 +114,18 @@ D:
     parse_databricks(path:Path)->Notebook
     parse_notebook(path:Path)->Notebook
     extract_dependencies(notebook:Notebook)->list[str]
+  src/markpact/packer.py:
+    i: fnmatch,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
+    e: DEFAULT_EXCLUDE,LANG_EXTENSIONS,PackResult,pack_directory,print_pack_report
+    PackResult: summary(0)  # Result of packing a directory.
+    _should_include(path:Path;exclude_patterns:set[str])->bool
+    _get_language(path:Path)->str
+    _detect_run_command(files:list[Path])->Optional[str]
+    _collect_files(src:Path;output_path:Path;exclude_patterns:set[str];include_patterns:Optional[list[str]];verbose:bool)->list[Path]
+    _generate_readme_content(files_to_pack:list[Path];src:Path;project_title:str;desc:str;run_command:Optional[str];dry_run:bool)->tuple[list[str], list[dict]]
+    _write_output(output_path:Path;lines:list[str];files_to_pack:list[Path];dry_run:bool;verbose:bool)->None
+    pack_directory(source_dir:Any;output:Any=None)->PackResult
+    print_pack_report(result:PackResult)->None
   src/markpact/parser.py:
     i: re,dataclasses.dataclass,typing.Optional
     e: CODEBLOCK_NEW_RE,CODEBLOCK_OLD_RE,Block,parse_blocks

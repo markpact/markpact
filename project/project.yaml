@@ -3,59 +3,29 @@ project:
   name: markpact
   repo: /home/tom/github/wronai/markpact
   language: python
-  analyzed_at: '2026-03-05T14:42:40Z'
+  analyzed_at: '2026-03-05T14:50:39Z'
   tool: code2llm
   stats:
     files: 13
-    lines: 6476
-    functions: 121
+    lines: 6473
+    functions: 142
     classes: 13
 health:
-  cc_avg: 7.8
-  critical_count: 29
+  cc_avg: 6.9
+  critical_count: 38
   critical_limit: 10
   duplicates: 0
   cycles: 0
   alerts:
-  - type: cc_exceeded
-    target: main
-    value: 103
-    limit: 15
-    severity: critical
-  - type: cc_exceeded
-    target: publish_pypi
-    value: 85
-    limit: 15
-    severity: critical
   - type: cc_exceeded
     target: run_live
     value: 67
     limit: 15
     severity: critical
   - type: high_fan_out
-    target: main
-    value: 62
-    limit: 10
-    severity: critical
-  - type: high_fan_out
     target: run_live
     value: 54
     limit: 10
-    severity: critical
-  - type: high_fan_out
-    target: publish_pypi
-    value: 37
-    limit: 10
-    severity: critical
-  - type: high_fan_out
-    target: pack_directory
-    value: 31
-    limit: 10
-    severity: critical
-  - type: cc_exceeded
-    target: pack_directory
-    value: 30
-    limit: 15
     severity: critical
   - type: cc_exceeded
     target: infer_publish_config
@@ -72,6 +42,16 @@ health:
     value: 29
     limit: 15
     severity: critical
+  - type: cc_exceeded
+    target: main
+    value: 28
+    limit: 15
+    severity: critical
+  - type: high_fan_out
+    target: main
+    value: 24
+    limit: 10
+    severity: critical
   - type: high_fan_out
     target: notebook_to_markpact
     value: 21
@@ -82,6 +62,16 @@ health:
     value: 20
     limit: 10
     severity: critical
+  - type: cc_exceeded
+    target: _check_pypi_credentials
+    value: 24
+    limit: 15
+    severity: error
+  - type: cc_exceeded
+    target: _upload_to_pypi
+    value: 20
+    limit: 15
+    severity: error
   - type: high_fan_out
     target: parse_jupyter
     value: 17
@@ -108,6 +98,11 @@ health:
     limit: 10
     severity: error
   - type: cc_exceeded
+    target: _handle_publish_mode
+    value: 19
+    limit: 15
+    severity: warning
+  - type: cc_exceeded
     target: detect_block_type
     value: 19
     limit: 15
@@ -117,98 +112,12 @@ health:
     value: 17
     limit: 15
     severity: warning
+  - type: cc_exceeded
+    target: generate_contract
+    value: 17
+    limit: 15
+    severity: warning
 modules:
-- path: src/markpact/cli.py
-  lines: 575
-  classes: 0
-  methods: 3
-  cc_max: 103
-  inbound_deps: 0
-  exports:
-  - name: handle_pack_cli
-    type: function
-    cc: 6
-  - name: handle_config_cli
-    type: function
-    cc: 12
-    fan_out: 15
-  - name: main
-    type: function
-    cc: 103
-    flag: split
-    fan_out: 62
-- path: src/markpact/publisher.py
-  lines: 1068
-  classes: 2
-  methods: 22
-  cc_max: 85
-  inbound_deps: 1
-  exports:
-  - name: PublishConfig
-    type: class
-    cc_avg: 2.0
-  - name: PublishResult
-    type: class
-    cc_avg: 0.0
-  - name: infer_publish_config
-    type: function
-    cc: 30
-    flag: split
-    fan_out: 11
-  - name: prompt_publish_config
-    type: function
-    cc: 4
-  - name: ensure_publish_block_in_readme
-    type: function
-    cc: 5
-  - name: generate_publish_config_with_llm
-    type: function
-    cc: 16
-    flag: split
-  - name: bump_version
-    type: function
-    cc: 4
-  - name: extract_version_from_readme
-    type: function
-    cc: 4
-  - name: update_version_in_readme
-    type: function
-    cc: 2
-  - name: get_license_classifier
-    type: function
-    cc: 1
-  - name: generate_pyproject_toml
-    type: function
-    cc: 12
-    fan_out: 12
-  - name: publish_pypi
-    type: function
-    cc: 85
-    flag: split
-    fan_out: 37
-  - name: generate_package_json
-    type: function
-    cc: 11
-    fan_out: 10
-  - name: publish_npm
-    type: function
-    cc: 6
-  - name: generate_dockerfile
-    type: function
-    cc: 10
-  - name: publish_docker
-    type: function
-    cc: 9
-  - name: publish_github_packages
-    type: function
-    cc: 3
-  - name: parse_publish_block
-    type: function
-    cc: 11
-    fan_out: 14
-  - name: publish
-    type: function
-    cc: 9
 - path: demos/demo_live_markpact.py
   lines: 870
   classes: 3
@@ -275,24 +184,77 @@ modules:
     type: function
     cc: 6
     fan_out: 11
-- path: src/markpact/packer.py
-  lines: 386
-  classes: 1
-  methods: 6
+- path: src/markpact/publisher.py
+  lines: 1089
+  classes: 2
+  methods: 30
   cc_max: 30
   inbound_deps: 1
   exports:
-  - name: PackResult
+  - name: PublishConfig
     type: class
-    cc_avg: 3.0
-  - name: pack_directory
+    cc_avg: 2.0
+  - name: PublishResult
+    type: class
+    cc_avg: 0.0
+  - name: infer_publish_config
     type: function
     cc: 30
     flag: split
-    fan_out: 31
-  - name: print_pack_report
+    fan_out: 11
+  - name: prompt_publish_config
+    type: function
+    cc: 4
+  - name: ensure_publish_block_in_readme
+    type: function
+    cc: 5
+  - name: generate_publish_config_with_llm
+    type: function
+    cc: 16
+    flag: split
+  - name: bump_version
+    type: function
+    cc: 4
+  - name: extract_version_from_readme
+    type: function
+    cc: 4
+  - name: update_version_in_readme
+    type: function
+    cc: 2
+  - name: get_license_classifier
+    type: function
+    cc: 1
+  - name: generate_pyproject_toml
+    type: function
+    cc: 12
+    fan_out: 12
+  - name: publish_pypi
+    type: function
+    cc: 8
+    fan_out: 13
+  - name: generate_package_json
+    type: function
+    cc: 11
+    fan_out: 10
+  - name: publish_npm
     type: function
     cc: 6
+  - name: generate_dockerfile
+    type: function
+    cc: 10
+  - name: publish_docker
+    type: function
+    cc: 9
+  - name: publish_github_packages
+    type: function
+    cc: 3
+  - name: parse_publish_block
+    type: function
+    cc: 11
+    fan_out: 14
+  - name: publish
+    type: function
+    cc: 9
 - path: src/markpact/auto_fix.py
   lines: 331
   classes: 0
@@ -381,6 +343,25 @@ modules:
   - name: get_supported_formats
     type: function
     cc: 1
+- path: src/markpact/cli.py
+  lines: 509
+  classes: 0
+  methods: 13
+  cc_max: 28
+  inbound_deps: 0
+  exports:
+  - name: handle_pack_cli
+    type: function
+    cc: 6
+  - name: handle_config_cli
+    type: function
+    cc: 12
+    fan_out: 15
+  - name: main
+    type: function
+    cc: 28
+    flag: split
+    fan_out: 24
 - path: src/markpact/converter.py
   lines: 282
   classes: 2
@@ -432,6 +413,23 @@ modules:
   - name: list_example_prompts
     type: function
     cc: 1
+- path: src/markpact/packer.py
+  lines: 424
+  classes: 1
+  methods: 9
+  cc_max: 17
+  inbound_deps: 1
+  exports:
+  - name: PackResult
+    type: class
+    cc_avg: 3.0
+  - name: pack_directory
+    type: function
+    cc: 11
+    fan_out: 14
+  - name: print_pack_report
+    type: function
+    cc: 6
 - path: src/markpact/docker_runner.py
   lines: 333
   classes: 0
@@ -552,25 +550,18 @@ modules:
     type: function
     cc: 3
 - path: src/markpact/__init__.py
-  lines: 33
+  lines: 37
   classes: 0
   methods: 0
   cc_max: 0
   inbound_deps: 0
 hotspots:
-- name: main
-  fan_out: 62
-  note: Orchestrates 62 calls
 - name: run_live
   fan_out: 54
   note: Orchestrates 54 calls
-- name: publish_pypi
-  fan_out: 37
-  note: Publish package to PyPI.
-- name: pack_directory
-  fan_out: 31
-  note: "Pack a directory into markpact README.md format.\n\nArgs:\n    source_dir:\
-    \ Director"
+- name: main
+  fan_out: 24
+  note: Main entry point for markpact CLI.
 - name: notebook_to_markpact
   fan_out: 21
   note: Convert notebook to markpact README.md format.
@@ -592,12 +583,15 @@ hotspots:
 - name: handle_config_cli
   fan_out: 15
   note: Handle config subcommand with its own parser
+- name: LivePDF.add_summary_page
+  fan_out: 15
+  note: Orchestrates 15 calls
+- name: pack_directory
+  fan_out: 14
+  note: "Pack a directory into markpact README.md format.\n\nArgs:\n    source_dir:\
+    \ Director"
 refactoring:
   priorities:
-  - action: Split pack_directory (CC=30 → target CC<10)
-    impact: high
-    effort: low
-    module: packer.py
   - action: Split notebook_to_markpact (CC=29 → target CC<10)
     impact: high
     effort: low
@@ -606,7 +600,7 @@ refactoring:
     impact: high
     effort: low
     module: auto_fix.py
-  - action: Split main (CC=103 → target CC<10)
+  - action: Split main (CC=28 → target CC<10)
     impact: high
     effort: low
     module: cli.py
@@ -614,24 +608,20 @@ refactoring:
     impact: high
     effort: low
     module: publisher.py
-  - action: Split publish_pypi (CC=85 → target CC<10)
-    impact: high
-    effort: low
-    module: publisher.py
   - action: Split run_live (CC=67 → target CC<10)
     impact: high
     effort: low
     module: demo_live_markpact.py
-  - action: Split god module src/markpact/cli.py (575L, 0 classes)
-    impact: high
-    effort: high
-  - action: Split god module src/markpact/publisher.py (1068L, 2 classes)
-    impact: high
-    effort: high
   - action: Split god module demos/demo_live_markpact.py (870L, 3 classes)
     impact: high
     effort: high
+  - action: Split god module src/markpact/publisher.py (1089L, 2 classes)
+    impact: high
+    effort: high
   - action: Split god module src/markpact/notebook_converter.py (638L, 2 classes)
+    impact: high
+    effort: high
+  - action: Split god module src/markpact/cli.py (509L, 0 classes)
     impact: high
     effort: high
   - action: Split run_docker_with_tests (CC=15 → target CC<10)
@@ -646,13 +636,21 @@ refactoring:
     impact: medium
     effort: low
     module: notebook_converter.py
+  - action: Split _handle_publish_mode (CC=19 → target CC<10)
+    impact: medium
+    effort: low
+    module: cli.py
   - action: Split generate_contract (CC=17 → target CC<10)
     impact: medium
     effort: low
     module: generator.py
+  - action: Split detect_block_type (CC=19 → target CC<10)
+    impact: medium
+    effort: low
+    module: converter.py
 evolution:
 - date: '2026-03-05'
-  cc_avg: 7.8
-  critical: 29
-  lines: 6476
+  cc_avg: 6.9
+  critical: 38
+  lines: 6473
   note: Automated analysis

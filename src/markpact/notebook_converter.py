@@ -455,23 +455,15 @@ def suggest_run_command(notebook: Notebook) -> str:
         return "python main.py"
 
 
-def notebook_to_markpact(
-    notebook: Notebook,
-    output_path: Optional[Path] = None,
-    verbose: bool = True,
-) -> str:
-    """Convert notebook to markpact README.md format."""
-    
+def _generate_header(notebook: Notebook, output_path: Optional[Path]) -> list[str]:
+    """Generate header section with title, description, and run instructions."""
     lines = []
-    
-    # Title and description
     lines.append(f"# {notebook.title}")
     lines.append("")
     if notebook.description:
         lines.append(notebook.description)
         lines.append("")
     
-    # Add run instructions
     lines.append("## Uruchomienie")
     lines.append("")
     lines.append("```bash")
@@ -483,8 +475,12 @@ def notebook_to_markpact(
     lines.append("")
     lines.append("---")
     lines.append("")
-    
-    # Extract and add dependencies
+    return lines
+
+
+def _extract_and_format_deps(notebook: Notebook) -> list[str]:
+    """Extract dependencies and format as markpact block."""
+    lines = []
     deps = extract_dependencies(notebook)
     if deps:
         lines.append(f"```text markpact:deps {notebook.language}")
@@ -492,14 +488,16 @@ def notebook_to_markpact(
             lines.append(dep)
         lines.append("```")
         lines.append("")
-    
-    # Process cells - collect code and markdown separately
+    return lines
+
+
+def _process_notebook_cells(notebook: Notebook) -> tuple[list, list]:
+    """Process notebook cells and return (code_cells, markdown_sections)."""
     code_cells = []
     markdown_sections = []
     current_file_content = []
     current_file_name = "app.py"
-    file_counter = 0
-    skip_first_title = True  # Skip first markdown with title
+    skip_first_title = True
     
     for cell in notebook.cells:
         if cell.cell_type == 'markdown':
@@ -508,7 +506,6 @@ def notebook_to_markpact(
             # Skip first cell if it's the title we already used
             if skip_first_title:
                 skip_first_title = False
-                # Check if this is just title/description we already captured
                 lines_in_cell = source.split('\n')
                 has_only_title = all(
                     l.startswith('#') or not l.strip() or l.strip() == notebook.description.strip()
@@ -521,9 +518,8 @@ def notebook_to_markpact(
             if current_file_content:
                 code_cells.append((current_file_name, '\n'.join(current_file_content)))
                 current_file_content = []
-                file_counter += 1
             
-            # Add markdown section header only (not full content to avoid duplication)
+            # Add markdown section header only
             for line in source.split('\n'):
                 if line.startswith('##'):
                     markdown_sections.append(line)
@@ -531,7 +527,6 @@ def notebook_to_markpact(
             
         elif cell.cell_type == 'code':
             source = cell.source.strip()
-            
             if not source:
                 continue
             
@@ -544,8 +539,6 @@ def notebook_to_markpact(
                 current_file_name = file_match.group(1)
                 source = '\n'.join(source.split('\n')[1:])
             
-            # For notebooks, keep all code in single app.py for simplicity
-            # This avoids import issues between generated files
             current_file_name = 'app.py'
             current_file_content.append(source)
     
@@ -553,15 +546,23 @@ def notebook_to_markpact(
     if current_file_content:
         code_cells.append((current_file_name, '\n'.join(current_file_content)))
     
-    # Merge code into appropriate files
+    return code_cells, markdown_sections
+
+
+def _merge_code_files(code_cells: list) -> dict[str, str]:
+    """Merge code cells into files by filename."""
     merged_files = {}
     for filename, content in code_cells:
         if filename in merged_files:
             merged_files[filename] += '\n\n' + content
         else:
             merged_files[filename] = content
-    
-    # Add file blocks
+    return merged_files
+
+
+def _generate_file_blocks(merged_files: dict, notebook: Notebook) -> list[str]:
+    """Generate markpact:file blocks for each merged file."""
+    lines = []
     for filename, content in merged_files.items():
         lang = notebook.language
         if filename.endswith('.py'):
@@ -575,6 +576,23 @@ def notebook_to_markpact(
         lines.append(content)
         lines.append("```")
         lines.append("")
+    return lines
+
+
+def notebook_to_markpact(
+    notebook: Notebook,
+    output_path: Optional[Path] = None,
+    verbose: bool = True,
+) -> str:
+    """Convert notebook to markpact README.md format."""
+    
+    lines = _generate_header(notebook, output_path)
+    lines.extend(_extract_and_format_deps(notebook))
+    
+    # Process cells
+    code_cells, _ = _process_notebook_cells(notebook)
+    merged_files = _merge_code_files(code_cells)
+    lines.extend(_generate_file_blocks(merged_files, notebook))
     
     # Add run command
     run_cmd = suggest_run_command(notebook)

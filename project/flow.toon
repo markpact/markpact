@@ -1,15 +1,15 @@
-# markpact/flow | 121 func | 7 pipelines | 5 hub-types | 2026-03-05
+# markpact/flow | 142 func | 6 pipelines | 7 hub-types | 2026-03-05
 
-PIPELINES[7] (Core:1, Export:1, Refactor:1, Unknown:4):
+PIPELINES[6] (Core:1, Export:1, Refactor:1, Unknown:3):
   Src [Core]: list[str] | None → Path
-              → main(argv:list[str] | None) → int       CC=103  IO  !! ▶
+              → main(argv:list[str] | None) → int       CC=28   IO  !! ▶
               → handle_config_cli(argv:list[str]) → int CC=12   IO
               → set_api_base(api_base:str) → dict[str, str] CC=1    pure
               → set_config(key:str, value:str) → dict[str, str] CC=1    pure
               → save_env(config:dict[str, str]) → Path  CC=1    IO
               → ensure_config_dir() → Path              CC=1    IO
               → get_env_path() → Path                   CC=1    pure ■
-              PURITY: 3/7 pure  BOTTLENECK: main(CC=103)
+              PURITY: 3/7 pure  BOTTLENECK: main(CC=28)
 
   Demos [Export]: title → str
               → add_step_page(title, subtitle, left_lines, right_lines, checks, highlight_kind) CC=2    pure ▶
@@ -24,12 +24,6 @@ PIPELINES[7] (Core:1, Export:1, Refactor:1, Unknown:4):
               → generate_contract(prompt:str, config:Optional[GeneratorConfig], verbose:bool) → str CC=17   IO  !!
               → _fix_unclosed_blocks(content:str) → str CC=7    mutation ■
               PURITY: 0/4 pure  BOTTLENECK: run_live(CC=67)
-
-  Src [Unknown]: list[str] → bool
-              → handle_pack_cli(argv:list[str]) → int   CC=6    IO ▶
-              → pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult CC=30   IO  !!
-              → _should_include(path:Path, exclude_patterns:set[str]) → bool CC=6    pure ■
-              PURITY: 1/3 pure  BOTTLENECK: pack_directory(CC=30)
 
   Demos [Unknown]: total → str
               → _page_num(total)                        CC=1    pure ▶
@@ -51,10 +45,8 @@ PIPELINES[7] (Core:1, Export:1, Refactor:1, Unknown:4):
 
 
 TRANSFORMS (fan-out ≥10):
-  main(argv:list[str] | None) → int                       fan=62   !! script-in-disguise
   run_live(prompt_key:str, prompt:str, model:str)         fan=54   !! mutation-heavy
-  publish_pypi(config:PublishConfig, sandbox:Sandbox, test:bool, verbose:bool, source_readme_path:Optional[Path]) → PublishResult fan=37   !! mutation-heavy
-  pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult fan=31   !! mutation-heavy
+  main(argv:list[str] | None) → int                       fan=24   !! script-in-disguise
   notebook_to_markpact(notebook:Notebook, output_path:Optional[Path], verbose:bool) → str fan=21   !! side-effects
   parse_rmarkdown(path:Path) → Notebook                   fan=20   !! side-effects
   parse_jupyter(path:Path) → Notebook                     fan=17   fan=17
@@ -62,10 +54,12 @@ TRANSFORMS (fan-out ≥10):
   parse_quarto(path:Path) → Notebook                      fan=15   fan=15
   handle_config_cli(argv:list[str]) → int                 fan=15   fan=15
   add_summary_page(session:LiveSession)                   fan=15   PIPELINE:LivePDF.entry
+  pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult fan=14   fan=14
+  _handle_llm_generation(args, verbose:bool) → tuple[int, Path | None] fan=14   fan=14
   parse_publish_block(block_body:str, meta:str) → PublishConfig fan=14   fan=14
   run_docker_with_tests(sandbox_path:Path, test_body:str, image_name:str, port:int, verbose:bool, auto_find_port:bool) → tuple[int, TestSuite] fan=13   fan=13
-  run_with_auto_fix(cmd:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool, max_retries:int) → int fan=12   fan=12
-  generate_pyproject_toml(config, sandbox, base_path, verbose) → AnalysisResult fan=12   fan=12
+  _collect_files(src:Path, output_path:Path, exclude_patterns:set[str], include_patterns:Optional[list[str]], verbose:bool) → list[Path] fan=13   fan=13
+  _check_pypi_credentials(test:bool, verbose:bool) → tuple[bool, Path | None] fan=13   fan=13
 
 CONTRACTS:
   Pipeline: Src
@@ -73,7 +67,7 @@ CONTRACTS:
       IN:  argv:list[str] | None
       OUT: int
       SIDE-EFFECT: IO(read_text, print, print)
-      SMELL: CC=103 → split
+      SMELL: CC=28 → split
 
     handle_config_cli(argv:list[str]) → int
       IN:  argv:list[str]
@@ -143,22 +137,6 @@ CONTRACTS:
       OUT: str
       SIDE-EFFECT: pure
 
-  Pipeline: Src
-    handle_pack_cli(argv:list[str]) → int
-      IN:  argv:list[str]
-      OUT: int
-      SIDE-EFFECT: IO(print)
-
-    pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult
-      IN:  source_dir:str | Path, output:str | Path | None
-      OUT: PackResult
-      SIDE-EFFECT: IO(print, print, mkdir)
-      SMELL: CC=30 → split
-
-    _should_include(path:Path, exclude_patterns:set[str]) → bool
-      IN:  path:Path, exclude_patterns:set[str]
-      OUT: bool
-
   Pipeline: Demos
     _page_num(total)
       IN:  total
@@ -199,38 +177,42 @@ CONTRACTS:
       OUT: str
 
 
-DATA_TYPES (by cross-function usage) [103 annotated, 0 inferred / 121 functions]:
-  str                  consumed:55  produced:27   !! HUB-TYPE → split interface
-  Path                 consumed:29  produced:9    !! HUB-TYPE → split interface
-  bool                 consumed:28  produced:9    !! HUB-TYPE → split interface
-  int                  consumed:11  produced:8    !! HUB-TYPE → split interface
-  PublishConfig        consumed:9   produced:4  
-  Sandbox              consumed:12  produced:0    !! HUB-TYPE → split interface
-  dict[str, str]       consumed:1   produced:8    output-heavy
+DATA_TYPES (by cross-function usage) [124 annotated, 0 inferred / 142 functions]:
+  str                  consumed:60  produced:27   !! HUB-TYPE → split interface
+  bool                 consumed:51  produced:9    !! HUB-TYPE → split interface
+  Path                 consumed:39  produced:10   !! HUB-TYPE → split interface
+  int                  consumed:11  produced:14   !! HUB-TYPE → split interface
+  Sandbox              consumed:18  produced:0    !! HUB-TYPE → split interface
+  PublishConfig        consumed:13  produced:4    !! HUB-TYPE → split interface
+  list[str]            consumed:10  produced:1    !! HUB-TYPE → split interface
   Notebook             consumed:3   produced:6  
-  list[str]            consumed:5   produced:1    input-heavy (read-only flow)
+  dict[str, str]       consumed:1   produced:8    output-heavy
+  str | None           consumed:6   produced:2  
   PublishResult        consumed:0   produced:5    output-heavy
+  list[Path]           consumed:3   produced:1    narrow scope
   GeneratorConfig      consumed:1   produced:2    narrow scope
   PackResult           consumed:1   produced:1    narrow scope
-  str | None           consumed:1   produced:1    narrow scope
   LiveSession          consumed:2   produced:0    narrow scope
-  str | Path | None    consumed:2   produced:0    narrow scope
   ConversionResult     consumed:1   produced:1    narrow scope
-  str | Path           consumed:1   produced:0    narrow scope
-  AnalysisResult       consumed:0   produced:1    narrow scope
-  set[str]             consumed:1   produced:0    narrow scope
-  tuple[subprocess.Popen, int] consumed:0   produced:1    narrow scope
+  str | Path | None    consumed:2   produced:0    narrow scope
+  tuple[int, Path | None] consumed:0   produced:2    narrow scope
+  Path | None          consumed:2   produced:0    narrow scope
+  set[str]             consumed:2   produced:0    narrow scope
 
   HUB TYPES (consumed ≥10):
-    str → 55 consumers → split into:
+    str → 60 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    Path → 29 consumers → split into:
+    bool → 51 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    bool → 28 consumers → split into:
+    Path → 39 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
     int → 11 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    Sandbox → 12 consumers → split into:
+    Sandbox → 18 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    PublishConfig → 13 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    list[str] → 10 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
 
 SIDE_EFFECTS:
@@ -242,7 +224,6 @@ SIDE_EFFECTS:
     Src             █░░░ 42% pure
     Demos           ████ 100% pure
     Demos           ░░░░ 0% pure
-    Src             █░░░ 33% pure
     Demos           ████ 100% pure
     Demos           ████ 100% pure
     Demos           ████ 100% pure

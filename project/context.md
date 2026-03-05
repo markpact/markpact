@@ -4,22 +4,26 @@
 
 - **Project**: /home/tom/github/wronai/markpact
 - **Analysis Mode**: static
-- **Total Functions**: 121
+- **Total Functions**: 142
 - **Total Classes**: 13
 - **Modules**: 14
-- **Entry Points**: 36
+- **Entry Points**: 35
 
 ## Architecture by Module
+
+### src.markpact.publisher
+- **Functions**: 30
+- **Classes**: 2
+- **File**: `publisher.py`
 
 ### demos.demo_live_markpact
 - **Functions**: 28
 - **Classes**: 3
 - **File**: `demo_live_markpact.py`
 
-### src.markpact.publisher
-- **Functions**: 22
-- **Classes**: 2
-- **File**: `publisher.py`
+### src.markpact.cli
+- **Functions**: 13
+- **File**: `cli.py`
 
 ### src.markpact.config
 - **Functions**: 12
@@ -29,6 +33,11 @@
 - **Functions**: 12
 - **Classes**: 2
 - **File**: `notebook_converter.py`
+
+### src.markpact.packer
+- **Functions**: 9
+- **Classes**: 1
+- **File**: `packer.py`
 
 ### src.markpact.docker_runner
 - **Functions**: 8
@@ -48,11 +57,6 @@
 - **Classes**: 1
 - **File**: `sandbox.py`
 
-### src.markpact.packer
-- **Functions**: 6
-- **Classes**: 1
-- **File**: `packer.py`
-
 ### src.markpact.converter
 - **Functions**: 4
 - **Classes**: 2
@@ -67,15 +71,12 @@
 - **Classes**: 1
 - **File**: `parser.py`
 
-### src.markpact.cli
-- **Functions**: 3
-- **File**: `cli.py`
-
 ## Key Entry Points
 
 Main execution flows into the system:
 
 ### src.markpact.cli.main
+> Main entry point for markpact CLI.
 - **Calls**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
 
 ### demos.demo_live_markpact.LivePDF.add_summary_page
@@ -109,10 +110,6 @@ Args:
 ### demos.demo_live_markpact.LivePDF.add_step_page
 > Add a split-screen step page.
 - **Calls**: self.add_page, self._bg, self.set_font, self.set_text_color, self.set_xy, self.cell, self.set_font, self.set_text_color
-
-### src.markpact.cli.handle_pack_cli
-> Handle pack subcommand - pack directory into markpact README.
-- **Calls**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
 
 ### demos.demo_live_markpact.LivePDF._render_right
 - **Calls**: self.set_xy, self.cell, self.set_font, line.startswith, self.set_text_color, self.set_font, line.startswith, self.set_text_color
@@ -194,6 +191,9 @@ Args:
 > Extract a key=value pair from the meta string.
 - **Calls**: re.search, re.escape
 
+### demos.demo_live_markpact.LiveSession.add_step
+- **Calls**: self.steps.append, StepRecord
+
 ## Process Flows
 
 Key execution flows identified:
@@ -240,14 +240,14 @@ _render_checks [demos.demo_live_markpact.LivePDF]
 add_step_page [demos.demo_live_markpact.LivePDF]
 ```
 
-### Flow 9: handle_pack_cli
-```
-handle_pack_cli [src.markpact.cli]
-```
-
-### Flow 10: _render_right
+### Flow 9: _render_right
 ```
 _render_right [demos.demo_live_markpact.LivePDF]
+```
+
+### Flow 10: ensure_publish_block_in_readme
+```
+ensure_publish_block_in_readme [src.markpact.publisher]
 ```
 
 ## Key Classes
@@ -358,6 +358,14 @@ Supports both formats:
 - New: ```python markpac
 - **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
 
+### src.markpact.cli._handle_list_notebook_formats
+> Handle --list-notebook-formats flag.
+- **Output to**: print, None.items, print, print, src.markpact.notebook_converter.get_supported_formats
+
+### src.markpact.cli._parse_blocks_to_state
+> Parse blocks and extract state. Returns state dict with error key if failed.
+- **Output to**: block.get_path, print, print, sandbox.write_file, None.extend
+
 ### src.markpact.converter.convert_markdown_to_markpact
 > Convert regular Markdown to markpact format.
 
@@ -380,11 +388,9 @@ Args:
 Functions exposed as public API (no underscore prefix):
 
 - `demos.demo_live_markpact.run_live` - 193 calls
-- `src.markpact.cli.main` - 160 calls
-- `src.markpact.publisher.publish_pypi` - 108 calls
 - `src.markpact.notebook_converter.notebook_to_markpact` - 58 calls
+- `src.markpact.cli.main` - 58 calls
 - `demos.demo_live_markpact.LivePDF.add_summary_page` - 58 calls
-- `src.markpact.packer.pack_directory` - 50 calls
 - `src.markpact.cli.handle_config_cli` - 35 calls
 - `src.markpact.notebook_converter.parse_rmarkdown` - 33 calls
 - `src.markpact.auto_fix.run_with_auto_fix_llm` - 32 calls
@@ -395,6 +401,7 @@ Functions exposed as public API (no underscore prefix):
 - `demos.demo_live_markpact.LivePDF.add_title_page` - 26 calls
 - `src.markpact.publisher.infer_publish_config` - 25 calls
 - `src.markpact.notebook_converter.parse_jupyter` - 24 calls
+- `src.markpact.packer.pack_directory` - 20 calls
 - `src.markpact.auto_fix.run_with_auto_fix` - 20 calls
 - `src.markpact.converter.convert_markdown_to_markpact` - 19 calls
 - `src.markpact.converter.print_conversion_report` - 19 calls
@@ -409,6 +416,7 @@ Functions exposed as public API (no underscore prefix):
 - `src.markpact.publisher.generate_pyproject_toml` - 15 calls
 - `src.markpact.publisher.parse_publish_block` - 15 calls
 - `src.markpact.publisher.generate_publish_config_with_llm` - 14 calls
+- `src.markpact.publisher.publish_pypi` - 14 calls
 - `src.markpact.publisher.generate_package_json` - 13 calls
 - `src.markpact.config.load_env` - 12 calls
 - `src.markpact.packer.print_pack_report` - 12 calls

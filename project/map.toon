@@ -1,51 +1,21 @@
-# markpact | 14f 5233L | python:14
+# markpact | 14f 5230L | python:14
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
 M[14]:
   demos/demo_live_markpact.py,870
-  src/markpact/__init__.py,33
+  src/markpact/__init__.py,37
   src/markpact/auto_fix.py,331
-  src/markpact/cli.py,575
+  src/markpact/cli.py,509
   src/markpact/config.py,204
   src/markpact/converter.py,282
   src/markpact/docker_runner.py,333
   src/markpact/generator.py,347
   src/markpact/notebook_converter.py,638
-  src/markpact/packer.py,386
+  src/markpact/packer.py,424
   src/markpact/parser.py,65
-  src/markpact/publisher.py,1068
+  src/markpact/publisher.py,1089
   src/markpact/runner.py,42
   src/markpact/sandbox.py,59
 D:
-  src/markpact/cli.py:
-    e: handle_pack_cli,handle_config_cli,main
-    handle_pack_cli(argv)
-    handle_config_cli(argv)
-    main(argv)
-  src/markpact/publisher.py:
-    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
-    PublishConfig: __post_init__(0)  # Configuration for publishing...
-    PublishResult:  # Result of a publish operation...
-    _slugify(name)
-    _first_heading(markdown)
-    _first_paragraph(markdown)
-    _format_subprocess_failure(result)
-    infer_publish_config(readme_path;markdown;blocks;run_command)
-    prompt_publish_config(config)
-    ensure_publish_block_in_readme(readme_path;config)
-    generate_publish_config_with_llm(markdown;verbose)
-    bump_version(version;bump_type)
-    extract_version_from_readme(readme_path)
-    update_version_in_readme(readme_path;new_version)
-    get_license_classifier(license_name)
-    generate_pyproject_toml(config;sandbox;base_path;verbose)
-    publish_pypi(config;sandbox;test;verbose;source_readme_path)
-    generate_package_json(config;sandbox)
-    publish_npm(config;sandbox;registry;verbose)
-    generate_dockerfile(config;sandbox;base_image)
-    publish_docker(config;sandbox;registry;tag;verbose)
-    publish_github_packages(config;sandbox;package_type;verbose)
-    parse_publish_block(block_body;meta)
-    publish(config;sandbox;bump;verbose;source_readme_path)
   demos/demo_live_markpact.py:
     e: StepRecord,LiveSession,LivePDF,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,run_live,_fallback_readme,main
     StepRecord:
@@ -64,14 +34,39 @@ D:
     run_live(prompt_key;prompt;model)
     _fallback_readme(prompt)
     main()
-  src/markpact/packer.py:
-    e: PackResult,_should_include,_get_language,_detect_run_command,pack_directory,print_pack_report
-    PackResult: summary(0)  # Result of packing a directory...
-    _should_include(path;exclude_patterns)
-    _get_language(path)
-    _detect_run_command(files)
-    pack_directory(source_dir;output)
-    print_pack_report(result)
+  src/markpact/publisher.py:
+    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_build_package,_check_pypi_credentials,_upload_to_pypi,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
+    PublishConfig: __post_init__(0)  # Configuration for publishing...
+    PublishResult:  # Result of a publish operation...
+    _slugify(name)
+    _first_heading(markdown)
+    _first_paragraph(markdown)
+    _format_subprocess_failure(result)
+    infer_publish_config(readme_path;markdown;blocks;run_command)
+    prompt_publish_config(config)
+    ensure_publish_block_in_readme(readme_path;config)
+    generate_publish_config_with_llm(markdown;verbose)
+    bump_version(version;bump_type)
+    extract_version_from_readme(readme_path)
+    update_version_in_readme(readme_path;new_version)
+    get_license_classifier(license_name)
+    generate_pyproject_toml(config;sandbox;base_path;verbose)
+    _normalize_package_name(config;verbose)
+    _determine_base_path(config;sandbox;verbose)
+    _detect_build_backend(pyproject_path)
+    _ensure_build_backend(build_backend;verbose)
+    _copy_readme(source_readme_path;base_path;config;verbose)
+    _build_package(base_path;verbose)
+    _check_pypi_credentials(test;verbose)
+    _upload_to_pypi(base_path;test;config;pypirc_path;verbose)
+    publish_pypi(config;sandbox;test;verbose;source_readme_path)
+    generate_package_json(config;sandbox)
+    publish_npm(config;sandbox;registry;verbose)
+    generate_dockerfile(config;sandbox;base_image)
+    publish_docker(config;sandbox;registry;tag;verbose)
+    publish_github_packages(config;sandbox;package_type;verbose)
+    parse_publish_block(block_body;meta)
+    publish(config;sandbox;bump;verbose;source_readme_path)
   src/markpact/notebook_converter.py:
     e: NotebookCell,Notebook,detect_format,parse_jupyter,parse_rmarkdown,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,notebook_to_markpact,convert_notebook,get_supported_formats
     NotebookCell:  # Represents a cell in a notebook...
@@ -97,6 +92,21 @@ D:
     extract_module_name(error_output)
     fix_with_llm(readme_path;error_output;error_type;verbose)
     run_with_auto_fix_llm(cmd;sandbox;readme_path;verbose;max_retries;use_llm)
+  src/markpact/cli.py:
+    e: handle_pack_cli,handle_config_cli,_handle_list_examples,_handle_list_notebook_formats,_handle_from_notebook,_handle_llm_generation,_handle_markdown_conversion,_parse_blocks_to_state,_handle_publish_mode,_handle_docker_mode,_handle_test_mode,_handle_normal_run,main
+    handle_pack_cli(argv)
+    handle_config_cli(argv)
+    _handle_list_examples(verbose)
+    _handle_list_notebook_formats(verbose)
+    _handle_from_notebook(args;verbose)
+    _handle_llm_generation(args;verbose)
+    _handle_markdown_conversion(args;original_text;verbose)
+    _parse_blocks_to_state(blocks;sandbox;args;verbose)
+    _handle_publish_mode(args;config;sandbox;readme;text_to_parse;blocks;run_command;verbose)
+    _handle_docker_mode(args;sandbox;deps;run_command;verbose)
+    _handle_test_mode(args;sandbox;run_command;test_blocks;deps;verbose)
+    _handle_normal_run(args;sandbox;run_command;deps;readme;verbose)
+    main(argv)
   src/markpact/converter.py:
     e: ConvertedBlock,ConversionResult,detect_block_type,suggest_filename,convert_markdown_to_markpact,print_conversion_report
     ConvertedBlock:  # A converted markpact block...
@@ -105,6 +115,17 @@ D:
     suggest_filename(lang;body;index)
     convert_markdown_to_markpact(text;verbose)
     print_conversion_report(result)
+  src/markpact/packer.py:
+    e: PackResult,_should_include,_get_language,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
+    PackResult: summary(0)  # Result of packing a directory...
+    _should_include(path;exclude_patterns)
+    _get_language(path)
+    _detect_run_command(files)
+    _collect_files(src;output_path;exclude_patterns;include_patterns;verbose)
+    _generate_readme_content(files_to_pack;src;project_title;desc;run_command;dry_run)
+    _write_output(output_path;lines;files_to_pack;dry_run;verbose)
+    pack_directory(source_dir;output)
+    print_pack_report(result)
   src/markpact/generator.py:
     e: GeneratorConfig,_fix_unclosed_blocks,generate_contract,save_contract,get_example_prompt,list_example_prompts
     GeneratorConfig: from_env(0),from_file(1)  # Configuration for LLM generator...
