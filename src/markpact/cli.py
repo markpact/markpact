@@ -8,9 +8,64 @@ from pathlib import Path
 
 from . import __version__
 from .converter import convert_markdown_to_markpact, print_conversion_report
+from .packer import pack_directory, print_pack_report
 from .parser import parse_blocks
 from .runner import install_deps, run_cmd
 from .sandbox import Sandbox
+
+
+def handle_pack_cli(argv: list[str]) -> int:
+    """Handle pack subcommand - pack directory into markpact README."""
+    parser = argparse.ArgumentParser(
+        prog="markpact pack",
+        description="Pack a directory into markpact README.md format"
+    )
+    parser.add_argument("source", nargs="?", default=".", 
+                        help="Source directory to pack (default: current directory)")
+    parser.add_argument("-o", "--output", metavar="FILE",
+                        help="Output README.md path (default: source/README.md)")
+    parser.add_argument("-n", "--dry-run", action="store_true",
+                        help="Show what would be done without writing files")
+    parser.add_argument("-q", "--quiet", action="store_true",
+                        help="Suppress output")
+    parser.add_argument("--title", metavar="NAME",
+                        help="Project title (default: directory name)")
+    parser.add_argument("--description", metavar="TEXT",
+                        help="Project description")
+    parser.add_argument("--run", metavar="COMMAND",
+                        help="Run command (auto-detected if not provided)")
+    parser.add_argument("--exclude", metavar="PATTERN", action="append",
+                        help="Additional exclude pattern (can be used multiple times)")
+    parser.add_argument("--include", metavar="PATTERN", action="append",
+                        help="Only include files matching pattern (can be used multiple times)")
+    
+    args = parser.parse_args(argv)
+    verbose = not args.quiet
+    
+    # Build exclude set
+    exclude = set(args.exclude) if args.exclude else None
+    include = args.include if args.include else None
+    
+    result = pack_directory(
+        source_dir=args.source,
+        output=args.output,
+        exclude=exclude,
+        include_patterns=include,
+        title=args.title,
+        description=args.description,
+        run_command=args.run,
+        dry_run=args.dry_run,
+        verbose=verbose,
+    )
+    
+    if not result.success:
+        print(f"[markpact] ERROR: {result.message}", file=sys.stderr)
+        return 1
+    
+    if verbose or args.dry_run:
+        print_pack_report(result)
+    
+    return 0
 
 
 def handle_config_cli(argv: list[str]) -> int:
@@ -92,11 +147,14 @@ def main(argv: list[str] | None = None) -> int:
     from .publisher import publish
     from .docker_runner import check_docker_available, generate_dockerfile, build_and_run_docker
     
-    # Check if first arg is 'config' subcommand
+    # Check if first arg is a subcommand
     args_list = argv if argv is not None else sys.argv[1:]
     
     if args_list and args_list[0] == "config":
         return handle_config_cli(args_list[1:])
+    
+    if args_list and args_list[0] == "pack":
+        return handle_pack_cli(args_list[1:])
     
     parser = argparse.ArgumentParser(
         prog="markpact",

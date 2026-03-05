@@ -4,10 +4,10 @@
 
 - **Project**: /home/tom/github/wronai/markpact
 - **Analysis Mode**: static
-- **Total Functions**: 114
-- **Total Classes**: 12
-- **Modules**: 13
-- **Entry Points**: 34
+- **Total Functions**: 121
+- **Total Classes**: 13
+- **Modules**: 14
+- **Entry Points**: 36
 
 ## Architecture by Module
 
@@ -48,6 +48,11 @@
 - **Classes**: 1
 - **File**: `sandbox.py`
 
+### src.markpact.packer
+- **Functions**: 6
+- **Classes**: 1
+- **File**: `packer.py`
+
 ### src.markpact.converter
 - **Functions**: 4
 - **Classes**: 2
@@ -63,7 +68,7 @@
 - **File**: `parser.py`
 
 ### src.markpact.cli
-- **Functions**: 2
+- **Functions**: 3
 - **File**: `cli.py`
 
 ## Key Entry Points
@@ -104,6 +109,10 @@ Args:
 ### demos.demo_live_markpact.LivePDF.add_step_page
 > Add a split-screen step page.
 - **Calls**: self.add_page, self._bg, self.set_font, self.set_text_color, self.set_xy, self.cell, self.set_font, self.set_text_color
+
+### src.markpact.cli.handle_pack_cli
+> Handle pack subcommand - pack directory into markpact README.
+- **Calls**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
 
 ### demos.demo_live_markpact.LivePDF._render_right
 - **Calls**: self.set_xy, self.cell, self.set_font, line.startswith, self.set_text_color, self.set_font, line.startswith, self.set_text_color
@@ -177,15 +186,13 @@ Args:
 > Remove sandbox directory
 - **Calls**: self.path.exists, shutil.rmtree
 
+### src.markpact.packer.PackResult.summary
+> Return human-readable summary.
+- **Calls**: None.join, lines.append
+
 ### src.markpact.parser.Block.get_meta_value
 > Extract a key=value pair from the meta string.
 - **Calls**: re.search, re.escape
-
-### demos.demo_live_markpact.LiveSession.add_step
-- **Calls**: self.steps.append, StepRecord
-
-### demos.demo_live_markpact.LivePDF._bg
-- **Calls**: self.set_fill_color, self.rect
 
 ## Process Flows
 
@@ -233,14 +240,14 @@ _render_checks [demos.demo_live_markpact.LivePDF]
 add_step_page [demos.demo_live_markpact.LivePDF]
 ```
 
-### Flow 9: _render_right
+### Flow 9: handle_pack_cli
 ```
-_render_right [demos.demo_live_markpact.LivePDF]
+handle_pack_cli [src.markpact.cli]
 ```
 
-### Flow 10: ensure_publish_block_in_readme
+### Flow 10: _render_right
 ```
-ensure_publish_block_in_readme [src.markpact.publisher]
+_render_right [demos.demo_live_markpact.LivePDF]
 ```
 
 ## Key Classes
@@ -268,6 +275,11 @@ ensure_publish_block_in_readme [src.markpact.publisher]
 ### demos.demo_live_markpact.LiveSession
 - **Methods**: 2
 - **Key Methods**: demos.demo_live_markpact.LiveSession.add_step, demos.demo_live_markpact.LiveSession.elapsed
+
+### src.markpact.packer.PackResult
+> Result of packing a directory.
+- **Methods**: 1
+- **Key Methods**: src.markpact.packer.PackResult.summary
 
 ### src.markpact.publisher.PublishConfig
 > Configuration for publishing
@@ -372,6 +384,7 @@ Functions exposed as public API (no underscore prefix):
 - `src.markpact.publisher.publish_pypi` - 108 calls
 - `src.markpact.notebook_converter.notebook_to_markpact` - 58 calls
 - `demos.demo_live_markpact.LivePDF.add_summary_page` - 58 calls
+- `src.markpact.packer.pack_directory` - 50 calls
 - `src.markpact.cli.handle_config_cli` - 35 calls
 - `src.markpact.notebook_converter.parse_rmarkdown` - 33 calls
 - `src.markpact.auto_fix.run_with_auto_fix_llm` - 32 calls
@@ -392,11 +405,13 @@ Functions exposed as public API (no underscore prefix):
 - `src.markpact.docker_runner.build_and_run_docker` - 17 calls
 - `demos.demo_live_markpact.LivePDF.add_step_page` - 17 calls
 - `src.markpact.publisher.prompt_publish_config` - 16 calls
+- `src.markpact.cli.handle_pack_cli` - 15 calls
 - `src.markpact.publisher.generate_pyproject_toml` - 15 calls
 - `src.markpact.publisher.parse_publish_block` - 15 calls
 - `src.markpact.publisher.generate_publish_config_with_llm` - 14 calls
 - `src.markpact.publisher.generate_package_json` - 13 calls
 - `src.markpact.config.load_env` - 12 calls
+- `src.markpact.packer.print_pack_report` - 12 calls
 - `src.markpact.publisher.ensure_publish_block_in_readme` - 12 calls
 - `src.markpact.publisher.generate_dockerfile` - 12 calls
 - `src.markpact.publisher.publish_docker` - 12 calls
@@ -404,9 +419,6 @@ Functions exposed as public API (no underscore prefix):
 - `src.markpact.notebook_converter.extract_dependencies` - 10 calls
 - `src.markpact.converter.detect_block_type` - 10 calls
 - `src.markpact.publisher.publish_npm` - 10 calls
-- `src.markpact.config.save_env` - 9 calls
-- `src.markpact.config.list_providers` - 9 calls
-- `src.markpact.docker_runner.stream_docker_logs` - 9 calls
 
 ## System Interactions
 

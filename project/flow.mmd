@@ -56,6 +56,12 @@ flowchart TD
         src__markpact__docker_runner__run_docker_with_logs["run_docker_with_logs"]
         src__markpact__docker_runner__stream_docker_logs("stream_docker_logs CC=8")
         src__run_docker_with_tests{{run_docker_with_tests CC=15}}
+        src__markpact__packer__PackResult__summary["summary"]
+        src__markpact__packer___should_include["_should_include"]
+        src__markpact__packer___get_language["_get_language"]
+        src__markpact__packer___detect_run_command{{_detect_run_command CC=17}}
+        src__markpact__packer__pack_directory{{pack_directory CC=30}}
+        src__markpact__packer__print_pack_report["print_pack_report"]
         src__markpact__runner__run_cmd["run_cmd"]
         src__markpact__runner__ensure_venv["ensure_venv"]
         src__markpact__runner__install_deps["install_deps"]
@@ -84,12 +90,6 @@ flowchart TD
         src__from_env["from_env"]
         src__from_file["from_file"]
         src__markpact__generator___fix_unclosed_blocks["_fix_unclosed_blocks"]
-        src__markpact__generator__generate_contract{{generate_contract CC=17}}
-        src__markpact__generator__save_contract["save_contract"]
-        src__markpact__generator__get_example_prompt["get_example_prompt"]
-        src__markpact__generator__list_example_prompts["list_example_prompts"]
-        src__markpact__converter__detect_block_type{{detect_block_type CC=19}}
-        src__markpact__converter__suggest_filename("suggest_filename CC=10")
     end
     src__markpact__config__ensure_config_dir --> src__markpact__config__get_env_path
     src__markpact__config__load_env --> src__markpact__config__get_env_path
@@ -136,6 +136,11 @@ flowchart TD
     src__markpact__auto_fix__run_with_auto_fix_llm --> src__markpact__sandbox__find_free_port
     src__markpact__generator__generate_contract --> src__from_env
     src__markpact__generator__generate_contract --> src__markpact__generator___fix_unclosed_blocks
+    src__markpact__cli__handle_pack_cli --> src__markpact__packer__pack_directory
+    src__markpact__cli__handle_pack_cli --> src__markpact__packer__print_pack_report
+    src__markpact__cli__handle_config_cli --> src__markpact__config__get_env_path
+    src__markpact__cli__handle_config_cli --> src__markpact__config__init_env
+    src__markpact__cli__handle_config_cli --> src__markpact__config__apply_preset
     src__convert_markdown_to_markpact --> src__markpact__converter__detect_block_type
     src__markpact__publisher__infer_publish_config --> src__markpact__publisher___first_heading
     src__markpact__publisher__infer_publish_config --> src__markpact__publisher___first_paragraph
@@ -155,9 +160,6 @@ flowchart TD
     src__markpact__publisher__publish --> src__markpact__publisher__publish_npm
     src__markpact__publisher__publish --> src__markpact__publisher__publish_docker
     src__markpact__publisher__publish --> src__markpact__publisher__publish_github_packages
-    src__markpact__cli__handle_config_cli --> src__markpact__config__get_env_path
-    src__markpact__cli__handle_config_cli --> src__markpact__config__init_env
-    src__markpact__cli__handle_config_cli --> src__markpact__config__apply_preset
     demos__demo_live_markpact__show_menu --> demos__demo_live_markpact__hdr
     demos__demo_live_markpact__LivePDF__cell --> demos__demo_live_markpact___ascii
     demos__demo_live_markpact__LivePDF__multi_cell --> demos__demo_live_markpact___ascii
@@ -173,5 +175,5 @@ flowchart TD
 
     classDef highCC fill:#ff6b6b,stroke:#c92a2a,color:#fff
     classDef medCC fill:#ffd43b,stroke:#f08c00,color:#000
-    class src__run_docker_with_tests,src__markpact__notebook_converter__parse_rmarkdown,src__notebook_to_markpact,src__markpact__auto_fix__run_with_auto_fix_llm,src__markpact__generator__generate_contract,src__markpact__converter__detect_block_type,src__markpact__publisher__infer_publish_config,src__generate_publish_config_with_llm,src__markpact__publisher__publish_pypi,src__markpact__cli__main,demos__demo_live_markpact__LivePDF___render_mono,demos__demo_live_markpact__run_live highCC
-    class src__markpact__config__load_env,src__markpact__docker_runner__build_and_run_docker,src__markpact__docker_runner__stream_docker_logs,src__markpact__notebook_converter__parse_jupyter,src__markpact__notebook_converter__parse_quarto,src__extract_dependencies,src__suggest_run_command,src__markpact__auto_fix__run_with_auto_fix,src__markpact__auto_fix__fix_with_llm,src__markpact__converter__suggest_filename,src__markpact__converter__print_conversion_report,src__markpact__publisher__generate_pyproject_toml,src__markpact__publisher__generate_package_json,src__markpact__publisher__generate_dockerfile,src__markpact__publisher__publish_docker,src__markpact__publisher__parse_publish_block,src__markpact__publisher__publish,src__markpact__cli__handle_config_cli,demos__demo_live_markpact__show_menu,demos__demo_live_markpact__LivePDF___render_right,demos__demo_live_markpact__LivePDF___render_checks,demos__add_summary_page medCC
+    class src__run_docker_with_tests,src__markpact__packer___detect_run_command,src__markpact__packer__pack_directory,src__markpact__notebook_converter__parse_rmarkdown,src__notebook_to_markpact,src__markpact__auto_fix__run_with_auto_fix_llm,src__markpact__generator__generate_contract,src__markpact__cli__main,src__markpact__converter__detect_block_type,src__markpact__publisher__infer_publish_config,src__generate_publish_config_with_llm,src__markpact__publisher__publish_pypi,demos__demo_live_markpact__LivePDF___render_mono,demos__demo_live_markpact__run_live highCC
+    class src__markpact__config__load_env,src__markpact__docker_runner__build_and_run_docker,src__markpact__docker_runner__stream_docker_logs,src__markpact__notebook_converter__parse_jupyter,src__markpact__notebook_converter__parse_quarto,src__extract_dependencies,src__suggest_run_command,src__markpact__auto_fix__run_with_auto_fix,src__markpact__auto_fix__fix_with_llm,src__markpact__cli__handle_config_cli,src__markpact__converter__suggest_filename,src__markpact__converter__print_conversion_report,src__markpact__publisher__generate_pyproject_toml,src__markpact__publisher__generate_package_json,src__markpact__publisher__generate_dockerfile,src__markpact__publisher__publish_docker,src__markpact__publisher__parse_publish_block,src__markpact__publisher__publish,demos__demo_live_markpact__show_menu,demos__demo_live_markpact__LivePDF___render_right,demos__demo_live_markpact__LivePDF___render_checks,demos__add_summary_page medCC

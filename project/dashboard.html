@@ -60,12 +60,12 @@
 </p>
 
 <div class="grid">
-  <div class="card"><div class="value">7.7</div><div class="label">Avg CC</div></div>
-  <div class="card"><div class="value">27</div><div class="label">Critical (CC≥10)</div></div>
-  <div class="card"><div class="value">114</div><div class="label">Functions</div></div>
-  <div class="card"><div class="value">12</div><div class="label">Classes</div></div>
-  <div class="card"><div class="value">12</div><div class="label">Files</div></div>
-  <div class="card"><div class="value">6035</div><div class="label">Lines</div></div>
+  <div class="card"><div class="value">7.8</div><div class="label">Avg CC</div></div>
+  <div class="card"><div class="value">29</div><div class="label">Critical (CC≥10)</div></div>
+  <div class="card"><div class="value">121</div><div class="label">Functions</div></div>
+  <div class="card"><div class="value">13</div><div class="label">Classes</div></div>
+  <div class="card"><div class="value">13</div><div class="label">Files</div></div>
+  <div class="card"><div class="value">6476</div><div class="label">Lines</div></div>
   <div class="card"><div class="value">0</div><div class="label">Duplicates</div></div>
   <div class="card"><div class="value">0</div><div class="label">Cycles</div></div>
 </div>
@@ -74,9 +74,9 @@
   <div class="chart-container">
     <h2 style="border:none;margin:0 0 .5rem;">Evolution (2026-03-05)</h2>
     <div class="evo-cards">
-      <div class="card"><div class="value">7.7</div><div class="label">CC̄ →</div></div>
-      <div class="card"><div class="value">27</div><div class="label">Critical →</div></div>
-      <div class="card"><div class="value">6035</div><div class="label">Lines</div></div>
+      <div class="card"><div class="value">7.8</div><div class="label">CC̄ →</div></div>
+      <div class="card"><div class="value">29</div><div class="label">Critical →</div></div>
+      <div class="card"><div class="value">6476</div><div class="label">Lines</div></div>
     </div>
     <p class="trend" style="margin-top:.5rem;">Run analysis multiple times to build a trend chart (≥3 data points needed).</p>
   </div>
@@ -135,6 +135,20 @@
             </tr>
             <tr class="critical">
                 <td><span class="badge critical">critical</span></td>
+                <td>pack_directory</td>
+                <td>high_fan_out</td>
+                <td>31</td>
+                <td>10</td>
+            </tr>
+            <tr class="critical">
+                <td><span class="badge critical">critical</span></td>
+                <td>pack_directory</td>
+                <td>cc_exceeded</td>
+                <td>30</td>
+                <td>15</td>
+            </tr>
+            <tr class="critical">
+                <td><span class="badge critical">critical</span></td>
                 <td>infer_publish_config</td>
                 <td>cc_exceeded</td>
                 <td>30</td>
@@ -181,20 +195,6 @@
                 <td>high_fan_out</td>
                 <td>17</td>
                 <td>10</td>
-            </tr>
-            <tr class="error">
-                <td><span class="badge error">error</span></td>
-                <td>parse_quarto</td>
-                <td>high_fan_out</td>
-                <td>15</td>
-                <td>10</td>
-            </tr>
-            <tr class="error">
-                <td><span class="badge error">error</span></td>
-                <td>handle_config_cli</td>
-                <td>high_fan_out</td>
-                <td>15</td>
-                <td>10</td>
             </tr></tbody>
 </table>
 </div></div>
@@ -220,6 +220,14 @@
                 <td><strong>publish_pypi</strong></td>
                 <td>37</td>
                 <td>Publish package to PyPI.</td>
+            </tr>
+            <tr>
+                <td><strong>pack_directory</strong></td>
+                <td>31</td>
+                <td>Pack a directory into markpact README.md format.
+
+Args:
+    source_dir: Director</td>
             </tr>
             <tr>
                 <td><strong>notebook_to_markpact</strong></td>
@@ -252,11 +260,6 @@ Args</td>
                 <td><strong>handle_config_cli</strong></td>
                 <td>15</td>
                 <td>Handle config subcommand with its own parser</td>
-            </tr>
-            <tr>
-                <td><strong>LivePDF.add_summary_page</strong></td>
-                <td>15</td>
-                <td>Orchestrates 15 calls</td>
             </tr></tbody>
 </table>
 </div></div>
@@ -270,61 +273,61 @@ Args</td>
   <tbody>
             <tr>
                 <td>1</td>
-                <td>Split notebook_to_markpact (CC=29 → target CC<10)</td>
+                <td>Split pack_directory (CC=30 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
                 <td>2</td>
-                <td>Split run_with_auto_fix_llm (CC=29 → target CC<10)</td>
+                <td>Split notebook_to_markpact (CC=29 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
                 <td>3</td>
-                <td>Split infer_publish_config (CC=30 → target CC<10)</td>
+                <td>Split run_with_auto_fix_llm (CC=29 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
                 <td>4</td>
-                <td>Split publish_pypi (CC=85 → target CC<10)</td>
-                <td><span class="badge high">high</span></td>
-                <td>low</td>
-            </tr>
-            <tr>
-                <td>5</td>
                 <td>Split main (CC=103 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
+                <td>5</td>
+                <td>Split infer_publish_config (CC=30 → target CC<10)</td>
+                <td><span class="badge high">high</span></td>
+                <td>low</td>
+            </tr>
+            <tr>
                 <td>6</td>
-                <td>Split run_live (CC=67 → target CC<10)</td>
+                <td>Split publish_pypi (CC=85 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
                 <td>7</td>
-                <td>Split god module src/markpact/cli.py (520L, 0 classes)</td>
+                <td>Split run_live (CC=67 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
-                <td>high</td>
+                <td>low</td>
             </tr>
             <tr>
                 <td>8</td>
-                <td>Split god module src/markpact/publisher.py (1068L, 2 classes)</td>
+                <td>Split god module src/markpact/cli.py (575L, 0 classes)</td>
                 <td><span class="badge high">high</span></td>
                 <td>high</td>
             </tr>
             <tr>
                 <td>9</td>
-                <td>Split god module demos/demo_live_markpact.py (870L, 3 classes)</td>
+                <td>Split god module src/markpact/publisher.py (1068L, 2 classes)</td>
                 <td><span class="badge high">high</span></td>
                 <td>high</td>
             </tr>
             <tr>
                 <td>10</td>
-                <td>Split god module src/markpact/notebook_converter.py (638L, 2 classes)</td>
+                <td>Split god module demos/demo_live_markpact.py (870L, 3 classes)</td>
                 <td><span class="badge high">high</span></td>
                 <td>high</td>
             </tr></tbody>
@@ -333,7 +336,7 @@ Args</td>
 </div>
 </div>
 
-<footer>Generated by code2llm on 2026-03-05 13:07</footer>
+<footer>Generated by code2llm on 2026-03-05 14:42</footer>
 
 <script>
 // Evolution chart disabled — fewer than 3 data points
@@ -342,9 +345,9 @@ const modCtx = document.getElementById('modChart').getContext('2d');
 new Chart(modCtx, {
   type: 'bar',
   data: {
-    labels: ['cli.py', 'publisher.py', 'demo_live_markpact.py', 'auto_fix.py', 'notebook_converter.py', 'converter.py', 'generator.py', 'docker_runner.py', 'config.py', 'parser.py', 'runner.py', 'sandbox.py', '__init__.py'],
-    datasets: [{ label: 'Max CC', data: [103, 85, 67, 29, 29, 19, 17, 15, 8, 6, 3, 3, 0],
-      backgroundColor: [103, 85, 67, 29, 29, 19, 17, 15, 8, 6, 3, 3, 0].map(v => v >= 15 ? '#ef4444' : v >= 10 ? '#eab308' : '#22c55e')
+    labels: ['cli.py', 'publisher.py', 'demo_live_markpact.py', 'packer.py', 'auto_fix.py', 'notebook_converter.py', 'converter.py', 'generator.py', 'docker_runner.py', 'config.py', 'parser.py', 'runner.py', 'sandbox.py', '__init__.py'],
+    datasets: [{ label: 'Max CC', data: [103, 85, 67, 30, 29, 29, 19, 17, 15, 8, 6, 3, 3, 0],
+      backgroundColor: [103, 85, 67, 30, 29, 29, 19, 17, 15, 8, 6, 3, 3, 0].map(v => v >= 15 ? '#ef4444' : v >= 10 ? '#eab308' : '#22c55e')
     }]
   },
   options: {

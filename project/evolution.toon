@@ -1,4 +1,4 @@
-# code2llm/evolution | 114 func | 12f | 2026-03-05
+# code2llm/evolution | 121 func | 13f | 2026-03-05
 
 NEXT[10] (ranked by impact):
   [1] !! SPLIT           src/markpact/publisher.py
@@ -25,21 +25,21 @@ NEXT[10] (ranked by impact):
       WHY: CC=85 exceeds 15
       EFFORT: ~1h  IMPACT: 3145
 
-  [7] !! SPLIT-FUNC      notebook_to_markpact  CC=29  fan=21
+  [7] !! SPLIT-FUNC      pack_directory  CC=30  fan=31
+      WHY: CC=30 exceeds 15
+      EFFORT: ~1h  IMPACT: 930
+
+  [8] !! SPLIT-FUNC      notebook_to_markpact  CC=29  fan=21
       WHY: CC=29 exceeds 15
       EFFORT: ~1h  IMPACT: 609
 
-  [8] !! SPLIT-FUNC      run_with_auto_fix_llm  CC=29  fan=17
+  [9] !! SPLIT-FUNC      run_with_auto_fix_llm  CC=29  fan=17
       WHY: CC=29 exceeds 15
       EFFORT: ~1h  IMPACT: 493
 
-  [9] !! SPLIT-FUNC      infer_publish_config  CC=30  fan=11
+  [10] !! SPLIT-FUNC      infer_publish_config  CC=30  fan=11
       WHY: CC=30 exceeds 15
       EFFORT: ~1h  IMPACT: 330
-
-  [10] !  SPLIT-FUNC      parse_rmarkdown  CC=15  fan=20
-      WHY: CC=15 exceeds 15
-      EFFORT: ~1h  IMPACT: 300
 
 
 RISKS[3]:
@@ -48,11 +48,11 @@ RISKS[3]:
   ⚠ Splitting src/markpact/notebook_converter.py may break 12 import paths
 
 METRICS-TARGET:
-  CC̄:          7.7 → ≤5.0
+  CC̄:          7.8 → ≤5.0
   max-CC:      103 → ≤20
   god-modules: 4 → 0
-  high-CC(≥15): 12 → ≤6
+  high-CC(≥15): 14 → ≤7
   hub-types:   0 → ≤0
 
 HISTORY:
-  prev CC̄=7.7 → now CC̄=7.7
+  prev CC̄=7.7 → now CC̄=7.8

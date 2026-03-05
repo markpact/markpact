@@ -1,6 +1,6 @@
-# markpact/flow | 114 func | 6 pipelines | 5 hub-types | 2026-03-05
+# markpact/flow | 121 func | 7 pipelines | 5 hub-types | 2026-03-05
 
-PIPELINES[6] (Core:1, Export:1, Refactor:1, Unknown:3):
+PIPELINES[7] (Core:1, Export:1, Refactor:1, Unknown:4):
   Src [Core]: list[str] | None → Path
               → main(argv:list[str] | None) → int       CC=103  IO  !! ▶
               → handle_config_cli(argv:list[str]) → int CC=12   IO
@@ -25,6 +25,12 @@ PIPELINES[6] (Core:1, Export:1, Refactor:1, Unknown:3):
               → _fix_unclosed_blocks(content:str) → str CC=7    mutation ■
               PURITY: 0/4 pure  BOTTLENECK: run_live(CC=67)
 
+  Src [Unknown]: list[str] → bool
+              → handle_pack_cli(argv:list[str]) → int   CC=6    IO ▶
+              → pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult CC=30   IO  !!
+              → _should_include(path:Path, exclude_patterns:set[str]) → bool CC=6    pure ■
+              PURITY: 1/3 pure  BOTTLENECK: pack_directory(CC=30)
+
   Demos [Unknown]: total → str
               → _page_num(total)                        CC=1    pure ▶
               → cell(w, h, text, *args, **kwargs)       CC=1    pure
@@ -48,6 +54,7 @@ TRANSFORMS (fan-out ≥10):
   main(argv:list[str] | None) → int                       fan=62   !! script-in-disguise
   run_live(prompt_key:str, prompt:str, model:str)         fan=54   !! mutation-heavy
   publish_pypi(config:PublishConfig, sandbox:Sandbox, test:bool, verbose:bool, source_readme_path:Optional[Path]) → PublishResult fan=37   !! mutation-heavy
+  pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult fan=31   !! mutation-heavy
   notebook_to_markpact(notebook:Notebook, output_path:Optional[Path], verbose:bool) → str fan=21   !! side-effects
   parse_rmarkdown(path:Path) → Notebook                   fan=20   !! side-effects
   parse_jupyter(path:Path) → Notebook                     fan=17   fan=17
@@ -59,7 +66,6 @@ TRANSFORMS (fan-out ≥10):
   run_docker_with_tests(sandbox_path:Path, test_body:str, image_name:str, port:int, verbose:bool, auto_find_port:bool) → tuple[int, TestSuite] fan=13   fan=13
   run_with_auto_fix(cmd:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool, max_retries:int) → int fan=12   fan=12
   generate_pyproject_toml(config, sandbox, base_path, verbose) → AnalysisResult fan=12   fan=12
-  add_step_page(title, subtitle, left_lines, right_lines, checks, highlight_kind) fan=12   PIPELINE:LivePDF.entry
 
 CONTRACTS:
   Pipeline: Src
@@ -137,6 +143,22 @@ CONTRACTS:
       OUT: str
       SIDE-EFFECT: pure
 
+  Pipeline: Src
+    handle_pack_cli(argv:list[str]) → int
+      IN:  argv:list[str]
+      OUT: int
+      SIDE-EFFECT: IO(print)
+
+    pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult
+      IN:  source_dir:str | Path, output:str | Path | None
+      OUT: PackResult
+      SIDE-EFFECT: IO(print, print, mkdir)
+      SMELL: CC=30 → split
+
+    _should_include(path:Path, exclude_patterns:set[str]) → bool
+      IN:  path:Path, exclude_patterns:set[str]
+      OUT: bool
+
   Pipeline: Demos
     _page_num(total)
       IN:  total
@@ -177,32 +199,32 @@ CONTRACTS:
       OUT: str
 
 
-DATA_TYPES (by cross-function usage) [96 annotated, 0 inferred / 114 functions]:
-  str                  consumed:55  produced:24   !! HUB-TYPE → split interface
-  Path                 consumed:27  produced:9    !! HUB-TYPE → split interface
-  bool                 consumed:28  produced:8    !! HUB-TYPE → split interface
-  int                  consumed:11  produced:7    !! HUB-TYPE → split interface
+DATA_TYPES (by cross-function usage) [103 annotated, 0 inferred / 121 functions]:
+  str                  consumed:55  produced:27   !! HUB-TYPE → split interface
+  Path                 consumed:29  produced:9    !! HUB-TYPE → split interface
+  bool                 consumed:28  produced:9    !! HUB-TYPE → split interface
+  int                  consumed:11  produced:8    !! HUB-TYPE → split interface
   PublishConfig        consumed:9   produced:4  
   Sandbox              consumed:12  produced:0    !! HUB-TYPE → split interface
-  Notebook             consumed:3   produced:6  
   dict[str, str]       consumed:1   produced:8    output-heavy
-  list[str]            consumed:4   produced:1  
+  Notebook             consumed:3   produced:6  
+  list[str]            consumed:5   produced:1    input-heavy (read-only flow)
   PublishResult        consumed:0   produced:5    output-heavy
   GeneratorConfig      consumed:1   produced:2    narrow scope
-  ConversionResult     consumed:1   produced:1    narrow scope
+  PackResult           consumed:1   produced:1    narrow scope
   str | None           consumed:1   produced:1    narrow scope
   LiveSession          consumed:2   produced:0    narrow scope
+  str | Path | None    consumed:2   produced:0    narrow scope
+  ConversionResult     consumed:1   produced:1    narrow scope
+  str | Path           consumed:1   produced:0    narrow scope
+  AnalysisResult       consumed:0   produced:1    narrow scope
+  set[str]             consumed:1   produced:0    narrow scope
   tuple[subprocess.Popen, int] consumed:0   produced:1    narrow scope
-  list[str] | None     consumed:1   produced:0    narrow scope
-  list[Block]          consumed:0   produced:1    narrow scope
-  tuple[str, str, float, str] consumed:0   produced:1    narrow scope
-  tuple[Path, bool]    consumed:0   produced:1    narrow scope
-  list[object]         consumed:1   produced:0    narrow scope
 
   HUB TYPES (consumed ≥10):
     str → 55 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    Path → 27 consumers → split into:
+    Path → 29 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
     bool → 28 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
@@ -213,13 +235,14 @@ DATA_TYPES (by cross-function usage) [96 annotated, 0 inferred / 114 functions]:
 
 SIDE_EFFECTS:
   IO:        Sandbox.__init__, Sandbox.write_file, Sandbox.write_requirements, ensure_config_dir, load_env, save_env, stop_existing_container, generate_dockerfile, build_and_run_docker, run_docker_with_logs
-  Mutation:  show_config, list_providers, extract_dependencies, parse_blocks, _fix_unclosed_blocks, convert_markdown_to_markpact, PublishConfig.__post_init__, _first_paragraph, parse_publish_block, LiveSession.add_step
+  Mutation:  show_config, list_providers, PackResult.summary, extract_dependencies, parse_blocks, _fix_unclosed_blocks, convert_markdown_to_markpact, PublishConfig.__post_init__, _first_paragraph, parse_publish_block
   Pure:      find_free_port, Sandbox.has_venv, Sandbox.clean, get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset
 
   PIPELINE PURITY:
     Src             █░░░ 42% pure
     Demos           ████ 100% pure
     Demos           ░░░░ 0% pure
+    Src             █░░░ 33% pure
     Demos           ████ 100% pure
     Demos           ████ 100% pure
     Demos           ████ 100% pure

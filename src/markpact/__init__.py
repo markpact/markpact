@@ -1,8 +1,9 @@
 """Markpact – Executable Markdown Runtime"""
 
-__version__ = "0.1.21"
+__version__ = "0.1.22"
 
 from .converter import convert_markdown_to_markpact, ConversionResult
+from .packer import pack_directory, PackResult, print_pack_report
 from .parser import Block, parse_blocks
 from .runner import run_cmd, ensure_venv
 from .sandbox import Sandbox, find_free_port
@@ -26,6 +27,9 @@ __all__ = [
     "find_free_port",
     "convert_markdown_to_markpact",
     "ConversionResult",
+    "pack_directory",
+    "PackResult",
+    "print_pack_report",
     "generate_contract",
     "GeneratorConfig",
     "EXAMPLE_PROMPTS",

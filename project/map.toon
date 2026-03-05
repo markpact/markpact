@@ -1,22 +1,24 @@
-# markpact | 13f 4792L | python:13
+# markpact | 14f 5233L | python:14
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
-M[13]:
+M[14]:
   demos/demo_live_markpact.py,870
   src/markpact/__init__.py,33
   src/markpact/auto_fix.py,331
-  src/markpact/cli.py,520
+  src/markpact/cli.py,575
   src/markpact/config.py,204
   src/markpact/converter.py,282
   src/markpact/docker_runner.py,333
   src/markpact/generator.py,347
   src/markpact/notebook_converter.py,638
+  src/markpact/packer.py,386
   src/markpact/parser.py,65
   src/markpact/publisher.py,1068
   src/markpact/runner.py,42
   src/markpact/sandbox.py,59
 D:
   src/markpact/cli.py:
-    e: handle_config_cli,main
+    e: handle_pack_cli,handle_config_cli,main
+    handle_pack_cli(argv)
     handle_config_cli(argv)
     main(argv)
   src/markpact/publisher.py:
@@ -62,6 +64,14 @@ D:
     run_live(prompt_key;prompt;model)
     _fallback_readme(prompt)
     main()
+  src/markpact/packer.py:
+    e: PackResult,_should_include,_get_language,_detect_run_command,pack_directory,print_pack_report
+    PackResult: summary(0)  # Result of packing a directory...
+    _should_include(path;exclude_patterns)
+    _get_language(path)
+    _detect_run_command(files)
+    pack_directory(source_dir;output)
+    print_pack_report(result)
   src/markpact/notebook_converter.py:
     e: NotebookCell,Notebook,detect_format,parse_jupyter,parse_rmarkdown,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,notebook_to_markpact,convert_notebook,get_supported_formats
     NotebookCell:  # Represents a cell in a notebook...

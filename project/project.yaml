@@ -3,16 +3,16 @@ project:
   name: markpact
   repo: /home/tom/github/wronai/markpact
   language: python
-  analyzed_at: '2026-03-05T13:07:06Z'
+  analyzed_at: '2026-03-05T14:42:40Z'
   tool: code2llm
   stats:
-    files: 12
-    lines: 6035
-    functions: 114
-    classes: 12
+    files: 13
+    lines: 6476
+    functions: 121
+    classes: 13
 health:
-  cc_avg: 7.7
-  critical_count: 27
+  cc_avg: 7.8
+  critical_count: 29
   critical_limit: 10
   duplicates: 0
   cycles: 0
@@ -46,6 +46,16 @@ health:
     target: publish_pypi
     value: 37
     limit: 10
+    severity: critical
+  - type: high_fan_out
+    target: pack_directory
+    value: 31
+    limit: 10
+    severity: critical
+  - type: cc_exceeded
+    target: pack_directory
+    value: 30
+    limit: 15
     severity: critical
   - type: cc_exceeded
     target: infer_publish_config
@@ -103,28 +113,21 @@ health:
     limit: 15
     severity: warning
   - type: cc_exceeded
-    target: generate_contract
+    target: _detect_run_command
     value: 17
-    limit: 15
-    severity: warning
-  - type: cc_exceeded
-    target: generate_publish_config_with_llm
-    value: 16
-    limit: 15
-    severity: warning
-  - type: cc_exceeded
-    target: run_docker_with_tests
-    value: 15
     limit: 15
     severity: warning
 modules:
 - path: src/markpact/cli.py
-  lines: 520
+  lines: 575
   classes: 0
-  methods: 2
+  methods: 3
   cc_max: 103
   inbound_deps: 0
   exports:
+  - name: handle_pack_cli
+    type: function
+    cc: 6
   - name: handle_config_cli
     type: function
     cc: 12
@@ -272,6 +275,24 @@ modules:
     type: function
     cc: 6
     fan_out: 11
+- path: src/markpact/packer.py
+  lines: 386
+  classes: 1
+  methods: 6
+  cc_max: 30
+  inbound_deps: 1
+  exports:
+  - name: PackResult
+    type: class
+    cc_avg: 3.0
+  - name: pack_directory
+    type: function
+    cc: 30
+    flag: split
+    fan_out: 31
+  - name: print_pack_report
+    type: function
+    cc: 6
 - path: src/markpact/auto_fix.py
   lines: 331
   classes: 0
@@ -546,6 +567,10 @@ hotspots:
 - name: publish_pypi
   fan_out: 37
   note: Publish package to PyPI.
+- name: pack_directory
+  fan_out: 31
+  note: "Pack a directory into markpact README.md format.\n\nArgs:\n    source_dir:\
+    \ Director"
 - name: notebook_to_markpact
   fan_out: 21
   note: Convert notebook to markpact README.md format.
@@ -567,11 +592,12 @@ hotspots:
 - name: handle_config_cli
   fan_out: 15
   note: Handle config subcommand with its own parser
-- name: LivePDF.add_summary_page
-  fan_out: 15
-  note: Orchestrates 15 calls
 refactoring:
   priorities:
+  - action: Split pack_directory (CC=30 → target CC<10)
+    impact: high
+    effort: low
+    module: packer.py
   - action: Split notebook_to_markpact (CC=29 → target CC<10)
     impact: high
     effort: low
@@ -580,6 +606,10 @@ refactoring:
     impact: high
     effort: low
     module: auto_fix.py
+  - action: Split main (CC=103 → target CC<10)
+    impact: high
+    effort: low
+    module: cli.py
   - action: Split infer_publish_config (CC=30 → target CC<10)
     impact: high
     effort: low
@@ -588,15 +618,11 @@ refactoring:
     impact: high
     effort: low
     module: publisher.py
-  - action: Split main (CC=103 → target CC<10)
-    impact: high
-    effort: low
-    module: cli.py
   - action: Split run_live (CC=67 → target CC<10)
     impact: high
     effort: low
     module: demo_live_markpact.py
-  - action: Split god module src/markpact/cli.py (520L, 0 classes)
+  - action: Split god module src/markpact/cli.py (575L, 0 classes)
     impact: high
     effort: high
   - action: Split god module src/markpact/publisher.py (1068L, 2 classes)
@@ -612,6 +638,10 @@ refactoring:
     impact: medium
     effort: low
     module: docker_runner.py
+  - action: Split _detect_run_command (CC=17 → target CC<10)
+    impact: medium
+    effort: low
+    module: packer.py
   - action: Split parse_rmarkdown (CC=15 → target CC<10)
     impact: medium
     effort: low
@@ -620,17 +650,9 @@ refactoring:
     impact: medium
     effort: low
     module: generator.py
-  - action: Split detect_block_type (CC=19 → target CC<10)
-    impact: medium
-    effort: low
-    module: converter.py
-  - action: Split generate_publish_config_with_llm (CC=16 → target CC<10)
-    impact: medium
-    effort: low
-    module: publisher.py
 evolution:
 - date: '2026-03-05'
-  cc_avg: 7.7
-  critical: 27
-  lines: 6035
+  cc_avg: 7.8
+  critical: 29
+  lines: 6476
   note: Automated analysis
