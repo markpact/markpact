@@ -1,0 +1,143 @@
+# markpact | 13f 4791L | python:13
+# Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
+M[13]:
+  demos/demo_live_markpact.py,870
+  src/markpact/__init__.py,33
+  src/markpact/auto_fix.py,331
+  src/markpact/cli.py,520
+  src/markpact/config.py,204
+  src/markpact/converter.py,282
+  src/markpact/docker_runner.py,332
+  src/markpact/generator.py,347
+  src/markpact/notebook_converter.py,638
+  src/markpact/parser.py,65
+  src/markpact/publisher.py,1068
+  src/markpact/runner.py,42
+  src/markpact/sandbox.py,59
+D:
+  src/markpact/cli.py:
+    e: handle_config_cli,main
+    handle_config_cli(argv)
+    main(argv)
+  src/markpact/publisher.py:
+    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
+    PublishConfig: __post_init__(0)  # Configuration for publishing...
+    PublishResult:  # Result of a publish operation...
+    _slugify(name)
+    _first_heading(markdown)
+    _first_paragraph(markdown)
+    _format_subprocess_failure(result)
+    infer_publish_config(readme_path;markdown;blocks;run_command)
+    prompt_publish_config(config)
+    ensure_publish_block_in_readme(readme_path;config)
+    generate_publish_config_with_llm(markdown;verbose)
+    bump_version(version;bump_type)
+    extract_version_from_readme(readme_path)
+    update_version_in_readme(readme_path;new_version)
+    get_license_classifier(license_name)
+    generate_pyproject_toml(config;sandbox;base_path;verbose)
+    publish_pypi(config;sandbox;test;verbose;source_readme_path)
+    generate_package_json(config;sandbox)
+    publish_npm(config;sandbox;registry;verbose)
+    generate_dockerfile(config;sandbox;base_image)
+    publish_docker(config;sandbox;registry;tag;verbose)
+    publish_github_packages(config;sandbox;package_type;verbose)
+    parse_publish_block(block_body;meta)
+    publish(config;sandbox;bump;verbose;source_readme_path)
+  demos/demo_live_markpact.py:
+    e: StepRecord,LiveSession,LivePDF,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,run_live,_fallback_readme,main
+    StepRecord:
+    LiveSession: add_step(5),elapsed(0)
+    LivePDF(FPDF): __init__(0),cell(3),multi_cell(3),get_string_width(1),_bg(0),_page_num(1),add_title_page(1),add_step_page(6),_draw_panel(7),_render_mono(6),_render_right(5),_render_checks(4),add_summary_page(1)  # Landscape A4 PDF with dark theme for live demo output...
+    _ascii(text)
+    hdr(text)
+    step(icon;text)
+    ok(text;detail)
+    fail(text;detail)
+    wait(text)
+    wait_done(ok_flag)
+    info(text)
+    show_menu()
+    list_prompts()
+    run_live(prompt_key;prompt;model)
+    _fallback_readme(prompt)
+    main()
+  src/markpact/notebook_converter.py:
+    e: NotebookCell,Notebook,detect_format,parse_jupyter,parse_rmarkdown,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,notebook_to_markpact,convert_notebook,get_supported_formats
+    NotebookCell:  # Represents a cell in a notebook...
+    Notebook:  # Represents a parsed notebook...
+    detect_format(path)
+    parse_jupyter(path)
+    parse_rmarkdown(path)
+    parse_quarto(path)
+    parse_zeppelin(path)
+    parse_databricks(path)
+    parse_notebook(path)
+    extract_dependencies(notebook)
+    suggest_run_command(notebook)
+    notebook_to_markpact(notebook;output_path;verbose)
+    convert_notebook(input_path;output_path;verbose)
+    get_supported_formats()
+  src/markpact/auto_fix.py:
+    e: detect_error_type,fix_port_in_readme,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,run_with_auto_fix_llm
+    detect_error_type(error_output)
+    fix_port_in_readme(readme_path;new_port)
+    run_with_auto_fix(cmd;sandbox;readme_path;verbose;max_retries)
+    add_missing_dependency(readme_path;module_name)
+    extract_module_name(error_output)
+    fix_with_llm(readme_path;error_output;error_type;verbose)
+    run_with_auto_fix_llm(cmd;sandbox;readme_path;verbose;max_retries;use_llm)
+  src/markpact/converter.py:
+    e: ConvertedBlock,ConversionResult,detect_block_type,suggest_filename,convert_markdown_to_markpact,print_conversion_report
+    ConvertedBlock:  # A converted markpact block...
+    ConversionResult:  # Result of converting a Markdown file...
+    detect_block_type(lang;body)
+    suggest_filename(lang;body;index)
+    convert_markdown_to_markpact(text;verbose)
+    print_conversion_report(result)
+  src/markpact/generator.py:
+    e: GeneratorConfig,_fix_unclosed_blocks,generate_contract,save_contract,get_example_prompt,list_example_prompts
+    GeneratorConfig: from_env(0),from_file(1)  # Configuration for LLM generator...
+    _fix_unclosed_blocks(content)
+    generate_contract(prompt;config;verbose)
+    save_contract(content;output_path;verbose)
+    get_example_prompt(name)
+    list_example_prompts()
+  src/markpact/docker_runner.py:
+    e: stop_existing_container,generate_dockerfile,is_port_free,build_and_run_docker,check_docker_available,run_docker_with_logs,stream_docker_logs,run_docker_with_tests
+    stop_existing_container(container_name;verbose)
+    generate_dockerfile(sandbox_path;deps;run_command)
+    is_port_free(port)
+    build_and_run_docker(sandbox_path;image_name;port;verbose;auto_find_port)
+    check_docker_available()
+    run_docker_with_logs(sandbox_path;image_name;port;follow_logs;verbose;auto_find_port)
+    stream_docker_logs(process;timeout)
+    run_docker_with_tests(sandbox_path;test_body;image_name;port;verbose;auto_find_port)
+  src/markpact/config.py:
+    e: get_env_path,ensure_config_dir,load_env,save_env,init_env,set_config,set_model,set_api_key,set_api_base,apply_preset,show_config,list_providers
+    get_env_path()
+    ensure_config_dir()
+    load_env()
+    save_env(config)
+    init_env(force)
+    set_config(key;value)
+    set_model(model)
+    set_api_key(api_key)
+    set_api_base(api_base)
+    apply_preset(provider;api_key)
+    show_config()
+    list_providers()
+  src/markpact/parser.py:
+    e: Block,parse_blocks
+    Block: get_path(0),get_meta_value(1)
+    parse_blocks(text)
+  src/markpact/sandbox.py:
+    e: Sandbox,find_free_port
+    Sandbox: __init__(1),has_venv(0),write_file(2),write_requirements(1),clean(0)  # Manages sandbox directory for markpact execution...
+    find_free_port(start_port;max_attempts)
+  src/markpact/runner.py:
+    e: run_cmd,ensure_venv,install_deps
+    run_cmd(cmd;sandbox;verbose)
+    ensure_venv(sandbox;verbose)
+    install_deps(deps;sandbox;verbose)
+  src/markpact/__init__.py:

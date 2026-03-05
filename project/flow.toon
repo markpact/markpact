@@ -1,0 +1,225 @@
+# markpact/flow | 114 func | 6 pipelines | 5 hub-types | 2026-03-05
+
+PIPELINES[6] (Core:1, Export:1, Refactor:1, Unknown:3):
+  Src [Core]: list[str] | None → Path
+              → main(argv:list[str] | None) → int       CC=103  IO  !! ▶
+              → handle_config_cli(argv:list[str]) → int CC=12   IO
+              → set_api_base(api_base:str) → dict[str, str] CC=1    pure
+              → set_config(key:str, value:str) → dict[str, str] CC=1    pure
+              → save_env(config:dict[str, str]) → Path  CC=1    IO
+              → ensure_config_dir() → Path              CC=1    IO
+              → get_env_path() → Path                   CC=1    pure ■
+              PURITY: 3/7 pure  BOTTLENECK: main(CC=103)
+
+  Demos [Export]: title → str
+              → add_step_page(title, subtitle, left_lines, right_lines, checks, highlight_kind) CC=2    pure ▶
+              → _render_checks(x, y, w, checks) → str   CC=8    pure
+              → cell(w, h, text, *args, **kwargs)       CC=1    pure
+              → _ascii(text:str) → str                  CC=1    pure ■
+              PURITY: 4/4 pure  BOTTLENECK: _render_checks(CC=8)
+
+  Demos [Refactor]: ? → str
+              → main()                                  CC=6    IO ▶
+              → run_live(prompt_key:str, prompt:str, model:str) CC=67   IO  !!
+              → generate_contract(prompt:str, config:Optional[GeneratorConfig], verbose:bool) → str CC=17   IO  !!
+              → _fix_unclosed_blocks(content:str) → str CC=7    mutation ■
+              PURITY: 0/4 pure  BOTTLENECK: run_live(CC=67)
+
+  Demos [Unknown]: total → str
+              → _page_num(total)                        CC=1    pure ▶
+              → cell(w, h, text, *args, **kwargs)       CC=1    pure
+              → _ascii(text:str) → str                  CC=1    pure ■
+              PURITY: 3/3 pure  BOTTLENECK: _page_num(CC=1)
+
+  Demos [Unknown]: LiveSession → str
+              → add_title_page(session:LiveSession)     CC=1    pure ▶
+              → multi_cell(w, h, text, *args, **kwargs) CC=1    pure
+              → _ascii(text:str) → str                  CC=1    pure ■
+              PURITY: 3/3 pure  BOTTLENECK: add_title_page(CC=1)
+
+  Demos [Unknown]: LiveSession → str
+              → add_summary_page(session:LiveSession)   CC=13   pure ▶
+              → cell(w, h, text, *args, **kwargs)       CC=1    pure
+              → _ascii(text:str) → str                  CC=1    pure ■
+              PURITY: 3/3 pure  BOTTLENECK: add_summary_page(CC=13)
+
+
+TRANSFORMS (fan-out ≥10):
+  main(argv:list[str] | None) → int                       fan=62   !! script-in-disguise
+  run_live(prompt_key:str, prompt:str, model:str)         fan=54   !! mutation-heavy
+  publish_pypi(config:PublishConfig, sandbox:Sandbox, test:bool, verbose:bool, source_readme_path:Optional[Path]) → PublishResult fan=37   !! mutation-heavy
+  notebook_to_markpact(notebook:Notebook, output_path:Optional[Path], verbose:bool) → str fan=21   !! side-effects
+  parse_rmarkdown(path:Path) → Notebook                   fan=20   !! side-effects
+  parse_jupyter(path:Path) → Notebook                     fan=17   fan=17
+  run_with_auto_fix_llm(cmd:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool, max_retries:int, use_llm:bool) → int fan=17   fan=17
+  parse_quarto(path:Path) → Notebook                      fan=15   fan=15
+  handle_config_cli(argv:list[str]) → int                 fan=15   fan=15
+  add_summary_page(session:LiveSession)                   fan=15   PIPELINE:LivePDF.entry
+  parse_publish_block(block_body:str, meta:str) → PublishConfig fan=14   fan=14
+  run_docker_with_tests(sandbox_path:Path, test_body:str, image_name:str, port:int, verbose:bool, auto_find_port:bool) → tuple[int, TestSuite] fan=13   fan=13
+  run_with_auto_fix(cmd:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool, max_retries:int) → int fan=12   fan=12
+  generate_pyproject_toml(config, sandbox, base_path, verbose) → AnalysisResult fan=12   fan=12
+  add_step_page(title, subtitle, left_lines, right_lines, checks, highlight_kind) fan=12   PIPELINE:LivePDF.entry
+
+CONTRACTS:
+  Pipeline: Src
+    main(argv:list[str] | None) → int
+      IN:  argv:list[str] | None
+      OUT: int
+      SIDE-EFFECT: IO(read_text, print, print)
+      SMELL: CC=103 → split
+
+    handle_config_cli(argv:list[str]) → int
+      IN:  argv:list[str]
+      OUT: int
+      SIDE-EFFECT: IO(print, print, print)
+
+    set_api_base(api_base:str) → dict[str, str]
+      IN:  api_base:str
+      OUT: dict[str, str]
+
+    set_config(key:str, value:str) → dict[str, str]
+      IN:  key:str, value:str
+      OUT: dict[str, str]
+
+    save_env(config:dict[str, str]) → Path
+      IN:  config:dict[str, str]
+      OUT: Path
+      SIDE-EFFECT: IO(write_text)
+
+    ensure_config_dir() → Path
+      IN:  ()
+      OUT: Path
+      SIDE-EFFECT: IO(mkdir)
+
+    get_env_path() → Path
+      IN:  ()
+      OUT: Path
+
+  Pipeline: Demos
+    add_step_page(title, subtitle, left_lines, right_lines, checks, highlight_kind)
+      IN:  title, subtitle, left_lines, right_lines, checks, highlight_kind
+      OUT: None
+
+    _render_checks(x, y, w, checks) → str
+      IN:  x, y, w, checks
+      OUT: str
+      INVARIANT: raises on invalid input
+
+    cell(w, h, text, *args, **kwargs)
+      IN:  w, h, text, *args, **kwargs
+      OUT: None
+
+    _ascii(text:str) → str
+      IN:  text:str
+      OUT: str
+
+  Pipeline: Demos
+    main()
+      IN:  ()
+      OUT: None
+      SIDE-EFFECT: IO(print, print, print)
+
+    run_live(prompt_key:str, prompt:str, model:str)
+      IN:  prompt_key:str, prompt:str, model:str
+      OUT: None
+      SIDE-EFFECT: IO(mkdir, print, print)
+      SMELL: CC=67 → split
+
+    generate_contract(prompt:str, config:Optional[GeneratorConfig], verbose:bool) → str
+      IN:  prompt:str, config:Optional[GeneratorConfig], verbose:bool
+      OUT: str
+      SIDE-EFFECT: IO(print, print, print)
+      SMELL: CC=17 → split
+
+    _fix_unclosed_blocks(content:str) → str
+      IN:  content:str
+      OUT: str
+      SIDE-EFFECT: pure
+
+  Pipeline: Demos
+    _page_num(total)
+      IN:  total
+      OUT: None
+
+    cell(w, h, text, *args, **kwargs)
+      IN:  w, h, text, *args, **kwargs
+      OUT: None
+
+    _ascii(text:str) → str
+      IN:  text:str
+      OUT: str
+
+  Pipeline: Demos
+    add_title_page(session:LiveSession)
+      IN:  session:LiveSession
+      OUT: None
+
+    multi_cell(w, h, text, *args, **kwargs)
+      IN:  w, h, text, *args, **kwargs
+      OUT: None
+
+    _ascii(text:str) → str
+      IN:  text:str
+      OUT: str
+
+  Pipeline: Demos
+    add_summary_page(session:LiveSession)
+      IN:  session:LiveSession
+      OUT: None
+
+    cell(w, h, text, *args, **kwargs)
+      IN:  w, h, text, *args, **kwargs
+      OUT: None
+
+    _ascii(text:str) → str
+      IN:  text:str
+      OUT: str
+
+
+DATA_TYPES (by cross-function usage) [96 annotated, 0 inferred / 114 functions]:
+  str                  consumed:55  produced:24   !! HUB-TYPE → split interface
+  Path                 consumed:27  produced:9    !! HUB-TYPE → split interface
+  bool                 consumed:28  produced:8    !! HUB-TYPE → split interface
+  int                  consumed:11  produced:7    !! HUB-TYPE → split interface
+  PublishConfig        consumed:9   produced:4  
+  Sandbox              consumed:12  produced:0    !! HUB-TYPE → split interface
+  dict[str, str]       consumed:1   produced:8    output-heavy
+  Notebook             consumed:3   produced:6  
+  list[str]            consumed:4   produced:1  
+  PublishResult        consumed:0   produced:5    output-heavy
+  GeneratorConfig      consumed:1   produced:2    narrow scope
+  LiveSession          consumed:2   produced:0    narrow scope
+  ConversionResult     consumed:1   produced:1    narrow scope
+  str | None           consumed:1   produced:1    narrow scope
+  AnalysisResult       consumed:0   produced:1    narrow scope
+  subprocess.CompletedProcess consumed:1   produced:0    narrow scope
+  tuple[int, TestSuite] consumed:0   produced:1    narrow scope
+  list[Block]          consumed:0   produced:1    narrow scope
+  tuple[subprocess.Popen, int] consumed:0   produced:1    narrow scope
+  tuple[str, str, float, str] consumed:0   produced:1    narrow scope
+
+  HUB TYPES (consumed ≥10):
+    str → 55 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    Path → 27 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    bool → 28 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    int → 11 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    Sandbox → 12 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+
+SIDE_EFFECTS:
+  IO:        Sandbox.__init__, Sandbox.write_file, Sandbox.write_requirements, ensure_config_dir, load_env, save_env, stop_existing_container, generate_dockerfile, build_and_run_docker, run_docker_with_logs
+  Mutation:  show_config, list_providers, extract_dependencies, parse_blocks, PublishConfig.__post_init__, _first_paragraph, parse_publish_block, convert_markdown_to_markpact, _fix_unclosed_blocks, LiveSession.add_step
+  Pure:      find_free_port, Sandbox.has_venv, Sandbox.clean, get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset
+
+  PIPELINE PURITY:
+    Src             █░░░ 42% pure
+    Demos           ████ 100% pure
+    Demos           ░░░░ 0% pure
+    Demos           ████ 100% pure
+    Demos           ████ 100% pure
+    Demos           ████ 100% pure

@@ -1,0 +1,636 @@
+version: '1'
+project:
+  name: markpact
+  repo: /home/tom/github/wronai/markpact
+  language: python
+  analyzed_at: '2026-03-05T13:02:33Z'
+  tool: code2llm
+  stats:
+    files: 12
+    lines: 6034
+    functions: 114
+    classes: 12
+health:
+  cc_avg: 7.7
+  critical_count: 27
+  critical_limit: 10
+  duplicates: 0
+  cycles: 0
+  alerts:
+  - type: cc_exceeded
+    target: main
+    value: 103
+    limit: 15
+    severity: critical
+  - type: cc_exceeded
+    target: publish_pypi
+    value: 85
+    limit: 15
+    severity: critical
+  - type: cc_exceeded
+    target: run_live
+    value: 67
+    limit: 15
+    severity: critical
+  - type: high_fan_out
+    target: main
+    value: 62
+    limit: 10
+    severity: critical
+  - type: high_fan_out
+    target: run_live
+    value: 54
+    limit: 10
+    severity: critical
+  - type: high_fan_out
+    target: publish_pypi
+    value: 37
+    limit: 10
+    severity: critical
+  - type: cc_exceeded
+    target: infer_publish_config
+    value: 30
+    limit: 15
+    severity: critical
+  - type: cc_exceeded
+    target: notebook_to_markpact
+    value: 29
+    limit: 15
+    severity: critical
+  - type: cc_exceeded
+    target: run_with_auto_fix_llm
+    value: 29
+    limit: 15
+    severity: critical
+  - type: high_fan_out
+    target: notebook_to_markpact
+    value: 21
+    limit: 10
+    severity: critical
+  - type: high_fan_out
+    target: parse_rmarkdown
+    value: 20
+    limit: 10
+    severity: critical
+  - type: high_fan_out
+    target: parse_jupyter
+    value: 17
+    limit: 10
+    severity: error
+  - type: high_fan_out
+    target: run_with_auto_fix_llm
+    value: 17
+    limit: 10
+    severity: error
+  - type: high_fan_out
+    target: parse_quarto
+    value: 15
+    limit: 10
+    severity: error
+  - type: high_fan_out
+    target: handle_config_cli
+    value: 15
+    limit: 10
+    severity: error
+  - type: high_fan_out
+    target: LivePDF.add_summary_page
+    value: 15
+    limit: 10
+    severity: error
+  - type: cc_exceeded
+    target: detect_block_type
+    value: 19
+    limit: 15
+    severity: warning
+  - type: cc_exceeded
+    target: generate_contract
+    value: 17
+    limit: 15
+    severity: warning
+  - type: cc_exceeded
+    target: generate_publish_config_with_llm
+    value: 16
+    limit: 15
+    severity: warning
+  - type: cc_exceeded
+    target: run_docker_with_tests
+    value: 15
+    limit: 15
+    severity: warning
+modules:
+- path: src/markpact/cli.py
+  lines: 520
+  classes: 0
+  methods: 2
+  cc_max: 103
+  inbound_deps: 0
+  exports:
+  - name: handle_config_cli
+    type: function
+    cc: 12
+    fan_out: 15
+  - name: main
+    type: function
+    cc: 103
+    flag: split
+    fan_out: 62
+- path: src/markpact/publisher.py
+  lines: 1068
+  classes: 2
+  methods: 22
+  cc_max: 85
+  inbound_deps: 1
+  exports:
+  - name: PublishConfig
+    type: class
+    cc_avg: 2.0
+  - name: PublishResult
+    type: class
+    cc_avg: 0.0
+  - name: infer_publish_config
+    type: function
+    cc: 30
+    flag: split
+    fan_out: 11
+  - name: prompt_publish_config
+    type: function
+    cc: 4
+  - name: ensure_publish_block_in_readme
+    type: function
+    cc: 5
+  - name: generate_publish_config_with_llm
+    type: function
+    cc: 16
+    flag: split
+  - name: bump_version
+    type: function
+    cc: 4
+  - name: extract_version_from_readme
+    type: function
+    cc: 4
+  - name: update_version_in_readme
+    type: function
+    cc: 2
+  - name: get_license_classifier
+    type: function
+    cc: 1
+  - name: generate_pyproject_toml
+    type: function
+    cc: 12
+    fan_out: 12
+  - name: publish_pypi
+    type: function
+    cc: 85
+    flag: split
+    fan_out: 37
+  - name: generate_package_json
+    type: function
+    cc: 11
+    fan_out: 10
+  - name: publish_npm
+    type: function
+    cc: 6
+  - name: generate_dockerfile
+    type: function
+    cc: 10
+  - name: publish_docker
+    type: function
+    cc: 9
+  - name: publish_github_packages
+    type: function
+    cc: 3
+  - name: parse_publish_block
+    type: function
+    cc: 11
+    fan_out: 14
+  - name: publish
+    type: function
+    cc: 9
+- path: demos/demo_live_markpact.py
+  lines: 870
+  classes: 3
+  methods: 28
+  cc_max: 67
+  inbound_deps: 0
+  exports:
+  - name: StepRecord
+    type: class
+    cc_avg: 0.0
+  - name: LiveSession
+    type: class
+    cc_avg: 1.5
+  - name: LivePDF
+    type: class
+    cc_avg: 4.2
+    methods:
+    - name: add_title_page
+      cc: 1
+      fan_out: 10
+    - name: add_step_page
+      cc: 2
+      fan_out: 12
+    - name: _render_mono
+      cc: 15
+      flag: split
+      fan_out: 11
+    - name: add_summary_page
+      cc: 13
+      fan_out: 15
+  - name: hdr
+    type: function
+    cc: 1
+  - name: step
+    type: function
+    cc: 1
+  - name: ok
+    type: function
+    cc: 2
+  - name: fail
+    type: function
+    cc: 2
+  - name: wait
+    type: function
+    cc: 1
+  - name: wait_done
+    type: function
+    cc: 2
+  - name: info
+    type: function
+    cc: 1
+  - name: show_menu
+    type: function
+    cc: 10
+  - name: list_prompts
+    type: function
+    cc: 3
+  - name: run_live
+    type: function
+    cc: 67
+    flag: split
+    fan_out: 54
+  - name: main
+    type: function
+    cc: 6
+    fan_out: 11
+- path: src/markpact/auto_fix.py
+  lines: 331
+  classes: 0
+  methods: 7
+  cc_max: 29
+  inbound_deps: 1
+  exports:
+  - name: detect_error_type
+    type: function
+    cc: 5
+  - name: fix_port_in_readme
+    type: function
+    cc: 3
+  - name: run_with_auto_fix
+    type: function
+    cc: 14
+    fan_out: 12
+  - name: add_missing_dependency
+    type: function
+    cc: 3
+  - name: extract_module_name
+    type: function
+    cc: 2
+  - name: fix_with_llm
+    type: function
+    cc: 8
+  - name: run_with_auto_fix_llm
+    type: function
+    cc: 29
+    flag: split
+    fan_out: 17
+- path: src/markpact/notebook_converter.py
+  lines: 638
+  classes: 2
+  methods: 12
+  cc_max: 29
+  inbound_deps: 1
+  exports:
+  - name: NotebookCell
+    type: class
+    cc_avg: 0.0
+  - name: Notebook
+    type: class
+    cc_avg: 0.0
+  - name: detect_format
+    type: function
+    cc: 1
+  - name: parse_jupyter
+    type: function
+    cc: 11
+    fan_out: 17
+  - name: parse_rmarkdown
+    type: function
+    cc: 15
+    flag: split
+    fan_out: 20
+  - name: parse_quarto
+    type: function
+    cc: 11
+    fan_out: 15
+  - name: parse_zeppelin
+    type: function
+    cc: 7
+    fan_out: 10
+  - name: parse_databricks
+    type: function
+    cc: 7
+    fan_out: 10
+  - name: parse_notebook
+    type: function
+    cc: 6
+  - name: extract_dependencies
+    type: function
+    cc: 11
+  - name: suggest_run_command
+    type: function
+    cc: 11
+  - name: notebook_to_markpact
+    type: function
+    cc: 29
+    flag: split
+    fan_out: 21
+  - name: convert_notebook
+    type: function
+    cc: 5
+  - name: get_supported_formats
+    type: function
+    cc: 1
+- path: src/markpact/converter.py
+  lines: 282
+  classes: 2
+  methods: 4
+  cc_max: 19
+  inbound_deps: 1
+  exports:
+  - name: ConvertedBlock
+    type: class
+    cc_avg: 0.0
+  - name: ConversionResult
+    type: class
+    cc_avg: 0.0
+  - name: detect_block_type
+    type: function
+    cc: 19
+    flag: split
+  - name: suggest_filename
+    type: function
+    cc: 10
+  - name: convert_markdown_to_markpact
+    type: function
+    cc: 3
+    fan_out: 10
+  - name: print_conversion_report
+    type: function
+    cc: 14
+- path: src/markpact/generator.py
+  lines: 347
+  classes: 1
+  methods: 7
+  cc_max: 17
+  inbound_deps: 3
+  exports:
+  - name: GeneratorConfig
+    type: class
+    cc_avg: 1.5
+  - name: generate_contract
+    type: function
+    cc: 17
+    flag: split
+    fan_out: 11
+  - name: save_contract
+    type: function
+    cc: 2
+  - name: get_example_prompt
+    type: function
+    cc: 1
+  - name: list_example_prompts
+    type: function
+    cc: 1
+- path: src/markpact/docker_runner.py
+  lines: 332
+  classes: 0
+  methods: 8
+  cc_max: 15
+  inbound_deps: 1
+  exports:
+  - name: stop_existing_container
+    type: function
+    cc: 4
+  - name: generate_dockerfile
+    type: function
+    cc: 3
+  - name: is_port_free
+    type: function
+    cc: 2
+  - name: build_and_run_docker
+    type: function
+    cc: 11
+  - name: check_docker_available
+    type: function
+    cc: 2
+  - name: run_docker_with_logs
+    type: function
+    cc: 5
+  - name: stream_docker_logs
+    type: function
+    cc: 8
+  - name: run_docker_with_tests
+    type: function
+    cc: 15
+    flag: split
+    fan_out: 13
+- path: src/markpact/config.py
+  lines: 204
+  classes: 0
+  methods: 12
+  cc_max: 8
+  inbound_deps: 1
+  exports:
+  - name: get_env_path
+    type: function
+    cc: 1
+  - name: ensure_config_dir
+    type: function
+    cc: 1
+  - name: load_env
+    type: function
+    cc: 8
+    fan_out: 11
+  - name: save_env
+    type: function
+    cc: 1
+  - name: init_env
+    type: function
+    cc: 3
+  - name: set_config
+    type: function
+    cc: 1
+  - name: set_model
+    type: function
+    cc: 1
+  - name: set_api_key
+    type: function
+    cc: 1
+  - name: set_api_base
+    type: function
+    cc: 1
+  - name: apply_preset
+    type: function
+    cc: 4
+  - name: show_config
+    type: function
+    cc: 6
+  - name: list_providers
+    type: function
+    cc: 3
+- path: src/markpact/parser.py
+  lines: 65
+  classes: 1
+  methods: 3
+  cc_max: 6
+  inbound_deps: 2
+  exports:
+  - name: Block
+    type: class
+    cc_avg: 2.0
+  - name: parse_blocks
+    type: function
+    cc: 6
+- path: src/markpact/runner.py
+  lines: 42
+  classes: 0
+  methods: 3
+  cc_max: 3
+  inbound_deps: 2
+  exports:
+  - name: run_cmd
+    type: function
+    cc: 3
+  - name: ensure_venv
+    type: function
+    cc: 3
+  - name: install_deps
+    type: function
+    cc: 3
+- path: src/markpact/sandbox.py
+  lines: 59
+  classes: 1
+  methods: 6
+  cc_max: 3
+  inbound_deps: 3
+  exports:
+  - name: Sandbox
+    type: class
+    cc_avg: 1.4
+  - name: find_free_port
+    type: function
+    cc: 3
+- path: src/markpact/__init__.py
+  lines: 33
+  classes: 0
+  methods: 0
+  cc_max: 0
+  inbound_deps: 0
+hotspots:
+- name: main
+  fan_out: 62
+  note: Orchestrates 62 calls
+- name: run_live
+  fan_out: 54
+  note: Orchestrates 54 calls
+- name: publish_pypi
+  fan_out: 37
+  note: Publish package to PyPI.
+- name: notebook_to_markpact
+  fan_out: 21
+  note: Convert notebook to markpact README.md format.
+- name: parse_rmarkdown
+  fan_out: 20
+  note: Parse R Markdown .Rmd file.
+- name: parse_jupyter
+  fan_out: 17
+  note: Parse Jupyter .ipynb notebook.
+- name: run_with_auto_fix_llm
+  fan_out: 17
+  note: 'Run command with automatic error detection and fixing (with optional LLM).
+
+
+    Args'
+- name: parse_quarto
+  fan_out: 15
+  note: Parse Quarto .qmd file (similar to R Markdown but multi-language).
+- name: handle_config_cli
+  fan_out: 15
+  note: Handle config subcommand with its own parser
+- name: LivePDF.add_summary_page
+  fan_out: 15
+  note: Orchestrates 15 calls
+refactoring:
+  priorities:
+  - action: Split notebook_to_markpact (CC=29 → target CC<10)
+    impact: high
+    effort: low
+    module: notebook_converter.py
+  - action: Split run_with_auto_fix_llm (CC=29 → target CC<10)
+    impact: high
+    effort: low
+    module: auto_fix.py
+  - action: Split infer_publish_config (CC=30 → target CC<10)
+    impact: high
+    effort: low
+    module: publisher.py
+  - action: Split publish_pypi (CC=85 → target CC<10)
+    impact: high
+    effort: low
+    module: publisher.py
+  - action: Split main (CC=103 → target CC<10)
+    impact: high
+    effort: low
+    module: cli.py
+  - action: Split run_live (CC=67 → target CC<10)
+    impact: high
+    effort: low
+    module: demo_live_markpact.py
+  - action: Split god module src/markpact/cli.py (520L, 0 classes)
+    impact: high
+    effort: high
+  - action: Split god module src/markpact/publisher.py (1068L, 2 classes)
+    impact: high
+    effort: high
+  - action: Split god module demos/demo_live_markpact.py (870L, 3 classes)
+    impact: high
+    effort: high
+  - action: Split god module src/markpact/notebook_converter.py (638L, 2 classes)
+    impact: high
+    effort: high
+  - action: Split run_docker_with_tests (CC=15 → target CC<10)
+    impact: medium
+    effort: low
+    module: docker_runner.py
+  - action: Split parse_rmarkdown (CC=15 → target CC<10)
+    impact: medium
+    effort: low
+    module: notebook_converter.py
+  - action: Split generate_publish_config_with_llm (CC=16 → target CC<10)
+    impact: medium
+    effort: low
+    module: publisher.py
+  - action: Split detect_block_type (CC=19 → target CC<10)
+    impact: medium
+    effort: low
+    module: converter.py
+  - action: Split generate_contract (CC=17 → target CC<10)
+    impact: medium
+    effort: low
+    module: generator.py
+evolution:
+- date: '2026-03-05'
+  cc_avg: 7.7
+  critical: 27
+  lines: 6034
+  note: Automated analysis

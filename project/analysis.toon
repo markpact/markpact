@@ -1,0 +1,240 @@
+# code2llm | 13f 4791L | py:13 | 2026-03-05
+# CC̄=7.7 | critical:27/114 | dups:0 | cycles:0
+
+HEALTH[12]:
+  🟡 CC    run_docker_with_tests CC=15 (limit:15)
+  🟡 CC    parse_rmarkdown CC=15 (limit:15)
+  🟡 CC    notebook_to_markpact CC=29 (limit:15)
+  🟡 CC    run_with_auto_fix_llm CC=29 (limit:15)
+  🟡 CC    infer_publish_config CC=30 (limit:15)
+  🟡 CC    generate_publish_config_with_llm CC=16 (limit:15)
+  🟡 CC    publish_pypi CC=85 (limit:15)
+  🟡 CC    detect_block_type CC=19 (limit:15)
+  🟡 CC    generate_contract CC=17 (limit:15)
+  🟡 CC    main CC=103 (limit:15)
+  🟡 CC    _render_mono CC=15 (limit:15)
+  🟡 CC    run_live CC=67 (limit:15)
+
+REFACTOR[1]:
+  1. split 12 high-CC methods  (CC>15)
+
+COUPLING:
+                       demos  src.markpact
+         demos            ──             3
+  src.markpact            ←3            ──
+  CYCLES: none
+
+LAYERS:
+  src/                            CC̄=8.4    ←in:0  →out:0
+  │ !! publisher                 1068L  2C   22m  CC=85     ←1
+  │ !! notebook_converter         638L  2C   12m  CC=29     ←1
+  │ !! cli                        520L  0C    2m  CC=103    ←0
+  │ !! generator                  347L  1C    7m  CC=17     ←4
+  │ !! docker_runner              332L  0C    8m  CC=15     ←1
+  │ !! auto_fix                   331L  0C    7m  CC=29     ←1
+  │ !! converter                  282L  2C    4m  CC=19     ←1
+  │ config                     204L  0C   12m  CC=8      ←1
+  │ parser                      65L  1C    3m  CC=6      ←2
+  │ sandbox                     59L  1C    6m  CC=3      ←3
+  │ runner                      42L  0C    3m  CC=3      ←2
+  │ __init__                    33L  0C    0m  CC=0.0    ←0
+  │
+  demos/                          CC̄=5.5    ←in:0  →out:3
+  │ !! demo_live_markpact         870L  3C   28m  CC=67     ←0
+  │
+
+DUPLICATES[0]: none
+
+FUNCTIONS (CC≥10, 27 of 114):
+  103.0  main                                      136n  18exit  loops+cond+ret  !! split
+   85.0  publish_pypi                               73n   4exit  cond+ret  !! split
+   67.0  run_live                                   55n   1exit  loops+cond  !! split
+   30.0  infer_publish_config                       28n   2exit  loops+cond+ret  !! split
+   29.0  notebook_to_markpact                       42n   2exit  loops+cond+ret  !! split
+   29.0  run_with_auto_fix_llm                      37n   3exit  loops+cond+ret  !! split
+   19.0  detect_block_type                          30n   6exit  loops+cond+ret  !! split
+   17.0  generate_contract                          20n   1exit  cond  !! split
+   16.0  generate_publish_config_with_llm           20n   3exit  cond+ret  !! split
+   15.0  run_docker_with_tests                      13n   2exit  cond+ret  !! split
+   15.0  parse_rmarkdown                            18n   2exit  loops+cond+ret  !! split
+   15.0  LivePDF._render_mono                       13n   1exit  loops+cond  !! split
+   14.0  run_with_auto_fix                          22n   4exit  loops+cond+ret
+   14.0  print_conversion_report                    16n   3exit  loops+cond+ret
+   13.0  LivePDF.add_summary_page                    6n   1exit  loops+cond
+   12.0  generate_pyproject_toml                    18n   2exit  loops+cond+ret
+   12.0  handle_config_cli                          30n   9exit  cond+ret
+   11.0  build_and_run_docker                       15n   2exit  cond+ret
+   11.0  parse_jupyter                              11n   2exit  loops+cond+ret
+   11.0  parse_quarto                               15n   2exit  loops+cond+ret
+   11.0  extract_dependencies                       13n   2exit  loops+cond+ret
+   11.0  suggest_run_command                        26n   6exit  loops+cond+ret
+   11.0  generate_package_json                      16n   2exit  loops+cond+ret
+   11.0  parse_publish_block                        16n   2exit  loops+cond+ret
+   10.0  generate_dockerfile                        16n   2exit  loops+cond+ret
+   10.0  suggest_filename                           22n   7exit  cond+ret
+   10.0  show_menu                                   5n   1exit  loops
+
+  summary:
+    critical(≥10): 27 | high(5-10): 21 | medium(2-5): 35 | low(<2): 31
+    24% CC≥10  42% CC≥5
+
+HOTSPOTS:
+  #1  main                                 fan=62   "calls 62 functions"
+  #2  run_live                             fan=54   "calls 54 functions"
+  #3  publish_pypi                         fan=37   "calls 37 functions"
+  #4  notebook_to_markpact                 fan=21   "calls 21 functions"
+  #5  parse_rmarkdown                      fan=20   "calls 20 functions"
+  #6  parse_jupyter                        fan=17   "calls 17 functions"
+  #7  run_with_auto_fix_llm                fan=17   "calls 17 functions"
+  #8  parse_quarto                         fan=15   "calls 15 functions"
+  #9  handle_config_cli                    fan=15   "calls 15 functions"
+  #10 LivePDF.add_summary_page             fan=15   "LivePDF method, fan-out=15"
+
+CLASSES:
+  LivePDF                        ████████████████████████  13m  CC̄=4.2   max=15    !!
+  Sandbox                        █████████                  5m  CC̄=1.4   max=2   
+  Block                          ███                        2m  CC̄=2.0   max=2   
+  GeneratorConfig                ███                        2m  CC̄=1.5   max=2   
+  LiveSession                    ███                        2m  CC̄=1.5   max=2   
+  PublishConfig                  █                          1m  CC̄=2.0   max=2   
+  NotebookCell                                              0m  CC̄=0.0   max=0.0 
+  Notebook                                                  0m  CC̄=0.0   max=0.0 
+  PublishResult                                             0m  CC̄=0.0   max=0.0 
+  ConvertedBlock                                            0m  CC̄=0.0   max=0.0 
+  ConversionResult                                          0m  CC̄=0.0   max=0.0 
+  StepRecord                                                0m  CC̄=0.0   max=0.0 
+
+D:
+  src/markpact/cli.py:
+    e: handle_config_cli,main
+    handle_config_cli(argv)
+    main(argv)
+  src/markpact/publisher.py:
+    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
+    PublishConfig  # Configuration for publishing...
+      __post_init__(0)  CC=2.0
+    PublishResult  # Result of a publish operation...
+    _slugify(name)
+    _first_heading(markdown)
+    _first_paragraph(markdown)
+    _format_subprocess_failure(result)
+    infer_publish_config(readme_path,markdown,blocks,run_command)
+    prompt_publish_config(config)
+    ensure_publish_block_in_readme(readme_path,config)
+    generate_publish_config_with_llm(markdown,verbose)
+    bump_version(version,bump_type)
+    extract_version_from_readme(readme_path)
+    update_version_in_readme(readme_path,new_version)
+    get_license_classifier(license_name)
+    generate_pyproject_toml(config,sandbox,base_path,verbose)
+    publish_pypi(config,sandbox,test,verbose,source_readme_path)
+    generate_package_json(config,sandbox)
+    publish_npm(config,sandbox,registry,verbose)
+    generate_dockerfile(config,sandbox,base_image)
+    publish_docker(config,sandbox,registry,tag,verbose)
+    publish_github_packages(config,sandbox,package_type,verbose)
+    parse_publish_block(block_body,meta)
+    publish(config,sandbox,bump,verbose,source_readme_path)
+  demos/demo_live_markpact.py:
+    e: StepRecord,LiveSession,LivePDF,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,run_live,_fallback_readme,main
+    StepRecord
+    LiveSession
+      add_step(5)  CC=1.0
+    LivePDF  # Landscape A4 PDF with dark theme for live demo output....
+      __init__(0)  CC=1.0
+        → __init__(0)  CC=1.0
+    _ascii(text)
+    hdr(text)
+    step(icon,text)
+    ok(text,detail)
+    fail(text,detail)
+    wait(text)
+    wait_done(ok_flag)
+    info(text)
+    show_menu()
+    list_prompts()
+    run_live(prompt_key,prompt,model)
+    _fallback_readme(prompt)
+    main()
+  src/markpact/notebook_converter.py:
+    e: NotebookCell,Notebook,detect_format,parse_jupyter,parse_rmarkdown,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,notebook_to_markpact,convert_notebook,get_supported_formats
+    NotebookCell  # Represents a cell in a notebook....
+    Notebook  # Represents a parsed notebook....
+    detect_format(path)
+    parse_jupyter(path)
+    parse_rmarkdown(path)
+    parse_quarto(path)
+    parse_zeppelin(path)
+    parse_databricks(path)
+    parse_notebook(path)
+    extract_dependencies(notebook)
+    suggest_run_command(notebook)
+    notebook_to_markpact(notebook,output_path,verbose)
+    convert_notebook(input_path,output_path,verbose)
+    get_supported_formats()
+  src/markpact/auto_fix.py:
+    e: detect_error_type,fix_port_in_readme,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,run_with_auto_fix_llm
+    detect_error_type(error_output)
+    fix_port_in_readme(readme_path,new_port)
+    run_with_auto_fix(cmd,sandbox,readme_path,verbose,max_retries)
+    add_missing_dependency(readme_path,module_name)
+    extract_module_name(error_output)
+    fix_with_llm(readme_path,error_output,error_type,verbose)
+    run_with_auto_fix_llm(cmd,sandbox,readme_path,verbose,max_retries,use_llm)
+  src/markpact/converter.py:
+    e: ConvertedBlock,ConversionResult,detect_block_type,suggest_filename,convert_markdown_to_markpact,print_conversion_report
+    ConvertedBlock  # A converted markpact block....
+    ConversionResult  # Result of converting a Markdown file....
+    detect_block_type(lang,body)
+    suggest_filename(lang,body,index)
+    convert_markdown_to_markpact(text,verbose)
+    print_conversion_report(result)
+  src/markpact/generator.py:
+    e: GeneratorConfig,_fix_unclosed_blocks,generate_contract,save_contract,get_example_prompt,list_example_prompts
+    GeneratorConfig  # Configuration for LLM generator...
+      from_env(0)  CC=1.0
+    _fix_unclosed_blocks(content)
+    generate_contract(prompt,config,verbose)
+    save_contract(content,output_path,verbose)
+    get_example_prompt(name)
+    list_example_prompts()
+  src/markpact/docker_runner.py:
+    e: stop_existing_container,generate_dockerfile,is_port_free,build_and_run_docker,check_docker_available,run_docker_with_logs,stream_docker_logs,run_docker_with_tests
+    stop_existing_container(container_name,verbose)
+    generate_dockerfile(sandbox_path,deps,run_command)
+    is_port_free(port)
+    build_and_run_docker(sandbox_path,image_name,port,verbose,auto_find_port)
+    check_docker_available()
+    run_docker_with_logs(sandbox_path,image_name,port,follow_logs,verbose,auto_find_port)
+    stream_docker_logs(process,timeout)
+    run_docker_with_tests(sandbox_path,test_body,image_name,port,verbose,auto_find_port)
+  src/markpact/config.py:
+    e: get_env_path,ensure_config_dir,load_env,save_env,init_env,set_config,set_model,set_api_key,set_api_base,apply_preset,show_config,list_providers
+    get_env_path()
+    ensure_config_dir()
+    load_env()
+    save_env(config)
+    init_env(force)
+    set_config(key,value)
+    set_model(model)
+    set_api_key(api_key)
+    set_api_base(api_base)
+    apply_preset(provider,api_key)
+    show_config()
+    list_providers()
+  src/markpact/parser.py:
+    e: Block,parse_blocks
+    Block
+      get_path(0)  CC=2.0
+    parse_blocks(text)
+  src/markpact/sandbox.py:
+    e: Sandbox,find_free_port
+    Sandbox  # Manages sandbox directory for markpact execution...
+      __init__(1)  CC=2.0
+    find_free_port(start_port,max_attempts)
+  src/markpact/runner.py:
+    e: run_cmd,ensure_venv,install_deps
+    run_cmd(cmd,sandbox,verbose)
+    ensure_venv(sandbox,verbose)
+    install_deps(deps,sandbox,verbose)
+  src/markpact/__init__.py:

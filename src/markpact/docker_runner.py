@@ -1,5 +1,6 @@
 """Docker sandbox runner for Markpact"""
 
+import socket
 import subprocess
 import sys
 import time

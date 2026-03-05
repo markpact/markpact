@@ -1,0 +1,58 @@
+# code2llm/evolution | 114 func | 12f | 2026-03-05
+
+NEXT[10] (ranked by impact):
+  [1] !! SPLIT           src/markpact/publisher.py
+      WHY: 1068L, 2 classes, max CC=85
+      EFFORT: ~4h  IMPACT: 90780
+
+  [2] !! SPLIT           demos/demo_live_markpact.py
+      WHY: 870L, 3 classes, max CC=67
+      EFFORT: ~4h  IMPACT: 58290
+
+  [3] !! SPLIT           src/markpact/notebook_converter.py
+      WHY: 638L, 2 classes, max CC=29
+      EFFORT: ~4h  IMPACT: 18502
+
+  [4] !! SPLIT-FUNC      main  CC=103  fan=62
+      WHY: CC=103 exceeds 15
+      EFFORT: ~1h  IMPACT: 6386
+
+  [5] !! SPLIT-FUNC      run_live  CC=67  fan=54
+      WHY: CC=67 exceeds 15
+      EFFORT: ~1h  IMPACT: 3618
+
+  [6] !! SPLIT-FUNC      publish_pypi  CC=85  fan=37
+      WHY: CC=85 exceeds 15
+      EFFORT: ~1h  IMPACT: 3145
+
+  [7] !! SPLIT-FUNC      notebook_to_markpact  CC=29  fan=21
+      WHY: CC=29 exceeds 15
+      EFFORT: ~1h  IMPACT: 609
+
+  [8] !! SPLIT-FUNC      run_with_auto_fix_llm  CC=29  fan=17
+      WHY: CC=29 exceeds 15
+      EFFORT: ~1h  IMPACT: 493
+
+  [9] !! SPLIT-FUNC      infer_publish_config  CC=30  fan=11
+      WHY: CC=30 exceeds 15
+      EFFORT: ~1h  IMPACT: 330
+
+  [10] !  SPLIT-FUNC      parse_rmarkdown  CC=15  fan=20
+      WHY: CC=15 exceeds 15
+      EFFORT: ~1h  IMPACT: 300
+
+
+RISKS[3]:
+  ⚠ Splitting src/markpact/publisher.py may break 22 import paths
+  ⚠ Splitting demos/demo_live_markpact.py may break 28 import paths
+  ⚠ Splitting src/markpact/notebook_converter.py may break 12 import paths
+
+METRICS-TARGET:
+  CC̄:          7.7 → ≤5.0
+  max-CC:      103 → ≤20
+  god-modules: 4 → 0
+  high-CC(≥15): 12 → ≤6
+  hub-types:   0 → ≤0
+
+HISTORY:
+  prev CC̄=7.7 → now CC̄=7.7

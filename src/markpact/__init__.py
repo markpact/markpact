@@ -1,6 +1,6 @@
 """Markpact – Executable Markdown Runtime"""
 
-__version__ = "0.1.19"
+__version__ = "0.1.20"
 
 from .converter import convert_markdown_to_markpact, ConversionResult
 from .parser import Block, parse_blocks
