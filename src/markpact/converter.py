@@ -267,11 +267,41 @@ def convert_markdown_to_markpact(text: str, verbose: bool = True) -> ConversionR
     return result
 
 
-def print_conversion_report(result: ConversionResult) -> None:
-    """Print a report of the conversion."""
+def _print_conversion_header() -> None:
+    """Print the conversion report header."""
     print("\n" + "=" * 60)
     print("MARKPACT CONVERSION REPORT")
     print("=" * 60)
+
+
+def _print_block_changes(changes: list[str]) -> None:
+    """Print the list of conversion changes."""
+    for change in changes:
+        print(f"  {change}")
+
+
+def _print_conversion_summary(blocks: list[ConvertedBlock]) -> None:
+    """Print the conversion summary with block counts."""
+    print("\n" + "-" * 60)
+    print("Summary:")
+    
+    deps = [b for b in blocks if b.markpact_tag == "deps"]
+    files = [b for b in blocks if b.markpact_tag == "file"]
+    runs = [b for b in blocks if b.markpact_tag == "run"]
+    
+    if deps:
+        print(f"  • Dependencies: {len(deps)} block(s)")
+    if files:
+        print(f"  • Files: {len(files)} file(s)")
+        for f in files:
+            print(f"      - {f.meta}")
+    if runs:
+        print(f"  • Run command: {len(runs)} block(s)")
+
+
+def print_conversion_report(result: ConversionResult) -> None:
+    """Print a report of the conversion."""
+    _print_conversion_header()
     
     if result.has_markpact:
         print("\n✓ File already contains markpact blocks. No conversion needed.")
@@ -283,24 +313,8 @@ def print_conversion_report(result: ConversionResult) -> None:
         return
     
     print(f"\n✓ Converted {len(result.blocks)} block(s):\n")
+    _print_block_changes(result.changes)
     
-    for change in result.changes:
-        print(f"  {change}")
-    
-    print("\n" + "-" * 60)
-    print("Summary:")
-    
-    deps = [b for b in result.blocks if b.markpact_tag == "deps"]
-    files = [b for b in result.blocks if b.markpact_tag == "file"]
-    runs = [b for b in result.blocks if b.markpact_tag == "run"]
-    
-    if deps:
-        print(f"  • Dependencies: {len(deps)} block(s)")
-    if files:
-        print(f"  • Files: {len(files)} file(s)")
-        for f in files:
-            print(f"      - {f.meta}")
-    if runs:
-        print(f"  • Run command: {len(runs)} block(s)")
+    _print_conversion_summary(result.blocks)
     
     print("=" * 60 + "\n")

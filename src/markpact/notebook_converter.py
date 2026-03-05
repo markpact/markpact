@@ -105,20 +105,14 @@ def parse_jupyter(path: Path) -> Notebook:
     )
 
 
-def parse_rmarkdown(path: Path) -> Notebook:
-    """Parse R Markdown .Rmd file."""
-    content = path.read_text(encoding='utf-8')
-    
-    cells = []
+def _parse_rmd_yaml_front_matter(content: str, default_title: str) -> tuple[dict, str, str]:
+    """Parse YAML front matter from R Markdown. Returns (metadata, title, remaining_content)."""
     metadata = {}
-    title = path.stem
-    description = ""
+    title = default_title
     
-    # Parse YAML front matter
     yaml_match = re.match(r'^---\n(.*?)\n---\n', content, re.DOTALL)
     if yaml_match:
         yaml_content = yaml_match.group(1)
-        # Simple YAML parsing for title
         for line in yaml_content.split('\n'):
             if line.startswith('title:'):
                 title = line.split(':', 1)[1].strip().strip('"\'')
@@ -126,7 +120,12 @@ def parse_rmarkdown(path: Path) -> Notebook:
                 metadata['output'] = line.split(':', 1)[1].strip()
         content = content[yaml_match.end():]
     
-    # Parse code chunks and markdown
+    return metadata, title, content
+
+
+def _parse_rmd_code_chunks(content: str) -> list[NotebookCell]:
+    """Parse R Markdown code chunks. Returns list of cells."""
+    cells = []
     # R Markdown code chunks: ```{r chunk_name, options}
     pattern = r'```\{(\w+)(?:\s+([^}]*))?\}(.*?)```'
     
@@ -164,12 +163,30 @@ def parse_rmarkdown(path: Path) -> Notebook:
             language='markdown',
         ))
     
-    # Get description from first markdown cell
+    return cells
+
+
+def _extract_description_from_cells(cells: list[NotebookCell]) -> str:
+    """Extract description from first non-empty markdown cell."""
     for cell in cells:
         if cell.cell_type == 'markdown' and cell.source.strip():
             lines = [l for l in cell.source.split('\n') if l.strip() and not l.startswith('#')]
-            description = ' '.join(lines)[:200]
-            break
+            return ' '.join(lines)[:200]
+    return ""
+
+
+def parse_rmarkdown(path: Path) -> Notebook:
+    """Parse R Markdown .Rmd file."""
+    content = path.read_text(encoding='utf-8')
+    
+    # Parse YAML front matter
+    metadata, title, remaining_content = _parse_rmd_yaml_front_matter(content, path.stem)
+    
+    # Parse code chunks
+    cells = _parse_rmd_code_chunks(remaining_content)
+    
+    # Extract description
+    description = _extract_description_from_cells(cells)
     
     return Notebook(
         cells=cells,
@@ -180,17 +197,12 @@ def parse_rmarkdown(path: Path) -> Notebook:
     )
 
 
-def parse_quarto(path: Path) -> Notebook:
-    """Parse Quarto .qmd file (similar to R Markdown but multi-language)."""
-    content = path.read_text(encoding='utf-8')
-    
-    cells = []
+def _parse_quarto_yaml_front_matter(content: str, default_title: str) -> tuple[dict, str, str, str]:
+    """Parse YAML front matter from Quarto. Returns (metadata, title, remaining_content, default_language)."""
     metadata = {}
-    title = path.stem
-    description = ""
+    title = default_title
     default_language = "python"
     
-    # Parse YAML front matter
     yaml_match = re.match(r'^---\n(.*?)\n---\n', content, re.DOTALL)
     if yaml_match:
         yaml_content = yaml_match.group(1)
@@ -205,7 +217,12 @@ def parse_quarto(path: Path) -> Notebook:
                     default_language = 'r'
         content = content[yaml_match.end():]
     
-    # Parse code chunks (Quarto uses ```{python} or ```{r} syntax)
+    return metadata, title, content, default_language
+
+
+def _parse_quarto_code_chunks(content: str) -> list[NotebookCell]:
+    """Parse Quarto code chunks. Returns list of cells."""
+    cells = []
     pattern = r'```\{(\w+)(?:\s+([^}]*))?\}(.*?)```'
     
     last_end = 0
@@ -231,6 +248,7 @@ def parse_quarto(path: Path) -> Notebook:
         
         last_end = match.end()
     
+    # Add remaining markdown
     remaining = content[last_end:].strip()
     if remaining:
         cells.append(NotebookCell(
@@ -239,12 +257,25 @@ def parse_quarto(path: Path) -> Notebook:
             language='markdown',
         ))
     
+    return cells
+
+
+def parse_quarto(path: Path) -> Notebook:
+    """Parse Quarto .qmd file (similar to R Markdown but multi-language)."""
+    content = path.read_text(encoding='utf-8')
+    
+    # Parse YAML front matter
+    metadata, title, remaining_content, default_language = _parse_quarto_yaml_front_matter(content, path.stem)
+    
+    # Parse code chunks
+    cells = _parse_quarto_code_chunks(remaining_content)
+    
     return Notebook(
         cells=cells,
         metadata=metadata,
         language=default_language,
         title=title,
-        description=description,
+        description="",
     )
 
 
@@ -491,6 +522,37 @@ def _extract_and_format_deps(notebook: Notebook) -> list[str]:
     return lines
 
 
+def _should_skip_first_markdown_cell(cell: NotebookCell, notebook: Notebook, skip_first_title: bool) -> bool:
+    """Check if first markdown cell should be skipped (title-only cell)."""
+    if not skip_first_title or cell.cell_type != 'markdown':
+        return False
+    
+    lines_in_cell = cell.source.strip().split('\n')
+    has_only_title = all(
+        l.startswith('#') or not l.strip() or l.strip() == notebook.description.strip()
+        for l in lines_in_cell
+    )
+    return has_only_title
+
+
+def _extract_markdown_section(cell: NotebookCell) -> str | None:
+    """Extract section header from markdown cell (## heading)."""
+    for line in cell.source.strip().split('\n'):
+        if line.startswith('##'):
+            return line
+    return None
+
+
+def _extract_file_hint(source: str) -> tuple[str | None, str]:
+    """Extract file path hint from comment. Returns (filename, remaining_source)."""
+    file_match = re.match(r'^#\s*(?:file:|path:)\s*(\S+)', source)
+    if file_match:
+        filename = file_match.group(1)
+        remaining = '\n'.join(source.split('\n')[1:])
+        return filename, remaining
+    return None, source
+
+
 def _process_notebook_cells(notebook: Notebook) -> tuple[list, list]:
     """Process notebook cells and return (code_cells, markdown_sections)."""
     code_cells = []
@@ -501,18 +563,11 @@ def _process_notebook_cells(notebook: Notebook) -> tuple[list, list]:
     
     for cell in notebook.cells:
         if cell.cell_type == 'markdown':
-            source = cell.source.strip()
-            
             # Skip first cell if it's the title we already used
-            if skip_first_title:
+            if _should_skip_first_markdown_cell(cell, notebook, skip_first_title):
                 skip_first_title = False
-                lines_in_cell = source.split('\n')
-                has_only_title = all(
-                    l.startswith('#') or not l.strip() or l.strip() == notebook.description.strip()
-                    for l in lines_in_cell
-                )
-                if has_only_title:
-                    continue
+                continue
+            skip_first_title = False
             
             # If we have accumulated code, save it first
             if current_file_content:
@@ -520,24 +575,23 @@ def _process_notebook_cells(notebook: Notebook) -> tuple[list, list]:
                 current_file_content = []
             
             # Add markdown section header only
-            for line in source.split('\n'):
-                if line.startswith('##'):
-                    markdown_sections.append(line)
-                    break
+            section = _extract_markdown_section(cell)
+            if section:
+                markdown_sections.append(section)
             
         elif cell.cell_type == 'code':
+            skip_first_title = False
             source = cell.source.strip()
             if not source:
                 continue
             
             # Check for file path hints in comments
-            file_match = re.match(r'^#\s*(?:file:|path:)\s*(\S+)', source)
-            if file_match:
+            new_filename, source = _extract_file_hint(source)
+            if new_filename:
                 if current_file_content:
                     code_cells.append((current_file_name, '\n'.join(current_file_content)))
                     current_file_content = []
-                current_file_name = file_match.group(1)
-                source = '\n'.join(source.split('\n')[1:])
+                current_file_name = new_filename
             
             current_file_name = 'app.py'
             current_file_content.append(source)

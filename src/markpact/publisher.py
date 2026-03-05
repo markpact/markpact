@@ -82,6 +82,18 @@ def _format_subprocess_failure(result: subprocess.CompletedProcess) -> str:
     return payload[:400]
 
 
+def _check_file_type(path: str) -> dict[str, bool]:
+    """Check file type and return flags."""
+    lower = path.lower()
+    return {
+        "package_json": lower.endswith("package.json"),
+        "pyproject": lower.endswith("pyproject.toml") or lower.endswith("setup.py"),
+        "dockerfile": lower.endswith("dockerfile"),
+        "js": lower.endswith((".js", ".ts", ".mjs", ".cjs")),
+        "python_pkg": lower.endswith("__init__.py"),
+    }
+
+
 def _analyze_blocks_for_types(blocks: list[object]) -> dict[str, bool]:
     """Analyze blocks to detect file types. Returns dict with flags."""
     flags = {
@@ -96,19 +108,22 @@ def _analyze_blocks_for_types(blocks: list[object]) -> dict[str, bool]:
         kind = getattr(b, "kind", "")
         path = getattr(b, "get_path", lambda: None)()
         if kind == "file" and path:
-            lower = path.lower()
-            if lower.endswith("package.json"):
-                flags["has_package_json"] = True
-            if lower.endswith("pyproject.toml") or lower.endswith("setup.py"):
-                flags["has_pyproject"] = True
-            if lower.endswith("dockerfile"):
-                flags["has_dockerfile"] = True
-            if lower.endswith((".js", ".ts", ".mjs", ".cjs")):
-                flags["has_js"] = True
-            if lower.endswith("__init__.py"):
-                flags["has_python_pkg"] = True
+            file_types = _check_file_type(path)
+            flags["has_package_json"] |= file_types["package_json"]
+            flags["has_pyproject"] |= file_types["pyproject"]
+            flags["has_dockerfile"] |= file_types["dockerfile"]
+            flags["has_js"] |= file_types["js"]
+            flags["has_python_pkg"] |= file_types["python_pkg"]
     
     return flags
+
+
+def _is_web_service(run_command: str | None) -> bool:
+    """Check if run command indicates a web service."""
+    if not run_command:
+        return False
+    web_indicators = ["uvicorn", "gunicorn", "flask run", "node ", "npm start"]
+    return any(x in run_command for x in web_indicators)
 
 
 def _detect_registry(flags: dict[str, bool], run_command: str | None) -> str:
@@ -116,8 +131,7 @@ def _detect_registry(flags: dict[str, bool], run_command: str | None) -> str:
     if flags["has_package_json"] or flags["has_js"]:
         return "npm"
     
-    web_indicators = ["uvicorn", "gunicorn", "flask run", "node ", "npm start"]
-    if flags["has_dockerfile"] or (run_command and any(x in run_command for x in web_indicators)):
+    if flags["has_dockerfile"] or _is_web_service(run_command):
         return "docker"
     
     if flags["has_pyproject"] or flags["has_python_pkg"]:
@@ -241,32 +255,38 @@ def ensure_publish_block_in_readme(readme_path: Path, config: "PublishConfig") -
     readme_path.write_text(new_text)
 
 
-def generate_publish_config_with_llm(markdown: str, verbose: bool = False) -> Optional["PublishConfig"]:
-    """Try to generate a publish config using LLM.
-
-    Requires optional dependency markpact[llm].
-    """
+def _setup_llm_for_publish() -> tuple[Optional["GeneratorConfig"], Optional["litellm"], bool]:
+    """Setup LLM configuration for publish config generation. Returns (cfg, litellm_module, available)."""
     try:
         from .generator import GeneratorConfig, litellm, LITELLM_AVAILABLE
     except Exception:
-        return None
+        return None, None, False
 
     if not LITELLM_AVAILABLE:
-        return None
+        return None, None, False
 
     cfg = GeneratorConfig.from_env()
-    if cfg.api_base:
-        litellm.api_base = cfg.api_base
-    if cfg.api_key:
-        if "openrouter" in cfg.model.lower():
-            os.environ["OPENROUTER_API_KEY"] = cfg.api_key
-        elif "openai" in cfg.model.lower() or cfg.model.startswith("gpt"):
-            os.environ["OPENAI_API_KEY"] = cfg.api_key
-        elif "anthropic" in cfg.model.lower() or "claude" in cfg.model.lower():
-            os.environ["ANTHROPIC_API_KEY"] = cfg.api_key
-        elif "groq" in cfg.model.lower():
-            os.environ["GROQ_API_KEY"] = cfg.api_key
+    return cfg, litellm, True
 
+
+def _set_provider_api_key_for_publish(cfg) -> None:
+    """Set provider-specific API key environment variables."""
+    if not cfg.api_key:
+        return
+
+    model_lower = cfg.model.lower()
+    if "openrouter" in model_lower:
+        os.environ["OPENROUTER_API_KEY"] = cfg.api_key
+    elif "openai" in model_lower or cfg.model.startswith("gpt"):
+        os.environ["OPENAI_API_KEY"] = cfg.api_key
+    elif "anthropic" in model_lower or "claude" in model_lower:
+        os.environ["ANTHROPIC_API_KEY"] = cfg.api_key
+    elif "groq" in model_lower:
+        os.environ["GROQ_API_KEY"] = cfg.api_key
+
+
+def _call_llm_for_publish_config(litellm, cfg, markdown: str) -> Optional[str]:
+    """Call LLM to generate publish config. Returns content or None on failure."""
     system = (
         "You extract publishing metadata from a README. "
         "Return ONLY a single markpact:publish codeblock. "
@@ -288,15 +308,43 @@ def generate_publish_config_with_llm(markdown: str, verbose: bool = False) -> Op
             temperature=0.2,
             max_tokens=512,
         )
-        content = resp.choices[0].message.content
+        return resp.choices[0].message.content
     except Exception:
         return None
 
+
+def _extract_publish_block_from_response(content: str) -> tuple[Optional[str], Optional[str]]:
+    """Extract publish block meta and body from LLM response."""
     m = re.search(r"```(?:[^\s]+\s+)?markpact:publish(?P<meta>[^\n]*)\n(?P<body>.*?)\n```", content, re.DOTALL)
     if not m:
-        return None
+        return None, None
     meta = (m.group("meta") or "").strip()
     body = (m.group("body") or "").strip()
+    return meta, body
+
+
+def generate_publish_config_with_llm(markdown: str, verbose: bool = False) -> Optional["PublishConfig"]:
+    """Try to generate a publish config using LLM.
+
+    Requires optional dependency markpact[llm].
+    """
+    cfg, litellm, available = _setup_llm_for_publish()
+    if not available or cfg is None:
+        return None
+
+    if cfg.api_base:
+        litellm.api_base = cfg.api_base
+
+    _set_provider_api_key_for_publish(cfg)
+
+    content = _call_llm_for_publish_config(litellm, cfg, markdown)
+    if content is None:
+        return None
+
+    meta, body = _extract_publish_block_from_response(content)
+    if meta is None or body is None:
+        return None
+
     try:
         return parse_publish_block(body, meta)
     except Exception:
@@ -555,30 +603,49 @@ def _copy_readme(source_readme_path: Path | None, base_path: Path, config: Publi
             readme.write_text(f"# {config.name}\n\n{config.description}\n")
 
 
-def _build_package(base_path: Path, verbose: bool) -> subprocess.CompletedProcess | None:
-    """Build package and return result. Returns None on success, result on failure."""
-    if verbose:
-        print("[markpact] Building package...")
-    
-    build_result = subprocess.run(
+def _run_build_command(base_path: Path) -> subprocess.CompletedProcess:
+    """Run the build command and return result."""
+    return subprocess.run(
         [sys.executable, "-m", "build", "--no-isolation"],
         cwd=base_path,
         capture_output=True,
         text=True,
     )
+
+
+def _print_build_output(build_result: subprocess.CompletedProcess) -> None:
+    """Print build stdout/stderr for debugging."""
+    print("[markpact] Build stdout/stderr:")
+    print("--- STDOUT ---")
+    print(build_result.stdout[-1000:] if build_result.stdout else "(empty)")
+    print("--- STDERR ---")
+    print(build_result.stderr[-1000:] if build_result.stderr else "(empty)")
+    print("--- END ---")
+
+
+def _get_build_error_hint(stdout: str, stderr: str) -> str | None:
+    """Generate hint based on build error output. Returns hint or None."""
+    combined = (stdout or "") + (stderr or "")
+    if "No module named 'build'" in combined:
+        return "[markpact] HINT: 'build' package not found. Install it with: pip install build"
+    elif "Cannot import 'hatchling.build'" in combined or "Backend 'hatchling.build' is not available" in combined:
+        return "[markpact] HINT: 'hatchling' backend not found. Install it with: pip install hatchling"
+    return None
+
+
+def _build_package(base_path: Path, verbose: bool) -> subprocess.CompletedProcess | None:
+    """Build package and return result. Returns None on success, result on failure."""
+    if verbose:
+        print("[markpact] Building package...")
+    
+    build_result = _run_build_command(base_path)
     
     if build_result.returncode != 0:
         if verbose:
-            print("[markpact] Build stdout/stderr:")
-            print("--- STDOUT ---")
-            print(build_result.stdout[-1000:] if build_result.stdout else "(empty)")
-            print("--- STDERR ---")
-            print(build_result.stderr[-1000:] if build_result.stderr else "(empty)")
-            print("--- END ---")
-            if "No module named 'build'" in (build_result.stdout or "") or "No module named 'build'" in (build_result.stderr or ""):
-                print("[markpact] HINT: 'build' package not found. Install it with: pip install build")
-            elif "Cannot import 'hatchling.build'" in (build_result.stdout or "") or "Backend 'hatchling.build' is not available" in (build_result.stdout or ""):
-                print("[markpact] HINT: 'hatchling' backend not found. Install it with: pip install hatchling")
+            _print_build_output(build_result)
+            hint = _get_build_error_hint(build_result.stdout, build_result.stderr)
+            if hint:
+                print(hint)
         return build_result
     return None
 
