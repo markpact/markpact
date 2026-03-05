@@ -122,27 +122,22 @@ def _get_language(path: Path) -> str:
     return LANG_EXTENSIONS.get(path.suffix.lower(), "text")
 
 
-def _detect_run_command(files: list[Path]) -> Optional[str]:
-    """Try to detect run command based on project files."""
+def _detect_file_indicators(files: list[Path]) -> dict[str, bool]:
+    """Detect framework indicators based on file names."""
+    return {
+        "has_main_py": any(f.name.lower() == "main.py" for f in files),
+        "has_app_py": any(f.name.lower() == "app.py" for f in files),
+        "has_package_json": any(f.name.lower() == "package.json" for f in files),
+        "has_requirements": any(f.name.lower() == "requirements.txt" for f in files),
+    }
+
+
+def _detect_framework_from_content(files: list[Path]) -> tuple[bool, bool]:
+    """Detect FastAPI and Flask from Python file content."""
     has_fastapi = False
     has_flask = False
-    has_package_json = False
-    has_requirements = False
-    has_main_py = False
-    has_app_py = False
     
     for f in files:
-        name = f.name.lower()
-        if name == "main.py":
-            has_main_py = True
-        elif name == "app.py":
-            has_app_py = True
-        elif name == "package.json":
-            has_package_json = True
-        elif name == "requirements.txt":
-            has_requirements = True
-        
-        # Check content for FastAPI/Flask
         if f.suffix == ".py":
             try:
                 content = f.read_text(encoding="utf-8", errors="ignore")[:2000]
@@ -153,26 +148,38 @@ def _detect_run_command(files: list[Path]) -> Optional[str]:
             except Exception:
                 pass
     
+    return has_fastapi, has_flask
+
+
+def _build_run_command(indicators: dict[str, bool], has_fastapi: bool, has_flask: bool) -> Optional[str]:
+    """Build run command based on detected indicators."""
     if has_fastapi:
-        if has_main_py:
+        if indicators["has_main_py"]:
             return "uvicorn main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8000}"
-        if has_app_py:
+        if indicators["has_app_py"]:
             return "uvicorn app:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8000}"
         return "uvicorn main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8000}"
     
     if has_flask:
         return "flask run --host 0.0.0.0 --port ${MARKPACT_PORT:-5000}"
     
-    if has_package_json:
+    if indicators["has_package_json"]:
         return "npm start"
     
-    if has_main_py:
+    if indicators["has_main_py"]:
         return "python main.py"
     
-    if has_app_py:
+    if indicators["has_app_py"]:
         return "python app.py"
     
     return None
+
+
+def _detect_run_command(files: list[Path]) -> Optional[str]:
+    """Try to detect run command based on project files."""
+    indicators = _detect_file_indicators(files)
+    has_fastapi, has_flask = _detect_framework_from_content(files)
+    return _build_run_command(indicators, has_fastapi, has_flask)
 
 
 def _collect_files(

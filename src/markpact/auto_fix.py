@@ -48,6 +48,62 @@ def fix_port_in_readme(readme_path: Path, new_port: int) -> bool:
     return False
 
 
+def _setup_env_with_venv_simple(sandbox: Sandbox) -> dict:
+    """Setup environment with virtualenv if available."""
+    env = os.environ.copy()
+    if sandbox.venv_bin.exists():
+        env["VIRTUAL_ENV"] = str(sandbox.venv_bin.parent)
+        env["PATH"] = f"{sandbox.venv_bin}:{env.get('PATH', '')}"
+    return env
+
+
+def _run_and_print(cmd: str, sandbox: Sandbox, env: dict, verbose: bool) -> subprocess.CompletedProcess:
+    """Run subprocess and print output. Returns result."""
+    if verbose:
+        print(f"[markpact] RUN: {cmd}")
+    
+    try:
+        result = subprocess.run(
+            cmd,
+            shell=True,
+            cwd=sandbox.path,
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+    except KeyboardInterrupt:
+        if verbose:
+            print("\n[markpact] Stopped by user (Ctrl+C)")
+        raise
+    
+    if result.stdout:
+        print(result.stdout, end='')
+    if result.stderr:
+        print(result.stderr, end='')
+    
+    return result
+
+
+def _handle_port_error_simple(
+    cmd: str,
+    env: dict,
+    readme_path: Optional[Path],
+) -> tuple[str, dict]:
+    """Handle port in use error. Returns (new_cmd, new_env)."""
+    new_port = find_free_port()
+    print(f"\n[markpact] Port in use. Trying port {new_port}...")
+    
+    if readme_path and readme_path.exists():
+        if fix_port_in_readme(readme_path, new_port):
+            print(f"[markpact] Updated README with new port: {new_port}")
+    
+    new_cmd = re.sub(r'\$\{MARKPACT_PORT:-\d+\}', str(new_port), cmd)
+    new_cmd = re.sub(r'--port\s+\d+', f'--port {new_port}', new_cmd)
+    env["MARKPACT_PORT"] = str(new_port)
+    
+    return new_cmd, env
+
+
 def run_with_auto_fix(
     cmd: str,
     sandbox: Sandbox,
@@ -67,37 +123,14 @@ def run_with_auto_fix(
     Returns:
         Exit code (0 for success)
     """
-    env = os.environ.copy()
-    if sandbox.venv_bin.exists():
-        env["VIRTUAL_ENV"] = str(sandbox.venv_bin.parent)
-        env["PATH"] = f"{sandbox.venv_bin}:{env.get('PATH', '')}"
-    
+    env = _setup_env_with_venv_simple(sandbox)
     current_cmd = cmd
     
     for attempt in range(max_retries + 1):
-        if verbose:
-            print(f"[markpact] RUN: {current_cmd}")
-        
         try:
-            # Run with output capture for error detection
-            result = subprocess.run(
-                current_cmd,
-                shell=True,
-                cwd=sandbox.path,
-                env=env,
-                capture_output=True,
-                text=True,
-            )
+            result = _run_and_print(current_cmd, sandbox, env, verbose)
         except KeyboardInterrupt:
-            if verbose:
-                print("\n[markpact] Stopped by user (Ctrl+C)")
-            return 130  # Standard exit code for SIGINT
-            
-        # Print output
-        if result.stdout:
-            print(result.stdout, end='')
-        if result.stderr:
-            print(result.stderr, end='')
+            return 130
         
         if result.returncode == 0:
             return 0
@@ -107,26 +140,7 @@ def run_with_auto_fix(
         error_type = detect_error_type(combined_output)
         
         if error_type == "port_in_use" and attempt < max_retries:
-            # Find a free port and retry
-            new_port = find_free_port()
-            print(f"\n[markpact] Port in use. Trying port {new_port}...")
-            
-            # Update README if provided
-            if readme_path and readme_path.exists():
-                if fix_port_in_readme(readme_path, new_port):
-                    print(f"[markpact] Updated README with new port: {new_port}")
-            
-            # Update command with new port
-            current_cmd = re.sub(
-                r'\$\{MARKPACT_PORT:-\d+\}',
-                str(new_port),
-                cmd
-            )
-            # Also try direct port replacement
-            current_cmd = re.sub(r'--port\s+\d+', f'--port {new_port}', current_cmd)
-            
-            # Set environment variable
-            env["MARKPACT_PORT"] = str(new_port)
+            current_cmd, env = _handle_port_error_simple(cmd, env, readme_path)
             continue
         
         # No auto-fix available

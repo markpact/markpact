@@ -199,6 +199,61 @@ def _fix_unclosed_blocks(content: str) -> str:
     return '\n'.join(lines)
 
 
+def _configure_litellm(config: GeneratorConfig, verbose: bool) -> None:
+    """Configure litellm with API base and verbose output."""
+    if config.api_base:
+        litellm.api_base = config.api_base
+    
+    if verbose:
+        print(f"[markpact] Using model: {config.model}")
+        print(f"[markpact] API base: {config.api_base}")
+
+
+def _set_provider_api_key(model: str, api_key: str | None) -> None:
+    """Set provider-specific API key environment variables."""
+    if not api_key:
+        return
+    
+    model_lower = model.lower()
+    if "openrouter" in model_lower:
+        os.environ["OPENROUTER_API_KEY"] = api_key
+    elif "openai" in model_lower or model.startswith("gpt"):
+        os.environ["OPENAI_API_KEY"] = api_key
+    elif "anthropic" in model_lower or "claude" in model_lower:
+        os.environ["ANTHROPIC_API_KEY"] = api_key
+    elif "groq" in model_lower:
+        os.environ["GROQ_API_KEY"] = api_key
+
+
+def _call_llm_with_config(config: GeneratorConfig, messages: list) -> str:
+    """Make LLM completion call and return content."""
+    completion_kwargs = {
+        "model": config.model,
+        "messages": messages,
+        "temperature": config.temperature,
+        "max_tokens": config.max_tokens,
+    }
+    
+    if config.api_key:
+        completion_kwargs["api_key"] = config.api_key
+    
+    response = litellm.completion(**completion_kwargs)
+    return response.choices[0].message.content
+
+
+def _clean_llm_response(content: str) -> str:
+    """Clean up LLM response by removing markdown code fences."""
+    # Remove markdown code fences if wrapped
+    if content.startswith("```markdown"):
+        content = content[11:]
+    if content.startswith("```"):
+        content = content[3:]
+    if content.endswith("```"):
+        content = content[:-3]
+    
+    return content.strip()
+
+
 def generate_contract(
     prompt: str,
     config: Optional[GeneratorConfig] = None,
@@ -227,26 +282,12 @@ def generate_contract(
     if config is None:
         config = GeneratorConfig.from_env()
     
+    _configure_litellm(config, verbose)
+    
     if verbose:
-        print(f"[markpact] Using model: {config.model}")
-        print(f"[markpact] API base: {config.api_base}")
         print(f"[markpact] Generating contract for: {prompt[:50]}...")
     
-    # Configure litellm
-    if config.api_base:
-        litellm.api_base = config.api_base
-    
-    # Set API key for the provider
-    if config.api_key:
-        # LiteLLM uses different env vars for different providers
-        if "openrouter" in config.model.lower():
-            os.environ["OPENROUTER_API_KEY"] = config.api_key
-        elif "openai" in config.model.lower() or config.model.startswith("gpt"):
-            os.environ["OPENAI_API_KEY"] = config.api_key
-        elif "anthropic" in config.model.lower() or "claude" in config.model.lower():
-            os.environ["ANTHROPIC_API_KEY"] = config.api_key
-        elif "groq" in config.model.lower():
-            os.environ["GROQ_API_KEY"] = config.api_key
+    _set_provider_api_key(config.model, config.api_key)
     
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -254,35 +295,9 @@ def generate_contract(
     ]
     
     try:
-        # Build completion kwargs
-        completion_kwargs = {
-            "model": config.model,
-            "messages": messages,
-            "temperature": config.temperature,
-            "max_tokens": config.max_tokens,
-        }
-        
-        # Add API key directly if provided
-        if config.api_key:
-            completion_kwargs["api_key"] = config.api_key
-        
-        response = litellm.completion(**completion_kwargs)
-        
-        content = response.choices[0].message.content
-        
-        # Clean up response (remove markdown code fences if wrapped)
-        if content.startswith("```markdown"):
-            content = content[11:]
-        if content.startswith("```"):
-            content = content[3:]
-        if content.endswith("```"):
-            content = content[:-3]
-        
-        content = content.strip()
-        
-        # Fix unclosed code blocks - ensure last markpact block is closed
+        content = _call_llm_with_config(config, messages)
+        content = _clean_llm_response(content)
         content = _fix_unclosed_blocks(content)
-        
         return content
         
     except Exception as e:
