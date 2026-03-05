@@ -1,4 +1,4 @@
-# code2llm | 13f 4791L | py:13 | 2026-03-05
+# code2llm | 13f 4792L | py:13 | 2026-03-05
 # CC̄=7.7 | critical:27/114 | dups:0 | cycles:0
 
 HEALTH[12]:
@@ -6,11 +6,11 @@ HEALTH[12]:
   🟡 CC    parse_rmarkdown CC=15 (limit:15)
   🟡 CC    notebook_to_markpact CC=29 (limit:15)
   🟡 CC    run_with_auto_fix_llm CC=29 (limit:15)
+  🟡 CC    generate_contract CC=17 (limit:15)
+  🟡 CC    detect_block_type CC=19 (limit:15)
   🟡 CC    infer_publish_config CC=30 (limit:15)
   🟡 CC    generate_publish_config_with_llm CC=16 (limit:15)
   🟡 CC    publish_pypi CC=85 (limit:15)
-  🟡 CC    detect_block_type CC=19 (limit:15)
-  🟡 CC    generate_contract CC=17 (limit:15)
   🟡 CC    main CC=103 (limit:15)
   🟡 CC    _render_mono CC=15 (limit:15)
   🟡 CC    run_live CC=67 (limit:15)
@@ -30,7 +30,7 @@ LAYERS:
   │ !! notebook_converter         638L  2C   12m  CC=29     ←1
   │ !! cli                        520L  0C    2m  CC=103    ←0
   │ !! generator                  347L  1C    7m  CC=17     ←4
-  │ !! docker_runner              332L  0C    8m  CC=15     ←1
+  │ !! docker_runner              333L  0C    8m  CC=15     ←1
   │ !! auto_fix                   331L  0C    7m  CC=29     ←1
   │ !! converter                  282L  2C    4m  CC=19     ←1
   │ config                     204L  0C   12m  CC=8      ←1
@@ -70,8 +70,8 @@ FUNCTIONS (CC≥10, 27 of 114):
    11.0  suggest_run_command                        26n   6exit  loops+cond+ret
    11.0  generate_package_json                      16n   2exit  loops+cond+ret
    11.0  parse_publish_block                        16n   2exit  loops+cond+ret
-   10.0  generate_dockerfile                        16n   2exit  loops+cond+ret
    10.0  suggest_filename                           22n   7exit  cond+ret
+   10.0  generate_dockerfile                        16n   2exit  loops+cond+ret
    10.0  show_menu                                   5n   1exit  loops
 
   summary:
@@ -99,9 +99,9 @@ CLASSES:
   PublishConfig                  █                          1m  CC̄=2.0   max=2   
   NotebookCell                                              0m  CC̄=0.0   max=0.0 
   Notebook                                                  0m  CC̄=0.0   max=0.0 
-  PublishResult                                             0m  CC̄=0.0   max=0.0 
   ConvertedBlock                                            0m  CC̄=0.0   max=0.0 
   ConversionResult                                          0m  CC̄=0.0   max=0.0 
+  PublishResult                                             0m  CC̄=0.0   max=0.0 
   StepRecord                                                0m  CC̄=0.0   max=0.0 
 
 D:

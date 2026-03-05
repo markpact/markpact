@@ -1,4 +1,4 @@
-# markpact | 23f 6057L | python:23
+# markpact | 23f 6058L | python:23
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
 M[23]:
   demos/demo_live_markpact.py,702
@@ -7,7 +7,7 @@ M[23]:
   src/markpact/cli.py,391
   src/markpact/config.py,154
   src/markpact/converter.py,210
-  src/markpact/docker_runner.py,242
+  src/markpact/docker_runner.py,243
   src/markpact/generator.py,243
   src/markpact/notebook_converter.py,505
   src/markpact/parser.py,47
@@ -75,7 +75,7 @@ D:
     convert_markdown_to_markpact(text:str;verbose:bool=True)->ConversionResult
     print_conversion_report(result:ConversionResult)->None
   src/markpact/docker_runner.py:
-    i: subprocess,sys,time,pathlib.Path,sandbox.find_free_port,typing.Optional
+    i: socket,subprocess,sys,time,pathlib.Path,sandbox.find_free_port,typing.Optional
     e: stop_existing_container,DOCKERFILE_TEMPLATE,generate_dockerfile,is_port_free,build_and_run_docker,check_docker_available,run_docker_with_logs,stream_docker_logs
     stop_existing_container(container_name:str;verbose:bool=False)->bool
     generate_dockerfile(sandbox_path:Path;deps:list[str];run_command:str)->Path

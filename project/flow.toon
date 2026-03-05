@@ -184,20 +184,20 @@ DATA_TYPES (by cross-function usage) [96 annotated, 0 inferred / 114 functions]:
   int                  consumed:11  produced:7    !! HUB-TYPE → split interface
   PublishConfig        consumed:9   produced:4  
   Sandbox              consumed:12  produced:0    !! HUB-TYPE → split interface
-  dict[str, str]       consumed:1   produced:8    output-heavy
   Notebook             consumed:3   produced:6  
+  dict[str, str]       consumed:1   produced:8    output-heavy
   list[str]            consumed:4   produced:1  
   PublishResult        consumed:0   produced:5    output-heavy
   GeneratorConfig      consumed:1   produced:2    narrow scope
-  LiveSession          consumed:2   produced:0    narrow scope
   ConversionResult     consumed:1   produced:1    narrow scope
   str | None           consumed:1   produced:1    narrow scope
-  AnalysisResult       consumed:0   produced:1    narrow scope
-  subprocess.CompletedProcess consumed:1   produced:0    narrow scope
-  tuple[int, TestSuite] consumed:0   produced:1    narrow scope
-  list[Block]          consumed:0   produced:1    narrow scope
+  LiveSession          consumed:2   produced:0    narrow scope
   tuple[subprocess.Popen, int] consumed:0   produced:1    narrow scope
+  list[str] | None     consumed:1   produced:0    narrow scope
+  list[Block]          consumed:0   produced:1    narrow scope
   tuple[str, str, float, str] consumed:0   produced:1    narrow scope
+  tuple[Path, bool]    consumed:0   produced:1    narrow scope
+  list[object]         consumed:1   produced:0    narrow scope
 
   HUB TYPES (consumed ≥10):
     str → 55 consumers → split into:
@@ -213,7 +213,7 @@ DATA_TYPES (by cross-function usage) [96 annotated, 0 inferred / 114 functions]:
 
 SIDE_EFFECTS:
   IO:        Sandbox.__init__, Sandbox.write_file, Sandbox.write_requirements, ensure_config_dir, load_env, save_env, stop_existing_container, generate_dockerfile, build_and_run_docker, run_docker_with_logs
-  Mutation:  show_config, list_providers, extract_dependencies, parse_blocks, PublishConfig.__post_init__, _first_paragraph, parse_publish_block, convert_markdown_to_markpact, _fix_unclosed_blocks, LiveSession.add_step
+  Mutation:  show_config, list_providers, extract_dependencies, parse_blocks, _fix_unclosed_blocks, convert_markdown_to_markpact, PublishConfig.__post_init__, _first_paragraph, parse_publish_block, LiveSession.add_step
   Pure:      find_free_port, Sandbox.has_venv, Sandbox.clean, get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset
 
   PIPELINE PURITY:

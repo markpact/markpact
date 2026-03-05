@@ -3,11 +3,11 @@ project:
   name: markpact
   repo: /home/tom/github/wronai/markpact
   language: python
-  analyzed_at: '2026-03-05T13:02:33Z'
+  analyzed_at: '2026-03-05T13:07:06Z'
   tool: code2llm
   stats:
     files: 12
-    lines: 6034
+    lines: 6035
     functions: 114
     classes: 12
 health:
@@ -412,7 +412,7 @@ modules:
     type: function
     cc: 1
 - path: src/markpact/docker_runner.py
-  lines: 332
+  lines: 333
   classes: 0
   methods: 8
   cc_max: 15
@@ -616,21 +616,21 @@ refactoring:
     impact: medium
     effort: low
     module: notebook_converter.py
-  - action: Split generate_publish_config_with_llm (CC=16 → target CC<10)
-    impact: medium
-    effort: low
-    module: publisher.py
-  - action: Split detect_block_type (CC=19 → target CC<10)
-    impact: medium
-    effort: low
-    module: converter.py
   - action: Split generate_contract (CC=17 → target CC<10)
     impact: medium
     effort: low
     module: generator.py
+  - action: Split detect_block_type (CC=19 → target CC<10)
+    impact: medium
+    effort: low
+    module: converter.py
+  - action: Split generate_publish_config_with_llm (CC=16 → target CC<10)
+    impact: medium
+    effort: low
+    module: publisher.py
 evolution:
 - date: '2026-03-05'
   cc_avg: 7.7
   critical: 27
-  lines: 6034
+  lines: 6035
   note: Automated analysis

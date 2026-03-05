@@ -119,13 +119,13 @@ Args:
 > Stream logs from Docker container.
 - **Calls**: time.time, process.stdout.readline, print, subprocess.run, process.poll, print, sys.stdout.flush, time.time
 
-### src.markpact.publisher.extract_version_from_readme
-> Extract version from README markpact:publish block.
-- **Calls**: readme_path.read_text, re.search, re.search, match.group, re.search, version_match.group, None.strip, version_match.group
-
 ### src.markpact.generator.GeneratorConfig.from_env
 > Load config from environment variables
 - **Calls**: cls, os.environ.get, os.environ.get, os.environ.get, float, int, os.environ.get, os.environ.get
+
+### src.markpact.publisher.extract_version_from_readme
+> Extract version from README markpact:publish block.
+- **Calls**: readme_path.read_text, re.search, re.search, match.group, re.search, version_match.group, None.strip, version_match.group
 
 ### src.markpact.docker_runner.run_docker_with_logs
 > Start Docker container and return process for log monitoring.
@@ -282,16 +282,16 @@ ensure_publish_block_in_readme [src.markpact.publisher]
 > Represents a parsed notebook.
 - **Methods**: 0
 
-### src.markpact.publisher.PublishResult
-> Result of a publish operation
-- **Methods**: 0
-
 ### src.markpact.converter.ConvertedBlock
 > A converted markpact block.
 - **Methods**: 0
 
 ### src.markpact.converter.ConversionResult
 > Result of converting a Markdown file.
+- **Methods**: 0
+
+### src.markpact.publisher.PublishResult
+> Result of a publish operation
 - **Methods**: 0
 
 ### demos.demo_live_markpact.StepRecord
@@ -346,6 +346,12 @@ Supports both formats:
 - New: ```python markpac
 - **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
 
+### src.markpact.converter.convert_markdown_to_markpact
+> Convert regular Markdown to markpact format.
+
+Analyzes code blocks and converts them to markpact:* f
+- **Output to**: ConversionResult, re.search, re.compile, pattern.sub, result.changes.append
+
 ### src.markpact.publisher._format_subprocess_failure
 - **Output to**: None.strip, None.strip
 
@@ -356,12 +362,6 @@ Args:
     block_body: The body of the publish block
     me
 - **Output to**: all_lines.extend, PublishConfig, all_lines.append, None.splitlines, line.strip
-
-### src.markpact.converter.convert_markdown_to_markpact
-> Convert regular Markdown to markpact format.
-
-Analyzes code blocks and converts them to markpact:* f
-- **Output to**: ConversionResult, re.search, re.compile, pattern.sub, result.changes.append
 
 ## Public API Surface
 
@@ -402,8 +402,8 @@ Functions exposed as public API (no underscore prefix):
 - `src.markpact.publisher.publish_docker` - 12 calls
 - `src.markpact.docker_runner.generate_dockerfile` - 11 calls
 - `src.markpact.notebook_converter.extract_dependencies` - 10 calls
-- `src.markpact.publisher.publish_npm` - 10 calls
 - `src.markpact.converter.detect_block_type` - 10 calls
+- `src.markpact.publisher.publish_npm` - 10 calls
 - `src.markpact.config.save_env` - 9 calls
 - `src.markpact.config.list_providers` - 9 calls
 - `src.markpact.docker_runner.stream_docker_logs` - 9 calls
