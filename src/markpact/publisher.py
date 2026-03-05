@@ -82,6 +82,77 @@ def _format_subprocess_failure(result: subprocess.CompletedProcess) -> str:
     return payload[:400]
 
 
+def _analyze_blocks_for_types(blocks: list[object]) -> dict[str, bool]:
+    """Analyze blocks to detect file types. Returns dict with flags."""
+    flags = {
+        "has_package_json": False,
+        "has_pyproject": False,
+        "has_dockerfile": False,
+        "has_js": False,
+        "has_python_pkg": False,
+    }
+    
+    for b in blocks:
+        kind = getattr(b, "kind", "")
+        path = getattr(b, "get_path", lambda: None)()
+        if kind == "file" and path:
+            lower = path.lower()
+            if lower.endswith("package.json"):
+                flags["has_package_json"] = True
+            if lower.endswith("pyproject.toml") or lower.endswith("setup.py"):
+                flags["has_pyproject"] = True
+            if lower.endswith("dockerfile"):
+                flags["has_dockerfile"] = True
+            if lower.endswith((".js", ".ts", ".mjs", ".cjs")):
+                flags["has_js"] = True
+            if lower.endswith("__init__.py"):
+                flags["has_python_pkg"] = True
+    
+    return flags
+
+
+def _detect_registry(flags: dict[str, bool], run_command: str | None) -> str:
+    """Detect registry based on file types and run command."""
+    if flags["has_package_json"] or flags["has_js"]:
+        return "npm"
+    
+    web_indicators = ["uvicorn", "gunicorn", "flask run", "node ", "npm start"]
+    if flags["has_dockerfile"] or (run_command and any(x in run_command for x in web_indicators)):
+        return "docker"
+    
+    if flags["has_pyproject"] or flags["has_python_pkg"]:
+        return "pypi"
+    
+    return "unknown"
+
+
+def _build_package_name(base_name: str, registry: str) -> str:
+    """Build package name with registry-specific prefix/suffix."""
+    # Add prefix to avoid PyPI collisions
+    if not base_name.startswith("markpact-"):
+        base_name = f"markpact-{base_name}"
+    
+    if registry == "docker":
+        docker_ns = os.environ.get("MARKPACT_DOCKER_NAMESPACE") or os.environ.get("DOCKER_USERNAME") or ""
+        return f"{docker_ns}/{base_name}".strip("/") if docker_ns else base_name
+    
+    if registry == "npm":
+        npm_scope = os.environ.get("MARKPACT_NPM_SCOPE") or ""
+        return f"@{npm_scope}/{base_name}" if npm_scope else base_name
+    
+    return base_name
+
+
+def _get_default_author() -> str:
+    """Get default author from environment variables."""
+    return (
+        os.environ.get("MARKPACT_AUTHOR") 
+        or os.environ.get("GIT_AUTHOR_NAME") 
+        or os.environ.get("USER") 
+        or ""
+    )
+
+
 def infer_publish_config(
     readme_path: Path,
     markdown: str,
@@ -98,54 +169,11 @@ def infer_publish_config(
     title = _first_heading(markdown)
     description = _first_paragraph(markdown)
 
-    has_package_json = False
-    has_pyproject = False
-    has_dockerfile = False
-    has_js = False
-    has_python_pkg = False
-
-    # blocks are markpact.parser.Block, but keep it loose to avoid import cycles
-    for b in blocks:
-        kind = getattr(b, "kind", "")
-        path = getattr(b, "get_path", lambda: None)()
-        if kind == "file" and path:
-            lower = path.lower()
-            if lower.endswith("package.json"):
-                has_package_json = True
-            if lower.endswith("pyproject.toml") or lower.endswith("setup.py"):
-                has_pyproject = True
-            if lower.endswith("dockerfile"):
-                has_dockerfile = True
-            if lower.endswith((".js", ".ts", ".mjs", ".cjs")):
-                has_js = True
-            if lower.endswith("__init__.py"):
-                has_python_pkg = True
-
-    if has_package_json or has_js:
-        registry = "npm"
-    elif has_dockerfile or (run_command and any(x in run_command for x in ["uvicorn", "gunicorn", "flask run", "node ", "npm start"])):
-        registry = "docker"
-    elif has_pyproject or has_python_pkg:
-        registry = "pypi"
-    else:
-        registry = "unknown"
-
+    flags = _analyze_blocks_for_types(blocks)
+    registry = _detect_registry(flags, run_command)
+    
     base_name = _slugify(title)
-    # Try to make name more unique to avoid PyPI collisions
-    if not base_name.startswith("markpact-"):
-        base_name = f"markpact-{base_name}"
-    default_author = os.environ.get("MARKPACT_AUTHOR") or os.environ.get("GIT_AUTHOR_NAME") or os.environ.get("USER") or ""
-
-    # Reasonable defaults per registry
-    if registry == "docker":
-        docker_ns = os.environ.get("MARKPACT_DOCKER_NAMESPACE") or os.environ.get("DOCKER_USERNAME") or ""
-        name = f"{docker_ns}/{base_name}".strip("/") if docker_ns else base_name
-    elif registry == "npm":
-        npm_scope = os.environ.get("MARKPACT_NPM_SCOPE") or ""
-        name = f"@{npm_scope}/{base_name}" if npm_scope else base_name
-    else:
-        name = base_name
-
+    name = _build_package_name(base_name, registry)
     version = os.environ.get("MARKPACT_VERSION") or "0.1.0"
 
     return PublishConfig(
@@ -153,7 +181,7 @@ def infer_publish_config(
         name=name,
         version=version,
         description=description,
-        author=default_author,
+        author=_get_default_author(),
         license=os.environ.get("MARKPACT_LICENSE", "MIT"),
         repository=os.environ.get("MARKPACT_REPOSITORY", ""),
         keywords=[],
@@ -555,8 +583,8 @@ def _build_package(base_path: Path, verbose: bool) -> subprocess.CompletedProces
     return None
 
 
-def _check_pypi_credentials(test: bool, verbose: bool) -> tuple[bool, Path | None]:
-    """Check PyPI credentials and return (has_creds, pypirc_path)."""
+def _setup_env_creds(test: bool) -> tuple[dict, bool]:
+    """Setup environment with PyPI credentials. Returns (env, has_env_creds)."""
     env = os.environ.copy()
     env.setdefault("TWINE_NON_INTERACTIVE", "1")
     token_env = "MARKPACT_TESTPYPI_TOKEN" if test else "MARKPACT_PYPI_TOKEN"
@@ -566,48 +594,67 @@ def _check_pypi_credentials(test: bool, verbose: bool) -> tuple[bool, Path | Non
         env.setdefault("TWINE_PASSWORD", token)
     
     has_env_creds = bool(env.get("TWINE_USERNAME")) and bool(env.get("TWINE_PASSWORD"))
-    pypirc_path = Path.home().joinpath(".pypirc")
-    has_pypirc = pypirc_path.exists()
+    return env, has_env_creds
+
+
+def _parse_pypirc_section(pypirc_path: Path, test: bool, verbose: bool) -> bool:
+    """Parse ~/.pypirc and check for valid section. Returns True if valid creds found."""
+    if not pypirc_path.exists():
+        return False
     
-    if has_pypirc and verbose:
+    if verbose:
         print(f"[markpact] Found ~/.pypirc at: {pypirc_path}")
     
-    if has_pypirc:
-        try:
-            import configparser
-            cp = configparser.ConfigParser()
-            cp.read(pypirc_path)
-            section = "testpypi" if test else "pypi"
-            if section not in cp:
-                if verbose:
-                    print(f"[markpact] NOTE: ~/.pypirc exists but section [{section}] is missing")
-            else:
-                u = (cp.get(section, "username", fallback="") or "").strip()
-                p = (cp.get(section, "password", fallback="") or "").strip()
-                if verbose:
-                    print(f"[markpact] ~/.pypirc section [{section}] parsed:")
-                    print(f"    username = {u}")
-                    masked = (p[:8] + "...") if len(p) > 8 else ("***" if p else "(empty)")
-                    print(f"    password = {masked}")
-                if not u or not p:
-                    print(f"[markpact] NOTE: ~/.pypirc section [{section}] is missing username/password. Ensure the INI keys are NOT indented.")
-        except Exception as e:
+    try:
+        import configparser
+        cp = configparser.ConfigParser()
+        cp.read(pypirc_path)
+        section = "testpypi" if test else "pypi"
+        
+        if section not in cp:
             if verbose:
-                print(f"[markpact] WARNING: Failed to parse ~/.pypirc: {e}")
+                print(f"[markpact] NOTE: ~/.pypirc exists but section [{section}] is missing")
+            return False
+        
+        u = (cp.get(section, "username", fallback="") or "").strip()
+        p = (cp.get(section, "password", fallback="") or "").strip()
+        
+        if verbose:
+            print(f"[markpact] ~/.pypirc section [{section}] parsed:")
+            print(f"    username = {u}")
+            masked = (p[:8] + "...") if len(p) > 8 else ("***" if p else "(empty)")
+            print(f"    password = {masked}")
+        
+        if not u or not p:
+            print(f"[markpact] NOTE: ~/.pypirc section [{section}] is missing username/password. Ensure the INI keys are NOT indented.")
+            return False
+        
+        return True
+        
+    except Exception as e:
+        if verbose:
+            print(f"[markpact] WARNING: Failed to parse ~/.pypirc: {e}")
+        return False
+
+
+def _check_pypi_credentials(test: bool, verbose: bool) -> tuple[bool, Path | None]:
+    """Check PyPI credentials and return (has_creds, pypirc_path)."""
+    env, has_env_creds = _setup_env_creds(test)
     
-    if not has_env_creds and not has_pypirc and verbose:
+    pypirc_path = Path.home().joinpath(".pypirc")
+    has_pypirc_creds = _parse_pypirc_section(pypirc_path, test, verbose)
+    
+    if not has_env_creds and not has_pypirc_creds and verbose:
         where = "TestPyPI" if test else "PyPI"
+        token_env = "MARKPACT_TESTPYPI_TOKEN" if test else "MARKPACT_PYPI_TOKEN"
         print(f"[markpact] NOTE: No Twine credentials detected for {where}.")
         print(f"[markpact] TIP: set {token_env}=pypi-... or configure ~/.pypirc")
     
-    return has_env_creds or has_pypirc, pypirc_path
+    return has_env_creds or has_pypirc_creds, pypirc_path if has_pypirc_creds or pypirc_path.exists() else None
 
 
-def _upload_to_pypi(base_path: Path, test: bool, config: PublishConfig, pypirc_path: Path | None, verbose: bool) -> PublishResult | None:
-    """Upload package to PyPI. Returns None on success, PublishResult on failure."""
-    if verbose:
-        print("[markpact] Uploading to PyPI...")
-    
+def _setup_upload_env(test: bool) -> dict:
+    """Setup environment for PyPI upload with token credentials."""
     env = os.environ.copy()
     env.setdefault("TWINE_NON_INTERACTIVE", "1")
     token_env = "MARKPACT_TESTPYPI_TOKEN" if test else "MARKPACT_PYPI_TOKEN"
@@ -615,7 +662,11 @@ def _upload_to_pypi(base_path: Path, test: bool, config: PublishConfig, pypirc_p
     if token:
         env.setdefault("TWINE_USERNAME", "__token__")
         env.setdefault("TWINE_PASSWORD", token)
-    
+    return env
+
+
+def _build_upload_cmd(test: bool, pypirc_path: Path | None, verbose: bool) -> list[str]:
+    """Build twine upload command with appropriate flags."""
     upload_cmd = [sys.executable, "-m", "twine", "upload"]
     if test:
         upload_cmd.extend(["--repository", "testpypi"])
@@ -624,6 +675,30 @@ def _upload_to_pypi(base_path: Path, test: bool, config: PublishConfig, pypirc_p
     if verbose:
         upload_cmd.append("--verbose")
     upload_cmd.append("dist/*")
+    return upload_cmd
+
+
+def _get_upload_error_hint(payload: str, stdout: str, test: bool, config: PublishConfig) -> str:
+    """Generate appropriate hint based on upload error."""
+    where = "TestPyPI" if test else "PyPI"
+    token_env = "MARKPACT_TESTPYPI_TOKEN" if test else "MARKPACT_PYPI_TOKEN"
+    
+    if "File already exists" in payload or "file-name-reuse" in payload or "File already exists" in stdout:
+        return f"Hint: a file for this version already exists on {where}. Try bumping the version with --bump patch/minor/major."
+    
+    if "too similar to an existing project" in payload or "too similar to an existing project" in stdout:
+        return f"Hint: the package name is too similar to an existing project on {where}. Change the 'name =' in the markpact:publish block."
+    
+    return f"Hint: configure ~/.pypirc or set TWINE_USERNAME/TWINE_PASSWORD (or {token_env}).\nTarget: {where}"
+
+
+def _upload_to_pypi(base_path: Path, test: bool, config: PublishConfig, pypirc_path: Path | None, verbose: bool) -> PublishResult | None:
+    """Upload package to PyPI. Returns None on success, PublishResult on failure."""
+    if verbose:
+        print("[markpact] Uploading to PyPI...")
+    
+    env = _setup_upload_env(test)
+    upload_cmd = _build_upload_cmd(test, pypirc_path, verbose)
     
     if verbose:
         print(f"[markpact] Running twine command:")
@@ -650,11 +725,7 @@ def _upload_to_pypi(base_path: Path, test: bool, config: PublishConfig, pypirc_p
         
         payload = _format_subprocess_failure(upload_result)
         stdout = (upload_result.stdout or "")
-        hint = f"Hint: configure ~/.pypirc or set TWINE_USERNAME/TWINE_PASSWORD (or {token_env}).\nTarget: {where}"
-        if "File already exists" in payload or "file-name-reuse" in payload or "File already exists" in stdout:
-            hint = f"Hint: a file for this version already exists on {where}. Try bumping the version with --bump patch/minor/major."
-        elif "too similar to an existing project" in payload or "too similar to an existing project" in stdout:
-            hint = f"Hint: the package name is too similar to an existing project on {where}. Change the 'name =' in the markpact:publish block."
+        hint = _get_upload_error_hint(payload, stdout, test, config)
         
         return PublishResult(
             success=False,

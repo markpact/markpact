@@ -87,6 +87,42 @@ class ConversionResult:
     changes: list[str] = field(default_factory=list)
 
 
+def _detect_deps(lang: str, body: str, body_lower: str) -> tuple[str, str, float, str] | None:
+    """Detect dependencies block type. Returns result or None if not detected."""
+    for pattern in PATTERNS["deps_python"]:
+        if re.search(pattern, body, re.MULTILINE | re.IGNORECASE):
+            if lang in ("", "text", "txt") or "requirements" in body_lower:
+                return ("deps", "python", 0.9, f"Detected Python dependencies (pattern: {pattern[:30]})")
+    
+    for pattern in PATTERNS["deps_node"]:
+        if re.search(pattern, body, re.MULTILINE):
+            if lang in ("json", "") and '"dependencies"' in body:
+                return ("deps", "node", 0.8, "Detected Node.js package.json")
+    
+    return None
+
+
+def _detect_run(lang: str, first_lines: str) -> tuple[str, str, float, str] | None:
+    """Detect run command block type. Returns result or None if not detected."""
+    for pattern in PATTERNS["run"]:
+        if re.search(pattern, first_lines, re.MULTILINE):
+            if lang in ("bash", "sh", "shell", "console", ""):
+                return ("run", lang or "bash", 0.85, f"Detected run command (pattern: {pattern[:30]})")
+    return None
+
+
+def _detect_file(first_lines: str, lang: str) -> tuple[str, str, float, str] | None:
+    """Detect file block type from content patterns. Returns result or None."""
+    for file_type, patterns in PATTERNS.items():
+        if not file_type.startswith("file_"):
+            continue
+        for pattern in patterns:
+            if re.search(pattern, first_lines, re.MULTILINE):
+                detected_lang = file_type.replace("file_", "")
+                return ("file", detected_lang, 0.8, f"Detected {detected_lang} file content")
+    return None
+
+
 def detect_block_type(lang: str, body: str) -> tuple[str, str, float, str]:
     """
     Detect the markpact block type based on language and content.
@@ -97,31 +133,19 @@ def detect_block_type(lang: str, body: str) -> tuple[str, str, float, str]:
     first_lines = "\n".join(body.split("\n")[:10])
     
     # Check for deps patterns
-    for pattern in PATTERNS["deps_python"]:
-        if re.search(pattern, body, re.MULTILINE | re.IGNORECASE):
-            # Looks like Python dependencies
-            if lang in ("", "text", "txt") or "requirements" in body_lower:
-                return "deps", "python", 0.9, f"Detected Python dependencies (pattern: {pattern[:30]})"
-    
-    for pattern in PATTERNS["deps_node"]:
-        if re.search(pattern, body, re.MULTILINE):
-            if lang in ("json", "") and '"dependencies"' in body:
-                return "deps", "node", 0.8, "Detected Node.js package.json"
+    result = _detect_deps(lang, body, body_lower)
+    if result:
+        return result
     
     # Check for run commands
-    for pattern in PATTERNS["run"]:
-        if re.search(pattern, first_lines, re.MULTILINE):
-            if lang in ("bash", "sh", "shell", "console", ""):
-                return "run", lang or "bash", 0.85, f"Detected run command (pattern: {pattern[:30]})"
+    result = _detect_run(lang, first_lines)
+    if result:
+        return result
     
     # Check for file patterns
-    for file_type, patterns in PATTERNS.items():
-        if not file_type.startswith("file_"):
-            continue
-        for pattern in patterns:
-            if re.search(pattern, first_lines, re.MULTILINE):
-                detected_lang = file_type.replace("file_", "")
-                return "file", detected_lang, 0.8, f"Detected {detected_lang} file content"
+    result = _detect_file(first_lines, lang)
+    if result:
+        return result
     
     # Fallback: if language is specified, assume it's a file
     if lang and lang not in ("bash", "sh", "shell", "console", "text", "txt", ""):
