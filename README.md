@@ -28,6 +28,7 @@ Markpact to narzędzie, które zamienia plik README.md w **wykonywalny kontrakt 
 | **Docker Sandbox** | Uruchom w izolowanym kontenerze: `--docker` |
 | **HTTP Testing** | Definiuj testy HTTP w `markpact:test http` |
 | **Auto-fix** | Automatyczne naprawianie błędów runtime |
+| **Sync & Rollback** | Synchronizuj pliki źródłowe z README: `markpact sync` |
 
 ### Dla kogo?
 
@@ -214,6 +215,63 @@ Uruchom automatyczne testy wszystkich przykładów:
 # Verbose output
 ./scripts/test_examples.sh --verbose
 ```
+
+## 🔄 Sync — synchronizacja plików z README
+
+Komenda `sync` aktualizuje bloki `markpact:file` w README.md na podstawie rzeczywistych plików w katalogu źródłowym (np. `sandbox/`). Odwrotność `markpact pack`.
+
+```bash
+# Synchronizacja (auto-detect sandbox/ obok README)
+markpact sync README.md
+
+# Z własnym katalogiem źródłowym
+markpact sync README.md --source ./my-project
+
+# Podgląd zmian bez zapisu
+markpact sync README.md --dry-run --diff
+
+# CI check — exit 1 jeśli pliki nie są zsynchronizowane
+markpact sync README.md --check
+
+# Lista śledzonych plików
+markpact sync README.md --list
+
+# Pliki w katalogu źródłowym nie śledzone w README
+markpact sync README.md --missing
+
+# Wyklucz wrażliwe pliki
+markpact sync README.md --exclude .env --exclude .env.prod
+```
+
+### Rollback — przywracanie poprzedniej wersji
+
+Każdy `sync` automatycznie tworzy backup README w `.markpact/` (max 10).
+
+```bash
+# Przywróć ostatni backup
+markpact sync README.md --rollback
+
+# Lista dostępnych backupów
+markpact sync README.md --backups
+
+# Przywróć konkretny backup
+markpact sync README.md --rollback-to .markpact/README.md.bak.20240301_143022
+```
+
+### Opcje `markpact sync`
+
+| Flaga | Opis |
+|-------|------|
+| `-n`, `--dry-run` | Podgląd bez zapisu |
+| `-d`, `--diff` | Pokaż unified diff |
+| `-c`, `--check` | CI: exit 1 jeśli out-of-sync |
+| `-l`, `--list` | Lista śledzonych plików |
+| `-m`, `--missing` | Pliki źródłowe bez bloku w README |
+| `--exclude PATH` | Wyklucz plik (powtarzalne) |
+| `--rollback` | Przywróć z ostatniego backup |
+| `--rollback-to FILE` | Przywróć z konkretnego backup |
+| `--backups` | Lista dostępnych backupów |
+| `-s`, `--source DIR` | Katalog źródłowy (domyślnie: `sandbox/`) |
 
 ## 🔄 Konwersja zwykłego Markdown
 

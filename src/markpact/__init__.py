@@ -7,6 +7,10 @@ from .packer import pack_directory, PackResult, print_pack_report
 from .parser import Block, parse_blocks
 from .runner import run_cmd, ensure_venv
 from .sandbox import Sandbox, find_free_port
+from .syncer import (
+    sync_readme, SyncResult, print_sync_report, list_tracked_paths, find_untracked_files,
+    create_backup, list_backups, restore_backup,
+)
 
 # Optional LLM generator (requires litellm)
 try:
@@ -30,6 +34,14 @@ __all__ = [
     "pack_directory",
     "PackResult",
     "print_pack_report",
+    "sync_readme",
+    "SyncResult",
+    "print_sync_report",
+    "list_tracked_paths",
+    "find_untracked_files",
+    "create_backup",
+    "list_backups",
+    "restore_backup",
     "generate_contract",
     "GeneratorConfig",
     "EXAMPLE_PROMPTS",
