@@ -1,26 +1,26 @@
-# markpact | 14f 5230L | python:14
+# markpact | 15f 6380L | python:15
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
-M[14]:
-  demos/demo_live_markpact.py,870
-  src/markpact/__init__.py,37
-  src/markpact/auto_fix.py,331
-  src/markpact/cli.py,509
+M[15]:
+  demos/demo_live_markpact.py,954
+  src/markpact/__init__.py,49
+  src/markpact/auto_fix.py,388
+  src/markpact/cli.py,736
   src/markpact/config.py,204
-  src/markpact/converter.py,282
-  src/markpact/docker_runner.py,333
-  src/markpact/generator.py,347
-  src/markpact/notebook_converter.py,638
-  src/markpact/packer.py,424
+  src/markpact/converter.py,320
+  src/markpact/docker_runner.py,417
+  src/markpact/generator.py,362
+  src/markpact/notebook_converter.py,710
+  src/markpact/packer.py,431
   src/markpact/parser.py,65
-  src/markpact/publisher.py,1089
+  src/markpact/publisher.py,1227
   src/markpact/runner.py,42
   src/markpact/sandbox.py,59
+  src/markpact/syncer.py,416
 D:
   demos/demo_live_markpact.py:
-    e: StepRecord,LiveSession,LivePDF,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,run_live,_fallback_readme,main
+    e: StepRecord,LiveSession,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,_step_generate_contract,_step_parse_blocks,_step_validate_blocks,_step_analyze_blocks,_step_sha_integrity,_save_outputs,_print_summary,run_live,_fallback_readme,main
     StepRecord:
     LiveSession: add_step(5),elapsed(0)
-    LivePDF(FPDF): __init__(0),cell(3),multi_cell(3),get_string_width(1),_bg(0),_page_num(1),add_title_page(1),add_step_page(6),_draw_panel(7),_render_mono(6),_render_right(5),_render_checks(4),add_summary_page(1)  # Landscape A4 PDF with dark theme for live demo output...
     _ascii(text)
     hdr(text)
     step(icon;text)
@@ -31,20 +31,78 @@ D:
     info(text)
     show_menu()
     list_prompts()
+    _step_generate_contract(session;config;pdf;prompt)
+    _step_parse_blocks(session;readme)
+    _step_validate_blocks(session;blocks)
+    _step_analyze_blocks(session;blocks)
+    _step_sha_integrity(session;readme;blocks)
+    _save_outputs(session;pdf;readme;prompt_key)
+    _print_summary(session;blocks;readme_path)
     run_live(prompt_key;prompt;model)
     _fallback_readme(prompt)
     main()
+  src/markpact/cli.py:
+    e: handle_pack_cli,handle_sync_cli,handle_config_cli,_handle_list_examples,_handle_list_notebook_formats,_handle_from_notebook,_handle_llm_generation,_handle_markdown_conversion,_parse_blocks_to_state,_resolve_publish_config,_determine_bump_type,_print_publish_dry_run,_execute_publish_result,_handle_publish_mode,_handle_docker_mode,_print_dry_run_tests,_split_test_blocks,_run_http_tests,_run_shell_tests,_handle_test_mode,_handle_normal_run,main
+    handle_pack_cli(argv)
+    handle_sync_cli(argv)
+    handle_config_cli(argv)
+    _handle_list_examples(verbose)
+    _handle_list_notebook_formats(verbose)
+    _handle_from_notebook(args;verbose)
+    _handle_llm_generation(args;verbose)
+    _handle_markdown_conversion(args;original_text;verbose)
+    _parse_blocks_to_state(blocks;sandbox;args;verbose)
+    _resolve_publish_config(args;text_to_parse;readme;blocks;run_command;verbose)
+    _determine_bump_type(args)
+    _print_publish_dry_run(config;bump_type)
+    _execute_publish_result(result;readme;bump_type;verbose)
+    _handle_publish_mode(args;config;sandbox;readme;text_to_parse;blocks;run_command;verbose)
+    _handle_docker_mode(args;sandbox;deps;run_command;verbose)
+    _print_dry_run_tests(test_blocks)
+    _split_test_blocks(test_blocks)
+    _run_http_tests(run_command;http_tests;sandbox;port;verbose;test_only)
+    _run_shell_tests(shell_tests;sandbox;verbose)
+    _handle_test_mode(args;sandbox;run_command;test_blocks;deps;verbose)
+    _handle_normal_run(args;sandbox;run_command;deps;readme;verbose)
+    main(argv)
+  src/markpact/auto_fix.py:
+    e: detect_error_type,fix_port_in_readme,_setup_env_with_venv_simple,_run_and_print,_handle_port_error_simple,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,_setup_env_with_venv,_run_subprocess,_handle_port_error,_handle_missing_module_error,_try_llm_fix,run_with_auto_fix_llm
+    detect_error_type(error_output)
+    fix_port_in_readme(readme_path;new_port)
+    _setup_env_with_venv_simple(sandbox)
+    _run_and_print(cmd;sandbox;env;verbose)
+    _handle_port_error_simple(cmd;env;readme_path)
+    run_with_auto_fix(cmd;sandbox;readme_path;verbose;max_retries)
+    add_missing_dependency(readme_path;module_name)
+    extract_module_name(error_output)
+    fix_with_llm(readme_path;error_output;error_type;verbose)
+    _setup_env_with_venv(sandbox)
+    _run_subprocess(cmd;sandbox;env)
+    _handle_port_error(cmd;env;readme_path;verbose)
+    _handle_missing_module_error(error_output;sandbox;readme_path;verbose)
+    _try_llm_fix(error_type;error_output;readme_path;verbose)
+    run_with_auto_fix_llm(cmd;sandbox;readme_path;verbose;max_retries;use_llm)
   src/markpact/publisher.py:
-    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_build_package,_check_pypi_credentials,_upload_to_pypi,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
+    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,_check_file_type,_analyze_blocks_for_types,_is_web_service,_detect_registry,_build_package_name,_get_default_author,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,_setup_llm_for_publish,_set_provider_api_key_for_publish,_call_llm_for_publish_config,_extract_publish_block_from_response,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
     PublishConfig: __post_init__(0)  # Configuration for publishing...
     PublishResult:  # Result of a publish operation...
     _slugify(name)
     _first_heading(markdown)
     _first_paragraph(markdown)
     _format_subprocess_failure(result)
+    _check_file_type(path)
+    _analyze_blocks_for_types(blocks)
+    _is_web_service(run_command)
+    _detect_registry(flags;run_command)
+    _build_package_name(base_name;registry)
+    _get_default_author()
     infer_publish_config(readme_path;markdown;blocks;run_command)
     prompt_publish_config(config)
     ensure_publish_block_in_readme(readme_path;config)
+    _setup_llm_for_publish()
+    _set_provider_api_key_for_publish(cfg)
+    _call_llm_for_publish_config(litellm;cfg;markdown)
+    _extract_publish_block_from_response(content)
     generate_publish_config_with_llm(markdown;verbose)
     bump_version(version;bump_type)
     extract_version_from_readme(readme_path)
@@ -56,8 +114,16 @@ D:
     _detect_build_backend(pyproject_path)
     _ensure_build_backend(build_backend;verbose)
     _copy_readme(source_readme_path;base_path;config;verbose)
+    _run_build_command(base_path)
+    _print_build_output(build_result)
+    _get_build_error_hint(stdout;stderr)
     _build_package(base_path;verbose)
+    _setup_env_creds(test)
+    _parse_pypirc_section(pypirc_path;test;verbose)
     _check_pypi_credentials(test;verbose)
+    _setup_upload_env(test)
+    _build_upload_cmd(test;pypirc_path;verbose)
+    _get_upload_error_hint(payload;stdout;test;config)
     _upload_to_pypi(base_path;test;config;pypirc_path;verbose)
     publish_pypi(config;sandbox;test;verbose;source_readme_path)
     generate_package_json(config;sandbox)
@@ -67,83 +133,76 @@ D:
     publish_github_packages(config;sandbox;package_type;verbose)
     parse_publish_block(block_body;meta)
     publish(config;sandbox;bump;verbose;source_readme_path)
-  src/markpact/notebook_converter.py:
-    e: NotebookCell,Notebook,detect_format,parse_jupyter,parse_rmarkdown,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,notebook_to_markpact,convert_notebook,get_supported_formats
-    NotebookCell:  # Represents a cell in a notebook...
-    Notebook:  # Represents a parsed notebook...
-    detect_format(path)
-    parse_jupyter(path)
-    parse_rmarkdown(path)
-    parse_quarto(path)
-    parse_zeppelin(path)
-    parse_databricks(path)
-    parse_notebook(path)
-    extract_dependencies(notebook)
-    suggest_run_command(notebook)
-    notebook_to_markpact(notebook;output_path;verbose)
-    convert_notebook(input_path;output_path;verbose)
-    get_supported_formats()
-  src/markpact/auto_fix.py:
-    e: detect_error_type,fix_port_in_readme,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,run_with_auto_fix_llm
-    detect_error_type(error_output)
-    fix_port_in_readme(readme_path;new_port)
-    run_with_auto_fix(cmd;sandbox;readme_path;verbose;max_retries)
-    add_missing_dependency(readme_path;module_name)
-    extract_module_name(error_output)
-    fix_with_llm(readme_path;error_output;error_type;verbose)
-    run_with_auto_fix_llm(cmd;sandbox;readme_path;verbose;max_retries;use_llm)
-  src/markpact/cli.py:
-    e: handle_pack_cli,handle_config_cli,_handle_list_examples,_handle_list_notebook_formats,_handle_from_notebook,_handle_llm_generation,_handle_markdown_conversion,_parse_blocks_to_state,_handle_publish_mode,_handle_docker_mode,_handle_test_mode,_handle_normal_run,main
-    handle_pack_cli(argv)
-    handle_config_cli(argv)
-    _handle_list_examples(verbose)
-    _handle_list_notebook_formats(verbose)
-    _handle_from_notebook(args;verbose)
-    _handle_llm_generation(args;verbose)
-    _handle_markdown_conversion(args;original_text;verbose)
-    _parse_blocks_to_state(blocks;sandbox;args;verbose)
-    _handle_publish_mode(args;config;sandbox;readme;text_to_parse;blocks;run_command;verbose)
-    _handle_docker_mode(args;sandbox;deps;run_command;verbose)
-    _handle_test_mode(args;sandbox;run_command;test_blocks;deps;verbose)
-    _handle_normal_run(args;sandbox;run_command;deps;readme;verbose)
-    main(argv)
-  src/markpact/converter.py:
-    e: ConvertedBlock,ConversionResult,detect_block_type,suggest_filename,convert_markdown_to_markpact,print_conversion_report
-    ConvertedBlock:  # A converted markpact block...
-    ConversionResult:  # Result of converting a Markdown file...
-    detect_block_type(lang;body)
-    suggest_filename(lang;body;index)
-    convert_markdown_to_markpact(text;verbose)
-    print_conversion_report(result)
   src/markpact/packer.py:
-    e: PackResult,_should_include,_get_language,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
+    e: PackResult,_should_include,_get_language,_detect_file_indicators,_detect_framework_from_content,_build_run_command,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
     PackResult: summary(0)  # Result of packing a directory...
     _should_include(path;exclude_patterns)
     _get_language(path)
+    _detect_file_indicators(files)
+    _detect_framework_from_content(files)
+    _build_run_command(indicators;has_fastapi;has_flask)
     _detect_run_command(files)
     _collect_files(src;output_path;exclude_patterns;include_patterns;verbose)
     _generate_readme_content(files_to_pack;src;project_title;desc;run_command;dry_run)
     _write_output(output_path;lines;files_to_pack;dry_run;verbose)
     pack_directory(source_dir;output)
     print_pack_report(result)
-  src/markpact/generator.py:
-    e: GeneratorConfig,_fix_unclosed_blocks,generate_contract,save_contract,get_example_prompt,list_example_prompts
-    GeneratorConfig: from_env(0),from_file(1)  # Configuration for LLM generator...
-    _fix_unclosed_blocks(content)
-    generate_contract(prompt;config;verbose)
-    save_contract(content;output_path;verbose)
-    get_example_prompt(name)
-    list_example_prompts()
-  src/markpact/docker_runner.py:
-    e: stop_existing_container,generate_dockerfile,is_port_free,build_and_run_docker,check_docker_available,run_docker_with_logs,stream_docker_logs,run_docker_with_tests
-    stop_existing_container(container_name;verbose)
-    generate_dockerfile(sandbox_path;deps;run_command)
-    is_port_free(port)
-    build_and_run_docker(sandbox_path;image_name;port;verbose;auto_find_port)
-    check_docker_available()
-    run_docker_with_logs(sandbox_path;image_name;port;follow_logs;verbose;auto_find_port)
-    stream_docker_logs(process;timeout)
-    run_docker_with_tests(sandbox_path;test_body;image_name;port;verbose;auto_find_port)
+  src/markpact/notebook_converter.py:
+    e: NotebookCell,Notebook,detect_format,parse_jupyter,_parse_rmd_yaml_front_matter,_parse_rmd_code_chunks,_extract_description_from_cells,parse_rmarkdown,_parse_quarto_yaml_front_matter,_parse_quarto_code_chunks,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,_generate_header,_extract_and_format_deps,_should_skip_first_markdown_cell,_extract_markdown_section,_extract_file_hint,_process_notebook_cells,_merge_code_files,_generate_file_blocks,notebook_to_markpact,convert_notebook,get_supported_formats
+    NotebookCell:  # Represents a cell in a notebook...
+    Notebook:  # Represents a parsed notebook...
+    detect_format(path)
+    parse_jupyter(path)
+    _parse_rmd_yaml_front_matter(content;default_title)
+    _parse_rmd_code_chunks(content)
+    _extract_description_from_cells(cells)
+    parse_rmarkdown(path)
+    _parse_quarto_yaml_front_matter(content;default_title)
+    _parse_quarto_code_chunks(content)
+    parse_quarto(path)
+    parse_zeppelin(path)
+    parse_databricks(path)
+    parse_notebook(path)
+    extract_dependencies(notebook)
+    suggest_run_command(notebook)
+    _generate_header(notebook;output_path)
+    _extract_and_format_deps(notebook)
+    _should_skip_first_markdown_cell(cell;notebook;skip_first_title)
+    _extract_markdown_section(cell)
+    _extract_file_hint(source)
+    _process_notebook_cells(notebook)
+    _merge_code_files(code_cells)
+    _generate_file_blocks(merged_files;notebook)
+    notebook_to_markpact(notebook;output_path;verbose)
+    convert_notebook(input_path;output_path;verbose)
+    get_supported_formats()
+  src/markpact/converter.py:
+    e: ConvertedBlock,ConversionResult,_detect_deps,_detect_run,_detect_file,detect_block_type,suggest_filename,convert_markdown_to_markpact,_print_conversion_header,_print_block_changes,_print_conversion_summary,print_conversion_report
+    ConvertedBlock:  # A converted markpact block...
+    ConversionResult:  # Result of converting a Markdown file...
+    _detect_deps(lang;body;body_lower)
+    _detect_run(lang;first_lines)
+    _detect_file(first_lines;lang)
+    detect_block_type(lang;body)
+    suggest_filename(lang;body;index)
+    convert_markdown_to_markpact(text;verbose)
+    _print_conversion_header()
+    _print_block_changes(changes)
+    _print_conversion_summary(blocks)
+    print_conversion_report(result)
+  src/markpact/syncer.py:
+    e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,sync_readme,print_sync_report
+    SyncResult: summary(0)  # Result of a sync operation...
+    _backup_dir(readme_path)
+    create_backup(readme_path)
+    list_backups(readme_path)
+    restore_backup(readme_path;backup_path)
+    _prune_backups(bak_dir)
+    list_tracked_paths(text)
+    find_untracked_files(text;source_dir)
+    diff_block(rel_path;old_body;new_body)
+    sync_readme(readme_path;source_dir)
+    print_sync_report(result)
   src/markpact/config.py:
     e: get_env_path,ensure_config_dir,load_env,save_env,init_env,set_config,set_model,set_api_key,set_api_base,apply_preset,show_config,list_providers
     get_env_path()
@@ -158,6 +217,36 @@ D:
     apply_preset(provider;api_key)
     show_config()
     list_providers()
+  src/markpact/docker_runner.py:
+    e: stop_existing_container,generate_dockerfile,is_port_free,_build_docker_image_simple,_find_docker_port,_run_docker_container_interactive,build_and_run_docker,check_docker_available,run_docker_with_logs,stream_docker_logs,_build_docker_image,_resolve_docker_port,_start_docker_container,_run_docker_tests,_stop_docker_container,run_docker_with_tests
+    stop_existing_container(container_name;verbose)
+    generate_dockerfile(sandbox_path;deps;run_command)
+    is_port_free(port)
+    _build_docker_image_simple(sandbox_path;image_name;verbose)
+    _find_docker_port(port;auto_find_port;verbose)
+    _run_docker_container_interactive(sandbox_path;image_name;container_name;current_port;verbose)
+    build_and_run_docker(sandbox_path;image_name;port;verbose;auto_find_port)
+    check_docker_available()
+    run_docker_with_logs(sandbox_path;image_name;port;follow_logs;verbose;auto_find_port)
+    stream_docker_logs(process;timeout)
+    _build_docker_image(sandbox_path;image_name;verbose)
+    _resolve_docker_port(port;auto_find_port;verbose)
+    _start_docker_container(sandbox_path;image_name;current_port;verbose)
+    _run_docker_tests(test_body;current_port;verbose)
+    _stop_docker_container(container_name;process;verbose)
+    run_docker_with_tests(sandbox_path;test_body;image_name;port;verbose;auto_find_port)
+  src/markpact/generator.py:
+    e: GeneratorConfig,_fix_unclosed_blocks,_configure_litellm,_set_provider_api_key,_call_llm_with_config,_clean_llm_response,generate_contract,save_contract,get_example_prompt,list_example_prompts
+    GeneratorConfig: from_env(0),from_file(1)  # Configuration for LLM generator...
+    _fix_unclosed_blocks(content)
+    _configure_litellm(config;verbose)
+    _set_provider_api_key(model;api_key)
+    _call_llm_with_config(config;messages)
+    _clean_llm_response(content)
+    generate_contract(prompt;config;verbose)
+    save_contract(content;output_path;verbose)
+    get_example_prompt(name)
+    list_example_prompts()
   src/markpact/parser.py:
     e: Block,parse_blocks
     Block: get_path(0),get_meta_value(1)

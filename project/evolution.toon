@@ -1,58 +1,54 @@
-# code2llm/evolution | 142 func | 13f | 2026-03-05
+# code2llm/evolution | 216 func | 14f | 2026-03-06
 
-NEXT[10] (ranked by impact):
+NEXT[9] (ranked by impact):
   [1] !! SPLIT           demos/demo_live_markpact.py
-      WHY: 870L, 3 classes, max CC=67
-      EFFORT: ~4h  IMPACT: 58290
+      WHY: 954L, 2 classes, max CC=51
+      EFFORT: ~4h  IMPACT: 48654
 
-  [2] !! SPLIT           src/markpact/publisher.py
-      WHY: 1089L, 2 classes, max CC=30
-      EFFORT: ~4h  IMPACT: 32670
+  [2] !! SPLIT           src/markpact/cli.py
+      WHY: 736L, 0 classes, max CC=35
+      EFFORT: ~4h  IMPACT: 25760
 
-  [3] !! SPLIT           src/markpact/notebook_converter.py
-      WHY: 638L, 2 classes, max CC=29
-      EFFORT: ~4h  IMPACT: 18502
+  [3] !! SPLIT           src/markpact/publisher.py
+      WHY: 1227L, 2 classes, max CC=15
+      EFFORT: ~4h  IMPACT: 18405
 
-  [4] !! SPLIT-FUNC      run_live  CC=67  fan=54
-      WHY: CC=67 exceeds 15
-      EFFORT: ~1h  IMPACT: 3618
+  [4] !! SPLIT-FUNC      run_live  CC=51  fan=50
+      WHY: CC=51 exceeds 15
+      EFFORT: ~1h  IMPACT: 2550
 
-  [5] !! SPLIT-FUNC      main  CC=28  fan=24
-      WHY: CC=28 exceeds 15
-      EFFORT: ~1h  IMPACT: 672
+  [5] !! SPLIT-FUNC      handle_sync_cli  CC=35  fan=28
+      WHY: CC=35 exceeds 15
+      EFFORT: ~1h  IMPACT: 980
 
-  [6] !! SPLIT-FUNC      notebook_to_markpact  CC=29  fan=21
-      WHY: CC=29 exceeds 15
-      EFFORT: ~1h  IMPACT: 609
-
-  [7] !! SPLIT-FUNC      run_with_auto_fix_llm  CC=29  fan=17
-      WHY: CC=29 exceeds 15
-      EFFORT: ~1h  IMPACT: 493
-
-  [8] !! SPLIT-FUNC      infer_publish_config  CC=30  fan=11
+  [6] !! SPLIT-FUNC      main  CC=30  fan=25
       WHY: CC=30 exceeds 15
-      EFFORT: ~1h  IMPACT: 330
+      EFFORT: ~1h  IMPACT: 750
 
-  [9] !  SPLIT-FUNC      _check_pypi_credentials  CC=24  fan=13
-      WHY: CC=24 exceeds 15
-      EFFORT: ~1h  IMPACT: 312
+  [7] !  SPLIT-FUNC      _step_analyze_blocks  CC=20  fan=18
+      WHY: CC=20 exceeds 15
+      EFFORT: ~1h  IMPACT: 360
 
-  [10] !  SPLIT-FUNC      parse_rmarkdown  CC=15  fan=20
+  [8] !  SPLIT-FUNC      run_with_auto_fix_llm  CC=18  fan=9
+      WHY: CC=18 exceeds 15
+      EFFORT: ~1h  IMPACT: 162
+
+  [9] !  SPLIT-FUNC      _parse_pypirc_section  CC=15  fan=7
       WHY: CC=15 exceeds 15
-      EFFORT: ~1h  IMPACT: 300
+      EFFORT: ~1h  IMPACT: 105
 
 
 RISKS[3]:
-  ⚠ Splitting src/markpact/publisher.py may break 30 import paths
-  ⚠ Splitting demos/demo_live_markpact.py may break 28 import paths
-  ⚠ Splitting src/markpact/notebook_converter.py may break 12 import paths
+  ⚠ Splitting src/markpact/publisher.py may break 48 import paths
+  ⚠ Splitting demos/demo_live_markpact.py may break 22 import paths
+  ⚠ Splitting src/markpact/cli.py may break 22 import paths
 
 METRICS-TARGET:
-  CC̄:          6.9 → ≤4.8
-  max-CC:      67 → ≤20
+  CC̄:          5.2 → ≤3.6
+  max-CC:      51 → ≤20
   god-modules: 4 → 0
-  high-CC(≥15): 15 → ≤7
+  high-CC(≥15): 6 → ≤3
   hub-types:   0 → ≤0
 
 HISTORY:
-  prev CC̄=7.8 → now CC̄=6.9
+  prev CC̄=5.2 → now CC̄=5.2

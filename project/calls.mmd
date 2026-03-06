@@ -1,102 +1,191 @@
 flowchart LR
     subgraph demos_demo_live_markpact
         demos__demo_live_markpact__show_menu["show_menu"]
-        demos__demo_live_markpact__run_live["run_live"]
-        demos__demo_live_markpact__main["main"]
         demos__demo_live_markpact__hdr["hdr"]
         demos__demo_live_markpact__step["step"]
-        demos__demo_live_markpact__LivePDF__cell["cell"]
-        demos__demo_live_markpact___ascii["_ascii"]
+        demos__demo_live_markpact___step_validate_blocks["_step_validate_blocks"]
+        demos__demo_live_markpact___step_sha_integrity["_step_sha_integrity"]
+        demos__demo_live_markpact__wait["wait"]
         demos__demo_live_markpact__list_prompts["list_prompts"]
-        demos__demo_live_markpact__LivePDF__multi_cell["multi_cell"]
-        demos__get_string_width["get_string_width"]
+        demos__demo_live_markpact___step_analyze_blocks["_step_analyze_blocks"]
+        demos__demo_live_markpact__fail["fail"]
+        demos__demo_live_markpact__main["main"]
+        demos__demo_live_markpact___step_generate_contract["_step_generate_contract"]
+        demos__demo_live_markpact__ok["ok"]
+        demos__demo_live_markpact__wait_done["wait_done"]
+        demos__demo_live_markpact__run_live["run_live"]
+        demos__demo_live_markpact___print_summary["_print_summary"]
+        demos__demo_live_markpact___step_parse_blocks["_step_parse_blocks"]
+        demos__demo_live_markpact__info["info"]
+        demos__demo_live_markpact___save_outputs["_save_outputs"]
     end
     subgraph src_markpact
-        src__convert_markdown_to_markpact["convert_markdown_to_markpact"]
-        src__markpact__config__set_config["set_config"]
-        src__markpact__packer___detect_run_command["_detect_run_command"]
-        src__markpact__converter__print_conversion_report["print_conversion_report"]
-        src__markpact__auto_fix__run_with_auto_fix_llm["run_with_auto_fix_llm"]
-        src__markpact__publisher__parse_publish_block["parse_publish_block"]
-        src__generate_publish_config_with_llm["generate_publish_config_with_l"]
-        src__markpact__cli___handle_from_notebook["_handle_from_notebook"]
-        src__markpact__docker_runner__run_docker_with_logs["run_docker_with_logs"]
-        src__markpact__publisher__prompt_publish_config["prompt_publish_config"]
-        src__markpact__config__init_env["init_env"]
-        src__markpact__config__set_model["set_model"]
-        src__markpact__publisher___upload_to_pypi["_upload_to_pypi"]
-        src__markpact__sandbox__find_free_port["find_free_port"]
-        src__markpact__notebook_converter__parse_notebook["parse_notebook"]
-        src__markpact__publisher___determine_base_path["_determine_base_path"]
-        src__markpact__cli___handle_publish_mode["_handle_publish_mode"]
-        src__check_docker_available["check_docker_available"]
-        src__markpact__cli___handle_list_examples["_handle_list_examples"]
-        src__markpact__generator__generate_contract["generate_contract"]
-        src__markpact__config__load_env["load_env"]
-        src__from_env["from_env"]
-        src__markpact__docker_runner__generate_dockerfile["generate_dockerfile"]
-        src__markpact__config__show_config["show_config"]
-        src__markpact__publisher___slugify["_slugify"]
-        src__markpact__generator__list_example_prompts["list_example_prompts"]
-        src__markpact__auto_fix__detect_error_type["detect_error_type"]
-        src__markpact__cli___handle_list_notebook_formats["_handle_list_notebook_formats"]
-        src__markpact__auto_fix__run_with_auto_fix["run_with_auto_fix"]
-        src__markpact__publisher__generate_package_json["generate_package_json"]
-        src__markpact__publisher__publish_pypi["publish_pypi"]
-        src__markpact__packer___write_output["_write_output"]
-        src__markpact__publisher__generate_dockerfile["generate_dockerfile"]
-        src__markpact__converter__detect_block_type["detect_block_type"]
-        src__markpact__cli___handle_test_mode["_handle_test_mode"]
-        src__markpact__notebook_converter__parse_quarto["parse_quarto"]
-        src__markpact__publisher___build_package["_build_package"]
         src__markpact__notebook_converter__parse_rmarkdown["parse_rmarkdown"]
-        src__markpact__config__apply_preset["apply_preset"]
-        src__markpact__docker_runner__is_port_free["is_port_free"]
-        src__markpact__cli___handle_llm_generation["_handle_llm_generation"]
-        src__convert_notebook["convert_notebook"]
+        src__markpact__publisher___build_package_name["_build_package_name"]
+        src__markpact__notebook_converter__parse_jupyter["parse_jupyter"]
+        src__markpact__packer___generate_readme_content["_generate_readme_content"]
+        src__markpact__auto_fix___handle_port_error["_handle_port_error"]
+        src__stop_existing_container["stop_existing_container"]
+        src__markpact__cli___handle_list_examples["_handle_list_examples"]
+        src___build_docker_image_simple["_build_docker_image_simple"]
+        src__markpact__config__set_api_base["set_api_base"]
+        src__markpact__publisher___first_paragraph["_first_paragraph"]
+        src__markpact__packer___collect_files["_collect_files"]
+        src__markpact__cli__handle_config_cli["handle_config_cli"]
+        src__get_supported_formats["get_supported_formats"]
+        src__markpact__cli___handle_docker_mode["_handle_docker_mode"]
+        src__markpact__auto_fix___try_llm_fix["_try_llm_fix"]
+        src___extract_publish_block_from_response["_extract_publish_block_from_re"]
+        src__markpact__publisher___check_pypi_credentials["_check_pypi_credentials"]
+        src__check_docker_available["check_docker_available"]
+        src___generate_header["_generate_header"]
+        src__markpact__cli___split_test_blocks["_split_test_blocks"]
+        src__markpact__auto_fix__fix_with_llm["fix_with_llm"]
+        src__markpact__packer___should_include["_should_include"]
+        src__markpact__config__ensure_config_dir["ensure_config_dir"]
+        src__markpact__config__set_model["set_model"]
         src__markpact__publisher__publish["publish"]
-        src___format_subprocess_failure["_format_subprocess_failure"]
+        src___parse_rmd_code_chunks["_parse_rmd_code_chunks"]
+        src__markpact__publisher___first_heading["_first_heading"]
+        src__markpact__publisher__prompt_publish_config["prompt_publish_config"]
+        src__markpact__docker_runner__build_and_run_docker["build_and_run_docker"]
+        src__markpact__auto_fix___handle_port_error_simple["_handle_port_error_simple"]
+        src__markpact__publisher___build_upload_cmd["_build_upload_cmd"]
         src__extract_dependencies["extract_dependencies"]
+        src__markpact__publisher___get_build_error_hint["_get_build_error_hint"]
+        src__markpact__publisher___setup_llm_for_publish["_setup_llm_for_publish"]
+        src__markpact__auto_fix___run_subprocess["_run_subprocess"]
+        src__markpact__converter__print_conversion_report["print_conversion_report"]
+        src__markpact__sandbox__find_free_port["find_free_port"]
+        src___format_subprocess_failure["_format_subprocess_failure"]
+        src___call_llm_for_publish_config["_call_llm_for_publish_config"]
+        src__markpact__cli___handle_test_mode["_handle_test_mode"]
+        src__markpact__auto_fix__run_with_auto_fix_llm["run_with_auto_fix_llm"]
+        src__markpact__generator___call_llm_with_config["_call_llm_with_config"]
+        src__markpact__publisher___get_default_author["_get_default_author"]
+        src__markpact__packer___write_output["_write_output"]
+        src__run_docker_with_tests["run_docker_with_tests"]
+        src__markpact__publisher__publish_pypi["publish_pypi"]
+        src__markpact__publisher__parse_publish_block["parse_publish_block"]
+        src__markpact__converter__detect_block_type["detect_block_type"]
+        src__markpact__docker_runner___resolve_docker_port["_resolve_docker_port"]
+        src___detect_framework_from_content["_detect_framework_from_content"]
+        src___handle_missing_module_error["_handle_missing_module_error"]
+        src__markpact__converter___detect_run["_detect_run"]
+        src__markpact__publisher___get_upload_error_hint["_get_upload_error_hint"]
+        src__markpact__generator___set_provider_api_key["_set_provider_api_key"]
+        src__parse_databricks["parse_databricks"]
+        src__markpact__syncer__restore_backup["restore_backup"]
+        src__markpact__cli___handle_from_notebook["_handle_from_notebook"]
+        src__markpact__parser__parse_blocks["parse_blocks"]
+        src___setup_env_with_venv_simple["_setup_env_with_venv_simple"]
+        src__generate_publish_config_with_llm["generate_publish_config_with_l"]
+        src__markpact__syncer__list_backups["list_backups"]
+        src__markpact__auto_fix__fix_port_in_readme["fix_port_in_readme"]
+        src__markpact__runner__ensure_venv["ensure_venv"]
+        src___extract_and_format_deps["_extract_and_format_deps"]
+        src__markpact__runner__run_cmd["run_cmd"]
+        src__markpact__cli___handle_normal_run["_handle_normal_run"]
+        src___parse_quarto_yaml_front_matter["_parse_quarto_yaml_front_matte"]
+        src__markpact__publisher___normalize_package_name["_normalize_package_name"]
+        src__markpact__auto_fix__detect_error_type["detect_error_type"]
+        src__markpact__cli___print_dry_run_tests["_print_dry_run_tests"]
+        src__markpact__cli___resolve_publish_config["_resolve_publish_config"]
+        src__markpact__publisher___setup_env_creds["_setup_env_creds"]
+        src___run_docker_container_interactive["_run_docker_container_interact"]
+        src__markpact__publisher___upload_to_pypi["_upload_to_pypi"]
+        src___merge_code_files["_merge_code_files"]
+        src___extract_markdown_section["_extract_markdown_section"]
+        src__markpact__converter___print_conversion_header["_print_conversion_header"]
+        src___parse_quarto_code_chunks["_parse_quarto_code_chunks"]
+        src__markpact__notebook_converter__parse_quarto["parse_quarto"]
+        src__markpact__auto_fix__extract_module_name["extract_module_name"]
+        src__markpact__publisher___is_web_service["_is_web_service"]
+        src__markpact__packer___detect_file_indicators["_detect_file_indicators"]
+        src__markpact__auto_fix__run_with_auto_fix["run_with_auto_fix"]
+        src___parse_rmd_yaml_front_matter["_parse_rmd_yaml_front_matter"]
+        src__markpact__docker_runner__run_docker_with_logs["run_docker_with_logs"]
+        src__markpact__publisher___determine_base_path["_determine_base_path"]
+        src__notebook_to_markpact["notebook_to_markpact"]
+        src__markpact__config__set_config["set_config"]
+        src__convert_markdown_to_markpact["convert_markdown_to_markpact"]
+        src__markpact__docker_runner___build_docker_image["_build_docker_image"]
+        src__markpact__publisher__publish_npm["publish_npm"]
+        src__markpact__publisher__publish_github_packages["publish_github_packages"]
+        src__markpact__publisher__bump_version["bump_version"]
+        src__markpact__generator___configure_litellm["_configure_litellm"]
+        src__markpact__cli___execute_publish_result["_execute_publish_result"]
+        src__markpact__notebook_converter__parse_notebook["parse_notebook"]
+        src___extract_file_hint["_extract_file_hint"]
+        src__markpact__publisher___check_file_type["_check_file_type"]
+        src__markpact__generator__get_example_prompt["get_example_prompt"]
+        src__markpact__auto_fix___run_and_print["_run_and_print"]
+        src___analyze_blocks_for_types["_analyze_blocks_for_types"]
+        src__markpact__syncer__list_tracked_paths["list_tracked_paths"]
+        src__markpact__publisher__infer_publish_config["infer_publish_config"]
+        src__markpact__auto_fix__add_missing_dependency["add_missing_dependency"]
+        src__markpact__cli___run_http_tests["_run_http_tests"]
+        src___extract_description_from_cells["_extract_description_from_cell"]
+        src__markpact__publisher__update_version_in_readme["update_version_in_readme"]
+        src__markpact__publisher___run_build_command["_run_build_command"]
+        src__markpact__publisher___print_build_output["_print_build_output"]
+        src__markpact__syncer___backup_dir["_backup_dir"]
+        src___process_notebook_cells["_process_notebook_cells"]
+        src___should_skip_first_markdown_cell["_should_skip_first_markdown_ce"]
+        src__markpact__publisher___parse_pypirc_section["_parse_pypirc_section"]
+        src__markpact__publisher__generate_pyproject_toml["generate_pyproject_toml"]
+        src__markpact__converter___print_block_changes["_print_block_changes"]
+        src__markpact__config__set_api_key["set_api_key"]
+        src__markpact__notebook_converter__parse_zeppelin["parse_zeppelin"]
+        src__markpact__publisher__generate_package_json["generate_package_json"]
+        src__markpact__docker_runner__generate_dockerfile["generate_dockerfile"]
+        src__markpact__syncer__create_backup["create_backup"]
+        src__markpact__packer___build_run_command["_build_run_command"]
+        src__markpact__publisher__publish_docker["publish_docker"]
+        src__markpact__cli___run_shell_tests["_run_shell_tests"]
+        src__markpact__cli___handle_list_notebook_formats["_handle_list_notebook_formats"]
+        src__markpact__cli___handle_markdown_conversion["_handle_markdown_conversion"]
+        src___start_docker_container["_start_docker_container"]
+        src__markpact__config__apply_preset["apply_preset"]
+        src___stop_docker_container["_stop_docker_container"]
+        src__markpact__publisher__get_license_classifier["get_license_classifier"]
         src__markpact__runner__install_deps["install_deps"]
         src__markpact__config__get_env_path["get_env_path"]
-        src__markpact__cli___handle_normal_run["_handle_normal_run"]
-        src__markpact__packer___generate_readme_content["_generate_readme_content"]
-        src__markpact__publisher___first_heading["_first_heading"]
-        src__markpact__publisher___check_pypi_credentials["_check_pypi_credentials"]
-        src__markpact__auto_fix__fix_with_llm["fix_with_llm"]
-        src__markpact__runner__run_cmd["run_cmd"]
-        src__get_supported_formats["get_supported_formats"]
-        src__markpact__packer___get_language["_get_language"]
-        src__markpact__cli___handle_docker_mode["_handle_docker_mode"]
-        src__markpact__publisher___first_paragraph["_first_paragraph"]
-        src__run_docker_with_tests["run_docker_with_tests"]
-        src__markpact__runner__ensure_venv["ensure_venv"]
-        src__markpact__config__save_env["save_env"]
-        src__markpact__publisher__publish_npm["publish_npm"]
-        src__markpact__publisher__bump_version["bump_version"]
-        src__parse_databricks["parse_databricks"]
-        src__markpact__publisher__publish_github_packages["publish_github_packages"]
-        src__markpact__publisher__publish_docker["publish_docker"]
-        src__markpact__packer___collect_files["_collect_files"]
-        src__notebook_to_markpact["notebook_to_markpact"]
-        src__markpact__publisher___normalize_package_name["_normalize_package_name"]
-        src__markpact__notebook_converter__parse_jupyter["parse_jupyter"]
-        src__markpact__publisher__generate_pyproject_toml["generate_pyproject_toml"]
-        src__markpact__cli___handle_markdown_conversion["_handle_markdown_conversion"]
-        src__markpact__publisher__get_license_classifier["get_license_classifier"]
-        src__markpact__config__ensure_config_dir["ensure_config_dir"]
-        src__markpact__config__set_api_base["set_api_base"]
-        src__markpact__packer__pack_directory["pack_directory"]
-        src__markpact__config__set_api_key["set_api_key"]
-        src__markpact__packer___should_include["_should_include"]
-        src__markpact__publisher__infer_publish_config["infer_publish_config"]
-        src__markpact__generator__get_example_prompt["get_example_prompt"]
-        src__markpact__notebook_converter__parse_zeppelin["parse_zeppelin"]
-        src__markpact__cli__handle_config_cli["handle_config_cli"]
-        src__markpact__publisher___copy_readme["_copy_readme"]
-        src__markpact__docker_runner__build_and_run_docker["build_and_run_docker"]
-        src__stop_existing_container["stop_existing_container"]
+        src__markpact__generator__generate_contract["generate_contract"]
+        src__markpact__generator___clean_llm_response["_clean_llm_response"]
+        src__markpact__publisher___setup_upload_env["_setup_upload_env"]
+        src__markpact__docker_runner___find_docker_port["_find_docker_port"]
+        src__markpact__syncer___prune_backups["_prune_backups"]
         src__markpact__notebook_converter__detect_format["detect_format"]
+        src___print_conversion_summary["_print_conversion_summary"]
+        src__markpact__converter___detect_file["_detect_file"]
+        src__markpact__cli___handle_llm_generation["_handle_llm_generation"]
+        src__markpact__cli___handle_publish_mode["_handle_publish_mode"]
+        src__suggest_run_command["suggest_run_command"]
+        src__markpact__generator__list_example_prompts["list_example_prompts"]
+        src___set_provider_api_key_for_publish["_set_provider_api_key_for_publ"]
+        src__markpact__publisher___build_package["_build_package"]
+        src__markpact__docker_runner__is_port_free["is_port_free"]
+        src__markpact__config__save_env["save_env"]
+        src__markpact__packer__pack_directory["pack_directory"]
+        src__markpact__packer___get_language["_get_language"]
+        src__markpact__packer___detect_run_command["_detect_run_command"]
+        src__markpact__cli___determine_bump_type["_determine_bump_type"]
+        src__markpact__publisher___slugify["_slugify"]
+        src__markpact__docker_runner___run_docker_tests["_run_docker_tests"]
+        src__markpact__generator___fix_unclosed_blocks["_fix_unclosed_blocks"]
+        src__markpact__publisher__generate_dockerfile["generate_dockerfile"]
+        src__markpact__config__init_env["init_env"]
+        src__markpact__config__load_env["load_env"]
+        src__from_env["from_env"]
+        src__markpact__publisher___copy_readme["_copy_readme"]
+        src__markpact__cli___print_publish_dry_run["_print_publish_dry_run"]
+        src__markpact__auto_fix___setup_env_with_venv["_setup_env_with_venv"]
+        src__convert_notebook["convert_notebook"]
+        src__markpact__converter___detect_deps["_detect_deps"]
+        src__markpact__syncer__find_untracked_files["find_untracked_files"]
+        src__markpact__publisher___detect_registry["_detect_registry"]
+        src__markpact__config__show_config["show_config"]
     end
     src__markpact__config__ensure_config_dir --> src__markpact__config__get_env_path
     src__markpact__config__load_env --> src__markpact__config__get_env_path
@@ -113,12 +202,26 @@ flowchart LR
     src__markpact__config__apply_preset --> src__markpact__config__save_env
     src__markpact__config__show_config --> src__markpact__config__load_env
     src__markpact__config__show_config --> src__markpact__config__get_env_path
+    src__markpact__docker_runner___find_docker_port --> src__markpact__docker_runner__is_port_free
+    src__markpact__docker_runner___find_docker_port --> src__markpact__sandbox__find_free_port
+    src__markpact__docker_runner__build_and_run_docker --> src___build_docker_image_simple
     src__markpact__docker_runner__build_and_run_docker --> src__stop_existing_container
-    src__markpact__docker_runner__build_and_run_docker --> src__markpact__docker_runner__is_port_free
+    src__markpact__docker_runner__build_and_run_docker --> src__markpact__docker_runner___find_docker_port
+    src__markpact__docker_runner__build_and_run_docker --> src___run_docker_container_interactive
     src__markpact__docker_runner__run_docker_with_logs --> src__stop_existing_container
     src__markpact__docker_runner__run_docker_with_logs --> src__markpact__sandbox__find_free_port
     src__markpact__docker_runner__run_docker_with_logs --> src__markpact__docker_runner__is_port_free
-    src__run_docker_with_tests --> src__stop_existing_container
+    src__markpact__docker_runner___resolve_docker_port --> src__markpact__docker_runner__is_port_free
+    src__markpact__docker_runner___resolve_docker_port --> src__markpact__sandbox__find_free_port
+    src___start_docker_container --> src__stop_existing_container
+    src__run_docker_with_tests --> src__markpact__docker_runner___build_docker_image
+    src__run_docker_with_tests --> src__markpact__docker_runner___resolve_docker_port
+    src__run_docker_with_tests --> src___start_docker_container
+    src__run_docker_with_tests --> src__markpact__docker_runner___run_docker_tests
+    src__run_docker_with_tests --> src___stop_docker_container
+    src__markpact__packer___detect_run_command --> src__markpact__packer___detect_file_indicators
+    src__markpact__packer___detect_run_command --> src___detect_framework_from_content
+    src__markpact__packer___detect_run_command --> src__markpact__packer___build_run_command
     src__markpact__packer___collect_files --> src__markpact__packer___should_include
     src__markpact__packer___generate_readme_content --> src__markpact__packer___get_language
     src__markpact__packer___generate_readme_content --> src__markpact__packer___detect_run_command
@@ -128,21 +231,45 @@ flowchart LR
     src__markpact__runner__ensure_venv --> src__markpact__runner__run_cmd
     src__markpact__runner__install_deps --> src__markpact__runner__ensure_venv
     src__markpact__runner__install_deps --> src__markpact__runner__run_cmd
+    src__markpact__notebook_converter__parse_rmarkdown --> src___parse_rmd_yaml_front_matter
+    src__markpact__notebook_converter__parse_rmarkdown --> src___parse_rmd_code_chunks
+    src__markpact__notebook_converter__parse_rmarkdown --> src___extract_description_from_cells
+    src__markpact__notebook_converter__parse_quarto --> src___parse_quarto_yaml_front_matter
+    src__markpact__notebook_converter__parse_quarto --> src___parse_quarto_code_chunks
     src__markpact__notebook_converter__parse_notebook --> src__markpact__notebook_converter__detect_format
     src__markpact__notebook_converter__parse_notebook --> src__markpact__notebook_converter__parse_jupyter
     src__markpact__notebook_converter__parse_notebook --> src__markpact__notebook_converter__parse_rmarkdown
     src__markpact__notebook_converter__parse_notebook --> src__markpact__notebook_converter__parse_quarto
     src__markpact__notebook_converter__parse_notebook --> src__markpact__notebook_converter__parse_zeppelin
     src__markpact__notebook_converter__parse_notebook --> src__parse_databricks
-    src__notebook_to_markpact --> src__extract_dependencies
+    src___extract_and_format_deps --> src__extract_dependencies
+    src___process_notebook_cells --> src___should_skip_first_markdown_cell
+    src___process_notebook_cells --> src___extract_markdown_section
+    src___process_notebook_cells --> src___extract_file_hint
+    src__notebook_to_markpact --> src___generate_header
+    src__notebook_to_markpact --> src___process_notebook_cells
+    src__notebook_to_markpact --> src___merge_code_files
+    src__notebook_to_markpact --> src__suggest_run_command
     src__convert_notebook --> src__markpact__notebook_converter__detect_format
     src__convert_notebook --> src__markpact__notebook_converter__parse_notebook
     src__convert_notebook --> src__notebook_to_markpact
+    src__markpact__auto_fix___handle_port_error_simple --> src__markpact__sandbox__find_free_port
+    src__markpact__auto_fix___handle_port_error_simple --> src__markpact__auto_fix__fix_port_in_readme
+    src__markpact__auto_fix__run_with_auto_fix --> src___setup_env_with_venv_simple
     src__markpact__auto_fix__run_with_auto_fix --> src__markpact__auto_fix__detect_error_type
-    src__markpact__auto_fix__run_with_auto_fix --> src__markpact__sandbox__find_free_port
+    src__markpact__auto_fix__run_with_auto_fix --> src__markpact__auto_fix___run_and_print
+    src__markpact__auto_fix__run_with_auto_fix --> src__markpact__auto_fix___handle_port_error_simple
     src__markpact__auto_fix__fix_with_llm --> src__markpact__generator__generate_contract
+    src__markpact__auto_fix___handle_port_error --> src__markpact__sandbox__find_free_port
+    src__markpact__auto_fix___handle_port_error --> src__markpact__auto_fix__fix_port_in_readme
+    src___handle_missing_module_error --> src__markpact__auto_fix__extract_module_name
+    src___handle_missing_module_error --> src__markpact__auto_fix__add_missing_dependency
+    src___handle_missing_module_error --> src__markpact__runner__install_deps
+    src__markpact__auto_fix___try_llm_fix --> src__markpact__auto_fix__fix_with_llm
+    src__markpact__auto_fix__run_with_auto_fix_llm --> src__markpact__auto_fix___setup_env_with_venv
     src__markpact__auto_fix__run_with_auto_fix_llm --> src__markpact__auto_fix__detect_error_type
-    src__markpact__auto_fix__run_with_auto_fix_llm --> src__markpact__sandbox__find_free_port
+    src__markpact__auto_fix__run_with_auto_fix_llm --> src__markpact__auto_fix___run_subprocess
+    src__markpact__auto_fix__run_with_auto_fix_llm --> src__markpact__auto_fix___handle_port_error
     src__markpact__cli__handle_config_cli --> src__markpact__config__get_env_path
     src__markpact__cli___handle_list_examples --> src__markpact__generator__list_example_prompts
     src__markpact__cli___handle_list_notebook_formats --> src__get_supported_formats
@@ -152,26 +279,71 @@ flowchart LR
     src__markpact__cli___handle_llm_generation --> src__markpact__generator__get_example_prompt
     src__markpact__cli___handle_markdown_conversion --> src__convert_markdown_to_markpact
     src__markpact__cli___handle_markdown_conversion --> src__markpact__converter__print_conversion_report
+    src__markpact__cli___resolve_publish_config --> src__markpact__publisher__infer_publish_config
+    src__markpact__cli___resolve_publish_config --> src__markpact__publisher__prompt_publish_config
+    src__markpact__cli___resolve_publish_config --> src__generate_publish_config_with_llm
+    src__markpact__cli___print_publish_dry_run --> src__markpact__publisher__bump_version
+    src__markpact__cli___execute_publish_result --> src__markpact__publisher__update_version_in_readme
+    src__markpact__cli___handle_publish_mode --> src__markpact__cli___determine_bump_type
     src__markpact__cli___handle_publish_mode --> src__markpact__publisher__publish
-    src__markpact__cli___handle_publish_mode --> src__markpact__publisher__infer_publish_config
-    src__markpact__cli___handle_publish_mode --> src__markpact__publisher__prompt_publish_config
-    src__markpact__cli___handle_publish_mode --> src__markpact__publisher__bump_version
+    src__markpact__cli___handle_publish_mode --> src__markpact__cli___execute_publish_result
+    src__markpact__cli___handle_publish_mode --> src__markpact__cli___resolve_publish_config
+    src__markpact__cli___handle_publish_mode --> src__markpact__cli___print_publish_dry_run
     src__markpact__cli___handle_docker_mode --> src__markpact__docker_runner__generate_dockerfile
     src__markpact__cli___handle_docker_mode --> src__markpact__docker_runner__build_and_run_docker
     src__markpact__cli___handle_docker_mode --> src__check_docker_available
     src__markpact__cli___handle_test_mode --> src__markpact__sandbox__find_free_port
+    src__markpact__cli___handle_test_mode --> src__markpact__cli___split_test_blocks
+    src__markpact__cli___handle_test_mode --> src__markpact__cli___run_http_tests
+    src__markpact__cli___handle_test_mode --> src__markpact__cli___run_shell_tests
+    src__markpact__cli___handle_test_mode --> src__markpact__cli___print_dry_run_tests
     src__markpact__cli___handle_test_mode --> src__markpact__runner__install_deps
     src__markpact__cli___handle_normal_run --> src__markpact__runner__install_deps
     src__markpact__cli___handle_normal_run --> src__markpact__auto_fix__run_with_auto_fix_llm
     src__markpact__cli___handle_normal_run --> src__markpact__runner__run_cmd
+    src__markpact__generator__generate_contract --> src__markpact__generator___configure_litellm
+    src__markpact__generator__generate_contract --> src__markpact__generator___set_provider_api_key
     src__markpact__generator__generate_contract --> src__from_env
+    src__markpact__generator__generate_contract --> src__markpact__generator___call_llm_with_config
+    src__markpact__generator__generate_contract --> src__markpact__generator___clean_llm_response
+    src__markpact__generator__generate_contract --> src__markpact__generator___fix_unclosed_blocks
+    src__markpact__converter__detect_block_type --> src__markpact__converter___detect_deps
+    src__markpact__converter__detect_block_type --> src__markpact__converter___detect_run
+    src__markpact__converter__detect_block_type --> src__markpact__converter___detect_file
     src__convert_markdown_to_markpact --> src__markpact__converter__detect_block_type
+    src__markpact__converter__print_conversion_report --> src__markpact__converter___print_conversion_header
+    src__markpact__converter__print_conversion_report --> src__markpact__converter___print_block_changes
+    src__markpact__converter__print_conversion_report --> src___print_conversion_summary
+    src__markpact__syncer__create_backup --> src__markpact__syncer___backup_dir
+    src__markpact__syncer__create_backup --> src__markpact__syncer___prune_backups
+    src__markpact__syncer__list_backups --> src__markpact__syncer___backup_dir
+    src__markpact__syncer__restore_backup --> src__markpact__syncer__list_backups
+    src__markpact__syncer__find_untracked_files --> src__markpact__syncer__list_tracked_paths
+    src___analyze_blocks_for_types --> src__markpact__publisher___check_file_type
+    src__markpact__publisher___detect_registry --> src__markpact__publisher___is_web_service
     src__markpact__publisher__infer_publish_config --> src__markpact__publisher___first_heading
     src__markpact__publisher__infer_publish_config --> src__markpact__publisher___first_paragraph
+    src__markpact__publisher__infer_publish_config --> src___analyze_blocks_for_types
+    src__markpact__publisher__infer_publish_config --> src__markpact__publisher___detect_registry
     src__markpact__publisher__infer_publish_config --> src__markpact__publisher___slugify
-    src__generate_publish_config_with_llm --> src__from_env
+    src__markpact__publisher__infer_publish_config --> src__markpact__publisher___build_package_name
+    src__markpact__publisher__infer_publish_config --> src__markpact__publisher___get_default_author
+    src__markpact__publisher___setup_llm_for_publish --> src__from_env
+    src__generate_publish_config_with_llm --> src__markpact__publisher___setup_llm_for_publish
+    src__generate_publish_config_with_llm --> src___set_provider_api_key_for_publish
+    src__generate_publish_config_with_llm --> src___call_llm_for_publish_config
+    src__generate_publish_config_with_llm --> src___extract_publish_block_from_response
     src__generate_publish_config_with_llm --> src__markpact__publisher__parse_publish_block
     src__markpact__publisher__generate_pyproject_toml --> src__markpact__publisher__get_license_classifier
+    src__markpact__publisher___build_package --> src__markpact__publisher___run_build_command
+    src__markpact__publisher___build_package --> src__markpact__publisher___print_build_output
+    src__markpact__publisher___build_package --> src__markpact__publisher___get_build_error_hint
+    src__markpact__publisher___check_pypi_credentials --> src__markpact__publisher___setup_env_creds
+    src__markpact__publisher___check_pypi_credentials --> src__markpact__publisher___parse_pypirc_section
+    src__markpact__publisher___upload_to_pypi --> src__markpact__publisher___setup_upload_env
+    src__markpact__publisher___upload_to_pypi --> src__markpact__publisher___build_upload_cmd
+    src__markpact__publisher___upload_to_pypi --> src___format_subprocess_failure
+    src__markpact__publisher___upload_to_pypi --> src__markpact__publisher___get_upload_error_hint
     src__markpact__publisher__publish_pypi --> src__markpact__publisher___normalize_package_name
     src__markpact__publisher__publish_pypi --> src__markpact__publisher___determine_base_path
     src__markpact__publisher__publish_pypi --> src__markpact__publisher__generate_pyproject_toml
@@ -190,11 +362,31 @@ flowchart LR
     src__markpact__publisher__publish --> src__markpact__publisher__publish_docker
     src__markpact__publisher__publish --> src__markpact__publisher__publish_github_packages
     demos__demo_live_markpact__show_menu --> demos__demo_live_markpact__hdr
-    demos__demo_live_markpact__LivePDF__cell --> demos__demo_live_markpact___ascii
-    demos__demo_live_markpact__LivePDF__multi_cell --> demos__demo_live_markpact___ascii
-    demos__get_string_width --> demos__demo_live_markpact___ascii
+    demos__demo_live_markpact___step_generate_contract --> demos__demo_live_markpact__hdr
+    demos__demo_live_markpact___step_generate_contract --> demos__demo_live_markpact__step
+    demos__demo_live_markpact___step_generate_contract --> demos__demo_live_markpact__info
+    demos__demo_live_markpact___step_generate_contract --> demos__demo_live_markpact__wait
+    demos__demo_live_markpact___step_generate_contract --> src__markpact__generator__generate_contract
+    demos__demo_live_markpact___step_generate_contract --> demos__demo_live_markpact__wait_done
+    demos__demo_live_markpact___step_generate_contract --> demos__demo_live_markpact__ok
+    demos__demo_live_markpact___step_parse_blocks --> demos__demo_live_markpact__hdr
+    demos__demo_live_markpact___step_parse_blocks --> src__markpact__parser__parse_blocks
+    demos__demo_live_markpact___step_parse_blocks --> demos__demo_live_markpact__ok
+    demos__demo_live_markpact___step_parse_blocks --> demos__demo_live_markpact__fail
+    demos__demo_live_markpact___step_validate_blocks --> demos__demo_live_markpact__hdr
+    demos__demo_live_markpact___step_validate_blocks --> demos__demo_live_markpact__ok
+    demos__demo_live_markpact___step_validate_blocks --> demos__demo_live_markpact__fail
+    demos__demo_live_markpact___step_analyze_blocks --> demos__demo_live_markpact__hdr
+    demos__demo_live_markpact___step_analyze_blocks --> demos__demo_live_markpact__ok
+    demos__demo_live_markpact___step_sha_integrity --> demos__demo_live_markpact__hdr
+    demos__demo_live_markpact___step_sha_integrity --> demos__demo_live_markpact__ok
+    demos__demo_live_markpact___save_outputs --> demos__demo_live_markpact__ok
+    demos__demo_live_markpact___save_outputs --> demos__demo_live_markpact__fail
+    demos__demo_live_markpact___save_outputs --> demos__demo_live_markpact__info
+    demos__demo_live_markpact___print_summary --> demos__demo_live_markpact__hdr
     demos__demo_live_markpact__run_live --> src__from_env
     demos__demo_live_markpact__run_live --> demos__demo_live_markpact__hdr
     demos__demo_live_markpact__run_live --> demos__demo_live_markpact__step
+    demos__demo_live_markpact__run_live --> demos__demo_live_markpact___step_generate_contract
     demos__demo_live_markpact__main --> demos__demo_live_markpact__run_live
     demos__demo_live_markpact__main --> demos__demo_live_markpact__list_prompts

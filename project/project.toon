@@ -1,20 +1,21 @@
-# markpact | 24f 6497L | python:24
+# markpact | 26f 8145L | python:26
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
-M[24]:
-  demos/demo_live_markpact.py,702
-  src/markpact/__init__.py,32
-  src/markpact/auto_fix.py,245
-  src/markpact/cli.py,421
+M[26]:
+  demos/demo_live_markpact.py,765
+  src/markpact/__init__.py,44
+  src/markpact/auto_fix.py,293
+  src/markpact/cli.py,588
   src/markpact/config.py,154
-  src/markpact/converter.py,210
-  src/markpact/docker_runner.py,243
-  src/markpact/generator.py,243
-  src/markpact/notebook_converter.py,505
-  src/markpact/packer.py,341
+  src/markpact/converter.py,237
+  src/markpact/docker_runner.py,306
+  src/markpact/generator.py,258
+  src/markpact/notebook_converter.py,559
+  src/markpact/packer.py,344
   src/markpact/parser.py,47
-  src/markpact/publisher.py,848
+  src/markpact/publisher.py,935
   src/markpact/runner.py,30
   src/markpact/sandbox.py,46
+  src/markpact/syncer.py,313
   src/markpact/tester.py,237
   tests/__init__.py,0
   tests/test_cli.py,118
@@ -25,13 +26,13 @@ M[24]:
   tests/test_parser.py,81
   tests/test_runner.py,73
   tests/test_sandbox.py,34
+  tests/test_syncer.py,340
 D:
   demos/demo_live_markpact.py:
     i: argparse,hashlib,os,sys,time,dataclasses.{dataclass,field},markpact.{Block,parse_blocks},pathlib.Path
     e: _PL_MAP,BOLD,DIM,RED,GREEN,YELLOW,BLUE,CYAN
     StepRecord: 
     LiveSession: add_step(5),elapsed(0)
-    LivePDF: __init__(0),cell(3),multi_cell(3),get_string_width(1),_bg(0)  # Landscape A4 PDF with dark theme for...
     _ascii(text:str)->str
     hdr(text)
     step(icon;text)
@@ -45,22 +46,23 @@ D:
     e: detect_error_type,fix_port_in_readme,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,run_with_auto_fix_llm
     detect_error_type(error_output:str)->Optional[str]
     fix_port_in_readme(readme_path:Path;new_port:int)->bool
+    _setup_env_with_venv_simple(sandbox:Sandbox)->dict
+    _run_and_print(cmd:str;sandbox:Sandbox;env:dict;verbose:bool)->subprocess.CompletedProcess
+    _handle_port_error_simple(cmd:str;env:dict;readme_path:Optional[Path])->tuple[str, dict]
     run_with_auto_fix(cmd:str;sandbox:Sandbox;readme_path:Optional[Path]=None;verbose:bool=True;max_retries:int=3)->int
     add_missing_dependency(readme_path:Path;module_name:str)->bool
     extract_module_name(error_output:str)->Optional[str]
-    fix_with_llm(readme_path:Path;error_output:str;error_type:str;verbose:bool=True)->bool
-    run_with_auto_fix_llm(cmd:str;sandbox:Sandbox;readme_path:Optional[Path]=None;verbose:bool=True;max_retries:int=3;use_llm:bool=False)->int
   src/markpact/cli.py:
     i: argparse,re,sys,__version__,converter.{convert_markdown_to_markpact,print_conversion_report},packer.{pack_directory,print_pack_report},parser.parse_blocks,pathlib.Path
-    e: handle_pack_cli,handle_config_cli,main
+    e: handle_pack_cli,handle_sync_cli,handle_config_cli,main
     handle_pack_cli(argv:list[str])->int
+    handle_sync_cli(argv:list[str])->int
     handle_config_cli(argv:list[str])->int
     _handle_list_examples(verbose:bool)->int
     _handle_list_notebook_formats(verbose:bool)->int
     _handle_from_notebook(args;verbose:bool)->tuple[int, Path | None]
     _handle_llm_generation(args;verbose:bool)->tuple[int, Path | None]
     _handle_markdown_conversion(args;original_text:str;verbose:bool)->tuple[str, bool]
-    _parse_blocks_to_state(blocks;sandbox:Sandbox;args;verbose:bool)->dict
   src/markpact/config.py:
     i: os,pathlib.Path,typing.Optional
     e: DEFAULT_ENV_PATH,DEFAULTS,PROVIDER_PRESETS,get_env_path,ensure_config_dir,load_env,save_env,init_env
@@ -77,30 +79,37 @@ D:
     e: PATTERNS,LANG_EXTENSIONS,ConvertedBlock,ConversionResult,detect_block_type,suggest_filename,convert_markdown_to_markpact,print_conversion_report
     ConvertedBlock:   # A converted markpact block.
     ConversionResult:   # Result of converting a Markdown file.
+    _detect_deps(lang:str;body:str;body_lower:str)->tuple[str, str, float, str] | None
+    _detect_run(lang:str;first_lines:str)->tuple[str, str, float, str] | None
+    _detect_file(first_lines:str;lang:str)->tuple[str, str, float, str] | None
     detect_block_type(lang:str;body:str)->tuple[str, str, float, str]
     suggest_filename(lang:str;body:str;index:int)->str
     convert_markdown_to_markpact(text:str;verbose:bool=True)->ConversionResult
-    print_conversion_report(result:ConversionResult)->None
+    _print_conversion_header()->None
+    _print_block_changes(changes:list[str])->None
   src/markpact/docker_runner.py:
     i: socket,subprocess,sys,time,pathlib.Path,sandbox.find_free_port,typing.Optional
     e: stop_existing_container,DOCKERFILE_TEMPLATE,generate_dockerfile,is_port_free,build_and_run_docker,check_docker_available,run_docker_with_logs,stream_docker_logs
     stop_existing_container(container_name:str;verbose:bool=False)->bool
     generate_dockerfile(sandbox_path:Path;deps:list[str];run_command:str)->Path
     is_port_free(port:int)->bool
+    _build_docker_image_simple(sandbox_path:Path;image_name:str;verbose:bool)->tuple[bool, int]
+    _find_docker_port(port:int;auto_find_port:bool;verbose:bool)->tuple[int, bool]
+    _run_docker_container_interactive(sandbox_path:Path;image_name:str;container_name:str;current_port:int;verbose:bool)->int
     build_and_run_docker(sandbox_path:Path;image_name:str='markpact-app';port:int=8000;verbose:bool=True;auto_find_port:bool=True)->int
     check_docker_available()->bool
-    run_docker_with_logs(sandbox_path:Path;image_name:str='markpact-app';port:int=8000;follow_logs:bool=True;verbose:bool=True;auto_find_port:bool=True)->tuple[subprocess.Popen, int]
-    stream_docker_logs(process:Any;timeout:Optional[int]=None)
-    run_docker_with_tests(sandbox_path:Path;test_body:str;image_name:str='markpact-app';port:int=8000;verbose:bool=True;auto_find_port:bool=True)->tuple[int, "TestSuite"]
   src/markpact/generator.py:
     i: json,os,warnings,litellm,dataclasses.dataclass,pathlib.Path,typing.Optional
     e: GeneratorConfig,SYSTEM_PROMPT,generate_contract,save_contract,EXAMPLE_PROMPTS,get_example_prompt,list_example_prompts
     GeneratorConfig: from_env(0),from_file(1)  # Configuration for LLM generator
     _fix_unclosed_blocks(content:str)->str
+    _configure_litellm(config:GeneratorConfig;verbose:bool)->None
+    _set_provider_api_key(model:str;api_key:Any)->None
+    _call_llm_with_config(config:GeneratorConfig;messages:list)->str
+    _clean_llm_response(content:str)->str
     generate_contract(prompt:str;config:Optional[GeneratorConfig]=None;verbose:bool=False)->str
     save_contract(content:str;output_path:Path;verbose:bool=False)->Path
     get_example_prompt(name:str)->str
-    list_example_prompts()->dict[str, str]
   src/markpact/notebook_converter.py:
     i: json,re,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
     e: NotebookCell,Notebook,detect_format,parse_jupyter,parse_rmarkdown,parse_quarto,parse_zeppelin,parse_databricks
@@ -108,24 +117,24 @@ D:
     Notebook:   # Represents a parsed notebook.
     detect_format(path:Path)->Optional[str]
     parse_jupyter(path:Path)->Notebook
+    _parse_rmd_yaml_front_matter(content:str;default_title:str)->tuple[dict, str, str]
+    _parse_rmd_code_chunks(content:str)->list[NotebookCell]
+    _extract_description_from_cells(cells:list[NotebookCell])->str
     parse_rmarkdown(path:Path)->Notebook
-    parse_quarto(path:Path)->Notebook
-    parse_zeppelin(path:Path)->Notebook
-    parse_databricks(path:Path)->Notebook
-    parse_notebook(path:Path)->Notebook
-    extract_dependencies(notebook:Notebook)->list[str]
+    _parse_quarto_yaml_front_matter(content:str;default_title:str)->tuple[dict, str, str, str]
+    _parse_quarto_code_chunks(content:str)->list[NotebookCell]
   src/markpact/packer.py:
     i: fnmatch,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
     e: DEFAULT_EXCLUDE,LANG_EXTENSIONS,PackResult,pack_directory,print_pack_report
     PackResult: summary(0)  # Result of packing a directory.
     _should_include(path:Path;exclude_patterns:set[str])->bool
     _get_language(path:Path)->str
+    _detect_file_indicators(files:list[Path])->dict[str, bool]
+    _detect_framework_from_content(files:list[Path])->tuple[bool, bool]
+    _build_run_command(indicators:dict[str;bool];has_fastapi:bool;has_flask:bool)->Optional[str]
     _detect_run_command(files:list[Path])->Optional[str]
     _collect_files(src:Path;output_path:Path;exclude_patterns:set[str];include_patterns:Optional[list[str]];verbose:bool)->list[Path]
     _generate_readme_content(files_to_pack:list[Path];src:Path;project_title:str;desc:str;run_command:Optional[str];dry_run:bool)->tuple[list[str], list[dict]]
-    _write_output(output_path:Path;lines:list[str];files_to_pack:list[Path];dry_run:bool;verbose:bool)->None
-    pack_directory(source_dir:Any;output:Any=None)->PackResult
-    print_pack_report(result:PackResult)->None
   src/markpact/parser.py:
     i: re,dataclasses.dataclass,typing.Optional
     e: CODEBLOCK_NEW_RE,CODEBLOCK_OLD_RE,Block,parse_blocks
@@ -140,10 +149,10 @@ D:
     _first_heading(markdown:str)->str
     _first_paragraph(markdown:str)->str
     _format_subprocess_failure(result:Any)->str
-    infer_publish_config(readme_path:Path;markdown:str;blocks:list[object];run_command:Any)->"PublishConfig"
-    prompt_publish_config(config:PublishConfig)->"PublishConfig"
-    ensure_publish_block_in_readme(readme_path:Path;config:PublishConfig)->None
-    generate_publish_config_with_llm(markdown:str;verbose:bool=False)->Optional["PublishConfig"]
+    _check_file_type(path:str)->dict[str, bool]
+    _analyze_blocks_for_types(blocks:list[object])->dict[str, bool]
+    _is_web_service(run_command:Any)->bool
+    _detect_registry(flags:dict[str;bool];run_command:Any)->str
   src/markpact/runner.py:
     i: os,subprocess,sys,pathlib.Path,sandbox.Sandbox
     e: run_cmd,ensure_venv,install_deps
@@ -155,6 +164,18 @@ D:
     e: find_free_port,Sandbox
     Sandbox: __init__(1),venv_bin(0),venv_pip(0),venv_python(0),has_venv(0)  # Manages sandbox directory for markpac...
     find_free_port(start_port:int=8000;max_attempts:int=100)->int
+  src/markpact/syncer.py:
+    i: difflib,fnmatch,re,shutil,datetime,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
+    e: BACKUP_DIR_NAME,BACKUP_PREFIX,MAX_BACKUPS,create_backup,list_backups,restore_backup,_BLOCK_NEW_RE,_BLOCK_OLD_RE
+    SyncResult: summary(0)  # Result of a sync operation.
+    _backup_dir(readme_path:Path)->Path
+    create_backup(readme_path:Path)->Path | None
+    list_backups(readme_path:Path)->list[Path]
+    restore_backup(readme_path:Path;backup_path:Any=None)->bool
+    _prune_backups(bak_dir:Path)->None
+    list_tracked_paths(text:str)->list[str]
+    find_untracked_files(text:str;source_dir:Path)->list[str]
+    diff_block(rel_path:str;old_body:str;new_body:str)->str
   src/markpact/tester.py:
     i: json,os,re,subprocess,sys,time,dataclasses.dataclass,pathlib.Path,typing.Optional,urllib.request.urlopen
     e: TestResult,TestSuite,wait_for_service,http_request,run_http_test,run_tests_from_block,run_service_with_tests,run_shell_tests
@@ -243,3 +264,14 @@ D:
     test_write_requirements()
     test_venv_paths()
     test_clean()
+  tests/test_syncer.py:
+    i: textwrap,markpact.syncer,pathlib.Path
+    e: test_list_tracked_old_format,test_list_tracked_new_format,test_list_tracked_mixed_formats,test_list_tracked_empty,test_find_untracked,test_find_untracked_excludes_dirs,test_find_untracked_nonexistent_dir,test_sync_updates_old_format
+    test_list_tracked_old_format()
+    test_list_tracked_new_format()
+    test_list_tracked_mixed_formats()
+    test_list_tracked_empty()
+    test_find_untracked(tmp_path)
+    test_find_untracked_excludes_dirs(tmp_path)
+    test_find_untracked_nonexistent_dir()
+    test_sync_updates_old_format(tmp_path)

@@ -56,27 +56,27 @@
   markpact — Warning
 </h1>
 <p style="color:var(--muted);font-size:.85rem;">
-  Analyzed 2026-03-05 by code2llm
+  Analyzed 2026-03-06 by code2llm
 </p>
 
 <div class="grid">
-  <div class="card"><div class="value">6.9</div><div class="label">Avg CC</div></div>
-  <div class="card"><div class="value">38</div><div class="label">Critical (CC≥10)</div></div>
-  <div class="card"><div class="value">142</div><div class="label">Functions</div></div>
+  <div class="card"><div class="value">5.2</div><div class="label">Avg CC</div></div>
+  <div class="card"><div class="value">27</div><div class="label">Critical (CC≥10)</div></div>
+  <div class="card"><div class="value">216</div><div class="label">Functions</div></div>
   <div class="card"><div class="value">13</div><div class="label">Classes</div></div>
-  <div class="card"><div class="value">13</div><div class="label">Files</div></div>
-  <div class="card"><div class="value">6473</div><div class="label">Lines</div></div>
+  <div class="card"><div class="value">14</div><div class="label">Files</div></div>
+  <div class="card"><div class="value">8119</div><div class="label">Lines</div></div>
   <div class="card"><div class="value">0</div><div class="label">Duplicates</div></div>
   <div class="card"><div class="value">0</div><div class="label">Cycles</div></div>
 </div>
 
 <div class="two-col">
   <div class="chart-container">
-    <h2 style="border:none;margin:0 0 .5rem;">Evolution (2026-03-05)</h2>
+    <h2 style="border:none;margin:0 0 .5rem;">Evolution (2026-03-06)</h2>
     <div class="evo-cards">
-      <div class="card"><div class="value">6.9</div><div class="label">CC̄ →</div></div>
-      <div class="card"><div class="value">38</div><div class="label">Critical →</div></div>
-      <div class="card"><div class="value">6473</div><div class="label">Lines</div></div>
+      <div class="card"><div class="value">5.2</div><div class="label">CC̄ ↓</div></div>
+      <div class="card"><div class="value">27</div><div class="label">Critical ↓</div></div>
+      <div class="card"><div class="value">8119</div><div class="label">Lines</div></div>
     </div>
     <p class="trend" style="margin-top:.5rem;">Run analysis multiple times to build a trend chart (≥3 data points needed).</p>
   </div>
@@ -95,78 +95,57 @@
                 <td><span class="badge critical">critical</span></td>
                 <td>run_live</td>
                 <td>cc_exceeded</td>
-                <td>67</td>
+                <td>51</td>
                 <td>15</td>
             </tr>
             <tr class="critical">
                 <td><span class="badge critical">critical</span></td>
                 <td>run_live</td>
                 <td>high_fan_out</td>
-                <td>54</td>
+                <td>50</td>
                 <td>10</td>
             </tr>
             <tr class="critical">
                 <td><span class="badge critical">critical</span></td>
-                <td>infer_publish_config</td>
+                <td>handle_sync_cli</td>
+                <td>cc_exceeded</td>
+                <td>35</td>
+                <td>15</td>
+            </tr>
+            <tr class="critical">
+                <td><span class="badge critical">critical</span></td>
+                <td>main</td>
                 <td>cc_exceeded</td>
                 <td>30</td>
                 <td>15</td>
             </tr>
             <tr class="critical">
                 <td><span class="badge critical">critical</span></td>
-                <td>notebook_to_markpact</td>
-                <td>cc_exceeded</td>
-                <td>29</td>
-                <td>15</td>
-            </tr>
-            <tr class="critical">
-                <td><span class="badge critical">critical</span></td>
-                <td>run_with_auto_fix_llm</td>
-                <td>cc_exceeded</td>
-                <td>29</td>
-                <td>15</td>
-            </tr>
-            <tr class="critical">
-                <td><span class="badge critical">critical</span></td>
-                <td>main</td>
-                <td>cc_exceeded</td>
+                <td>handle_sync_cli</td>
+                <td>high_fan_out</td>
                 <td>28</td>
-                <td>15</td>
+                <td>10</td>
             </tr>
             <tr class="critical">
                 <td><span class="badge critical">critical</span></td>
                 <td>main</td>
                 <td>high_fan_out</td>
-                <td>24</td>
-                <td>10</td>
-            </tr>
-            <tr class="critical">
-                <td><span class="badge critical">critical</span></td>
-                <td>notebook_to_markpact</td>
-                <td>high_fan_out</td>
-                <td>21</td>
-                <td>10</td>
-            </tr>
-            <tr class="critical">
-                <td><span class="badge critical">critical</span></td>
-                <td>parse_rmarkdown</td>
-                <td>high_fan_out</td>
-                <td>20</td>
+                <td>25</td>
                 <td>10</td>
             </tr>
             <tr class="error">
                 <td><span class="badge error">error</span></td>
-                <td>_check_pypi_credentials</td>
+                <td>_step_analyze_blocks</td>
                 <td>cc_exceeded</td>
-                <td>24</td>
+                <td>20</td>
                 <td>15</td>
             </tr>
             <tr class="error">
                 <td><span class="badge error">error</span></td>
-                <td>_upload_to_pypi</td>
-                <td>cc_exceeded</td>
-                <td>20</td>
-                <td>15</td>
+                <td>_step_analyze_blocks</td>
+                <td>high_fan_out</td>
+                <td>18</td>
+                <td>10</td>
             </tr>
             <tr class="error">
                 <td><span class="badge error">error</span></td>
@@ -177,16 +156,9 @@
             </tr>
             <tr class="error">
                 <td><span class="badge error">error</span></td>
-                <td>run_with_auto_fix_llm</td>
+                <td>sync_readme</td>
                 <td>high_fan_out</td>
                 <td>17</td>
-                <td>10</td>
-            </tr>
-            <tr class="error">
-                <td><span class="badge error">error</span></td>
-                <td>parse_quarto</td>
-                <td>high_fan_out</td>
-                <td>15</td>
                 <td>10</td>
             </tr>
             <tr class="error">
@@ -194,6 +166,34 @@
                 <td>handle_config_cli</td>
                 <td>high_fan_out</td>
                 <td>15</td>
+                <td>10</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
+                <td>run_with_auto_fix_llm</td>
+                <td>cc_exceeded</td>
+                <td>18</td>
+                <td>15</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
+                <td>_parse_pypirc_section</td>
+                <td>cc_exceeded</td>
+                <td>15</td>
+                <td>15</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
+                <td>pack_directory</td>
+                <td>high_fan_out</td>
+                <td>14</td>
+                <td>10</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
+                <td>_handle_llm_generation</td>
+                <td>high_fan_out</td>
+                <td>14</td>
                 <td>10</td>
             </tr></tbody>
 </table>
@@ -208,23 +208,23 @@
   <tbody>
             <tr>
                 <td><strong>run_live</strong></td>
-                <td>54</td>
-                <td>Orchestrates 54 calls</td>
+                <td>50</td>
+                <td>Main pipeline: prompt -> generate -> parse -> validate -> PDF.</td>
+            </tr>
+            <tr>
+                <td><strong>handle_sync_cli</strong></td>
+                <td>28</td>
+                <td>Handle sync subcommand - sync source files into README markpact blocks.</td>
             </tr>
             <tr>
                 <td><strong>main</strong></td>
-                <td>24</td>
+                <td>25</td>
                 <td>Main entry point for markpact CLI.</td>
             </tr>
             <tr>
-                <td><strong>notebook_to_markpact</strong></td>
-                <td>21</td>
-                <td>Convert notebook to markpact README.md format.</td>
-            </tr>
-            <tr>
-                <td><strong>parse_rmarkdown</strong></td>
-                <td>20</td>
-                <td>Parse R Markdown .Rmd file.</td>
+                <td><strong>_step_analyze_blocks</strong></td>
+                <td>18</td>
+                <td>Analysis pipeline, 18 stages</td>
             </tr>
             <tr>
                 <td><strong>parse_jupyter</strong></td>
@@ -232,26 +232,16 @@
                 <td>Parse Jupyter .ipynb notebook.</td>
             </tr>
             <tr>
-                <td><strong>run_with_auto_fix_llm</strong></td>
+                <td><strong>sync_readme</strong></td>
                 <td>17</td>
-                <td>Run command with automatic error detection and fixing (with optional LLM).
+                <td>Sync source directory files into README.md markpact:file blocks.
 
-Args</td>
-            </tr>
-            <tr>
-                <td><strong>parse_quarto</strong></td>
-                <td>15</td>
-                <td>Parse Quarto .qmd file (similar to R Markdown but multi-language).</td>
+Reads all mark</td>
             </tr>
             <tr>
                 <td><strong>handle_config_cli</strong></td>
                 <td>15</td>
                 <td>Handle config subcommand with its own parser</td>
-            </tr>
-            <tr>
-                <td><strong>LivePDF.add_summary_page</strong></td>
-                <td>15</td>
-                <td>Orchestrates 15 calls</td>
             </tr>
             <tr>
                 <td><strong>pack_directory</strong></td>
@@ -260,74 +250,87 @@ Args</td>
 
 Args:
     source_dir: Director</td>
+            </tr>
+            <tr>
+                <td><strong>_handle_llm_generation</strong></td>
+                <td>14</td>
+                <td>Handle --prompt or --example LLM generation. Returns (exit_code, readme_path_or_</td>
+            </tr>
+            <tr>
+                <td><strong>parse_publish_block</strong></td>
+                <td>14</td>
+                <td>Parse publish block content into config.
+
+Args:
+    block_body: The body of the </td>
             </tr></tbody>
 </table>
 </div></div>
 </div>
 
 <div>
-<h2>Refactoring Priorities (15)</h2>
+<h2>Refactoring Priorities (13)</h2>
 <div class="card"><div class="table-wrap">
 <table>
   <thead><tr><th>#</th><th>Action</th><th>Impact</th><th>Effort</th></tr></thead>
   <tbody>
             <tr>
                 <td>1</td>
-                <td>Split notebook_to_markpact (CC=29 → target CC<10)</td>
+                <td>Split handle_sync_cli (CC=35 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
                 <td>2</td>
-                <td>Split run_with_auto_fix_llm (CC=29 → target CC<10)</td>
+                <td>Split main (CC=30 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
                 <td>3</td>
-                <td>Split main (CC=28 → target CC<10)</td>
+                <td>Split run_live (CC=51 → target CC<10)</td>
                 <td><span class="badge high">high</span></td>
                 <td>low</td>
             </tr>
             <tr>
                 <td>4</td>
-                <td>Split infer_publish_config (CC=30 → target CC<10)</td>
+                <td>Split god module demos/demo_live_markpact.py (954L, 2 classes)</td>
                 <td><span class="badge high">high</span></td>
-                <td>low</td>
+                <td>high</td>
             </tr>
             <tr>
                 <td>5</td>
-                <td>Split run_live (CC=67 → target CC<10)</td>
+                <td>Split god module src/markpact/cli.py (736L, 0 classes)</td>
                 <td><span class="badge high">high</span></td>
-                <td>low</td>
+                <td>high</td>
             </tr>
             <tr>
                 <td>6</td>
-                <td>Split god module demos/demo_live_markpact.py (870L, 3 classes)</td>
+                <td>Split god module src/markpact/publisher.py (1227L, 2 classes)</td>
                 <td><span class="badge high">high</span></td>
                 <td>high</td>
             </tr>
             <tr>
                 <td>7</td>
-                <td>Split god module src/markpact/publisher.py (1089L, 2 classes)</td>
+                <td>Split god module src/markpact/notebook_converter.py (710L, 2 classes)</td>
                 <td><span class="badge high">high</span></td>
                 <td>high</td>
             </tr>
             <tr>
                 <td>8</td>
-                <td>Split god module src/markpact/notebook_converter.py (638L, 2 classes)</td>
-                <td><span class="badge high">high</span></td>
-                <td>high</td>
+                <td>Split run_with_auto_fix_llm (CC=18 → target CC<10)</td>
+                <td><span class="badge medium">medium</span></td>
+                <td>low</td>
             </tr>
             <tr>
                 <td>9</td>
-                <td>Split god module src/markpact/cli.py (509L, 0 classes)</td>
-                <td><span class="badge high">high</span></td>
-                <td>high</td>
+                <td>Split _parse_pypirc_section (CC=15 → target CC<10)</td>
+                <td><span class="badge medium">medium</span></td>
+                <td>low</td>
             </tr>
             <tr>
                 <td>10</td>
-                <td>Split run_docker_with_tests (CC=15 → target CC<10)</td>
+                <td>Split _step_analyze_blocks (CC=20 → target CC<10)</td>
                 <td><span class="badge medium">medium</span></td>
                 <td>low</td>
             </tr></tbody>
@@ -336,7 +339,7 @@ Args:
 </div>
 </div>
 
-<footer>Generated by code2llm on 2026-03-05 14:50</footer>
+<footer>Generated by code2llm on 2026-03-06 18:28</footer>
 
 <script>
 // Evolution chart disabled — fewer than 3 data points
@@ -345,9 +348,9 @@ const modCtx = document.getElementById('modChart').getContext('2d');
 new Chart(modCtx, {
   type: 'bar',
   data: {
-    labels: ['demo_live_markpact.py', 'publisher.py', 'auto_fix.py', 'notebook_converter.py', 'cli.py', 'converter.py', 'generator.py', 'packer.py', 'docker_runner.py', 'config.py', 'parser.py', 'runner.py', 'sandbox.py', '__init__.py'],
-    datasets: [{ label: 'Max CC', data: [67, 30, 29, 29, 28, 19, 17, 17, 15, 8, 6, 3, 3, 0],
-      backgroundColor: [67, 30, 29, 29, 28, 19, 17, 17, 15, 8, 6, 3, 3, 0].map(v => v >= 15 ? '#ef4444' : v >= 10 ? '#eab308' : '#22c55e')
+    labels: ['demo_live_markpact.py', 'cli.py', 'auto_fix.py', 'publisher.py', 'converter.py', 'notebook_converter.py', 'packer.py', 'syncer.py', 'config.py', 'docker_runner.py', 'generator.py', 'parser.py', 'runner.py', 'sandbox.py', '__init__.py'],
+    datasets: [{ label: 'Max CC', data: [51, 35, 18, 15, 11, 11, 11, 11, 8, 8, 8, 6, 3, 3, 0],
+      backgroundColor: [51, 35, 18, 15, 11, 11, 11, 11, 8, 8, 8, 6, 3, 3, 0].map(v => v >= 15 ? '#ef4444' : v >= 10 ? '#eab308' : '#22c55e')
     }]
   },
   options: {
