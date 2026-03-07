@@ -1,6 +1,6 @@
 """Markpact – Executable Markdown Runtime"""
 
-__version__ = "0.1.35"
+__version__ = "0.1.36"
 
 from .converter import convert_markdown_to_markpact, ConversionResult
 from .packer import pack_directory, PackResult, print_pack_report
