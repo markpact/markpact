@@ -1,6 +1,6 @@
 .PHONY: help extract run clean install dev test test-cov lint format build publish publish-test convert bump-patch bump-minor bump-major version
 
-PYTHON ?= python3
+PYTHON ?= .venv/bin/python3
 README ?= README.md
 SANDBOX ?= ./sandbox
 
@@ -64,16 +64,19 @@ publish: bump-patch build ## Publish to PyPI production (uses ~/.pypirc credenti
 version: ## Show current version
 	@grep -m1 'version = ' pyproject.toml | cut -d'"' -f2
 
-bump-patch: ## Bump patch version (0.1.0 → 0.1.1)
+bump-patch: sync-version ## Bump patch version (0.1.0 → 0.1.1)
 	bump2version patch --config-file .bumpversion.toml --allow-dirty
-	@echo "Bumped to $$(grep -m1 'version = ' pyproject.toml | cut -d'\"' -f2)"
+	@echo "Bumped to $$(python3 scripts/sync_version.py --get)"
 
-bump-minor: ## Bump minor version (0.1.0 → 0.2.0)
+bump-minor: sync-version ## Bump minor version (0.1.0 → 0.2.0)
 	bump2version minor --config-file .bumpversion.toml --allow-dirty
-	@echo "Bumped to $$(grep -m1 'version = ' pyproject.toml | cut -d'\"' -f2)"
+	@echo "Bumped to $$(python3 scripts/sync_version.py --get)"
 
-bump-major: ## Bump major version (0.1.0 → 1.0.0)
+bump-major: sync-version ## Bump major version (0.1.0 → 1.0.0)
 	bump2version major --config-file .bumpversion.toml --allow-dirty
-	@echo "Bumped to $$(grep -m1 'version = ' pyproject.toml | cut -d'\"' -f2)"
+	@echo "Bumped to $$(python3 scripts/sync_version.py --get)"
+
+sync-version: ## Sync bumpversion.toml with pyproject.toml
+	@python3 scripts/sync_version.py
 
 release: bump-patch publish ## Bump patch and publish

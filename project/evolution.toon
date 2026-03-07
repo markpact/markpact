@@ -1,54 +1,50 @@
-# code2llm/evolution | 264 func | 26f | 2026-03-07
+# code2llm/evolution | 261 func | 32f | 2026-03-07
 
-NEXT[9] (ranked by impact):
+NEXT[8] (ranked by impact):
   [1] !! SPLIT           examples/demo_live_markpact.py
-      WHY: 954L, 2 classes, max CC=51
-      EFFORT: ~4h  IMPACT: 48654
+      WHY: 969L, 2 classes, max CC=20
+      EFFORT: ~4h  IMPACT: 19380
 
-  [2] !! SPLIT           src/markpact/publisher.py
-      WHY: 1227L, 2 classes, max CC=15
-      EFFORT: ~4h  IMPACT: 18405
+  [2] !! SPLIT           src/markpact/notebook_converter.py
+      WHY: 710L, 2 classes, max CC=11
+      EFFORT: ~4h  IMPACT: 7810
 
-  [3] !! SPLIT-FUNC      run_live  CC=51  fan=50
-      WHY: CC=51 exceeds 15
-      EFFORT: ~1h  IMPACT: 2550
-
-  [4] !  SPLIT-FUNC      _step_analyze_blocks  CC=20  fan=18
+  [3] !  SPLIT-FUNC      _step_analyze_blocks  CC=20  fan=18
       WHY: CC=20 exceeds 15
       EFFORT: ~1h  IMPACT: 360
 
-  [5] !  SPLIT-FUNC      add_untracked_blocks  CC=18  fan=19
-      WHY: CC=18 exceeds 15
-      EFFORT: ~1h  IMPACT: 342
+  [4] !  SPLIT-FUNC      _pdf_analyze  CC=20  fan=14
+      WHY: CC=20 exceeds 15
+      EFFORT: ~1h  IMPACT: 280
 
-  [6] !  SPLIT-FUNC      run_with_auto_fix_llm  CC=18  fan=9
+  [5] !  SPLIT-FUNC      run_with_auto_fix_llm  CC=18  fan=9
       WHY: CC=18 exceeds 15
       EFFORT: ~1h  IMPACT: 162
 
-  [7] !  SPLIT-FUNC      _parse_blocks_to_state  CC=15  fan=9
+  [6] !  SPLIT-FUNC      _parse_blocks_to_state  CC=15  fan=9
       WHY: CC=15 exceeds 15
       EFFORT: ~1h  IMPACT: 135
 
-  [8] !  SPLIT-FUNC      _parse_pypirc_section  CC=15  fan=7
+  [7] !  SPLIT-FUNC      _parse_pypirc_section  CC=15  fan=7
       WHY: CC=15 exceeds 15
       EFFORT: ~1h  IMPACT: 105
 
-  [9] !! SPLIT           tests/test_syncer.py
-      WHY: 764L, 0 classes, max CC=0
+  [8] !! SPLIT           tests/test_syncer.py
+      WHY: 1011L, 0 classes, max CC=0
       EFFORT: ~4h  IMPACT: 0
 
 
 RISKS[3]:
-  ⚠ Splitting src/markpact/publisher.py may break 48 import paths
-  ⚠ Splitting examples/demo_live_markpact.py may break 22 import paths
   ⚠ Splitting tests/test_syncer.py may break 0 import paths
+  ⚠ Splitting examples/demo_live_markpact.py may break 29 import paths
+  ⚠ Splitting src/markpact/notebook_converter.py may break 25 import paths
 
 METRICS-TARGET:
-  CC̄:          5.0 → ≤3.5
-  max-CC:      51 → ≤20
-  god-modules: 5 → 0
+  CC̄:          4.8 → ≤3.4
+  max-CC:      20 → ≤10
+  god-modules: 4 → 0
   high-CC(≥15): 6 → ≤3
   hub-types:   0 → ≤0
 
 HISTORY:
-  prev CC̄=5.1 → now CC̄=5.0
+  prev CC̄=4.8 → now CC̄=4.8

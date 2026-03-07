@@ -1,9 +1,11 @@
-# markpact | 27f 7575L | python:27
+# markpact | 35f 7337L | python:35
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
-M[27]:
-  examples/demo_live_markpact.py,954
-  src/markpact/__init__.py,55
-  src/markpact/auto_fix.py,388
+M[35]:
+  examples/demo_live_markpact.py,969
+  examples/sync-workflow/src/app.py,7
+  scripts/sync_version.py,55
+  src/markpact/__init__.py,56
+  src/markpact/auto_fix.py,427
   src/markpact/cli/__init__.py,205
   src/markpact/cli/config_cmd.py,74
   src/markpact/cli/convert_cmd.py,112
@@ -19,18 +21,24 @@ M[27]:
   src/markpact/notebook_converter.py,710
   src/markpact/packer.py,431
   src/markpact/parser.py,154
+  src/markpact/publish/__init__.py,54
+  src/markpact/publish/docker_pub.py,108
+  src/markpact/publish/github.py,37
   src/markpact/publish/helpers.py,226
   src/markpact/publish/llm_config.py,107
+  src/markpact/publish/main.py,110
   src/markpact/publish/models.py,32
+  src/markpact/publish/npm.py,100
+  src/markpact/publish/pypi.py,445
   src/markpact/publish/version.py,72
-  src/markpact/publisher.py,1227
+  src/markpact/publisher.py,27
   src/markpact/runner.py,42
   src/markpact/sandbox.py,59
-  src/markpact/syncer.py,621
+  src/markpact/syncer.py,612
   src/markpact/template.py,184
 D:
   examples/demo_live_markpact.py:
-    e: StepRecord,LiveSession,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,_step_generate_contract,_step_parse_blocks,_step_validate_blocks,_step_analyze_blocks,_step_sha_integrity,_save_outputs,_print_summary,run_live,_fallback_readme,main
+    e: StepRecord,LiveSession,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,_step_generate_contract,_step_parse_blocks,_step_validate_blocks,_step_analyze_blocks,_step_sha_integrity,_save_outputs,_print_summary,_pdf_generate,_pdf_parse,_pdf_validate,_pdf_analyze,_pdf_sha,_setup_session,_finalize,run_live,_fallback_readme,main
     StepRecord:
     LiveSession: add_step(5),elapsed(0)
     _ascii(text)
@@ -50,12 +58,19 @@ D:
     _step_sha_integrity(session;readme;blocks)
     _save_outputs(session;pdf;readme;prompt_key)
     _print_summary(session;blocks;readme_path)
+    _pdf_generate(pdf;session;config;readme;prompt_key;prompt;dur;readme_path)
+    _pdf_parse(pdf;readme;blocks)
+    _pdf_validate(pdf;readme;blocks;all_required_ok)
+    _pdf_analyze(pdf;readme;blocks;analysis_checks)
+    _pdf_sha(pdf;readme;blocks;sha_checks)
+    _setup_session(prompt_key;prompt;model)
+    _finalize(session;pdf;blocks;readme_path;prompt_key)
     run_live(prompt_key;prompt;model)
     _fallback_readme(prompt)
     main()
   src/markpact/auto_fix.py:
     e: detect_error_type,fix_port_in_readme,_setup_env_with_venv_simple,_run_and_print,_handle_port_error_simple,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,_setup_env_with_venv,_run_subprocess,_handle_port_error,_handle_missing_module_error,_try_llm_fix,run_with_auto_fix_llm
-    detect_error_type(error_output)
+    detect_error_type(error_output;exit_code;cmd)
     fix_port_in_readme(readme_path;new_port)
     _setup_env_with_venv_simple(sandbox)
     _run_and_print(cmd;sandbox;env;verbose)
@@ -70,8 +85,12 @@ D:
     _handle_missing_module_error(error_output;sandbox;readme_path;verbose)
     _try_llm_fix(error_type;error_output;readme_path;verbose)
     run_with_auto_fix_llm(cmd;sandbox;readme_path;verbose;max_retries;use_llm)
+  src/markpact/cli/helpers.py:
+    e: _resolve_file_body,_parse_blocks_to_state
+    _resolve_file_body(block;verbose)
+    _parse_blocks_to_state(blocks;sandbox;args;verbose)
   src/markpact/syncer.py:
-    e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,_content_sha256,_update_header_hash,sync_readme,sync_readme_recursive,_detect_lang,add_untracked_blocks,print_sync_report
+    e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,_content_sha256,_build_header_suffix,_read_source_file,_process_block,sync_readme,sync_readme_recursive,_detect_lang,_build_block,_collect_untracked_blocks,_write_new_blocks,add_untracked_blocks,print_sync_report
     SyncResult: summary(0)  # Result of a sync operation...
     _backup_dir(readme_path)
     create_backup(readme_path)
@@ -82,38 +101,22 @@ D:
     find_untracked_files(text;source_dir)
     diff_block(rel_path;old_body;new_body)
     _content_sha256(body)
-    _update_header_hash(prefix;rel_path;new_hash)
+    _build_header_suffix(rest_of_header;new_body;hash_blocks)
+    _read_source_file(src;rel_path)
+    _process_block(m)
     sync_readme(readme_path;source_dir)
     sync_readme_recursive(readme_path;source_dir)
     _detect_lang(rel_path)
+    _build_block(rel_path;content)
+    _collect_untracked_blocks(src;paths;tracked)
+    _write_new_blocks(readme;text;new_blocks)
     add_untracked_blocks(readme_path;source_dir;paths)
     print_sync_report(result)
-  src/markpact/publisher.py:
-    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,_check_file_type,_analyze_blocks_for_types,_is_web_service,_detect_registry,_build_package_name,_get_default_author,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,_setup_llm_for_publish,_set_provider_api_key_for_publish,_call_llm_for_publish_config,_extract_publish_block_from_response,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
-    PublishConfig: __post_init__(0)  # Configuration for publishing...
-    PublishResult:  # Result of a publish operation...
-    _slugify(name)
-    _first_heading(markdown)
-    _first_paragraph(markdown)
-    _format_subprocess_failure(result)
-    _check_file_type(path)
-    _analyze_blocks_for_types(blocks)
-    _is_web_service(run_command)
-    _detect_registry(flags;run_command)
-    _build_package_name(base_name;registry)
-    _get_default_author()
-    infer_publish_config(readme_path;markdown;blocks;run_command)
-    prompt_publish_config(config)
-    ensure_publish_block_in_readme(readme_path;config)
-    _setup_llm_for_publish()
-    _set_provider_api_key_for_publish(cfg)
-    _call_llm_for_publish_config(litellm;cfg;markdown)
-    _extract_publish_block_from_response(content)
-    generate_publish_config_with_llm(markdown;verbose)
-    bump_version(version;bump_type)
-    extract_version_from_readme(readme_path)
-    update_version_in_readme(readme_path;new_version)
+  src/markpact/publish/pypi.py:
+    e: get_license_classifier,_extract_readme_description,_build_description,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi
     get_license_classifier(license_name)
+    _extract_readme_description(base_path)
+    _build_description(config;base_path)
     generate_pyproject_toml(config;sandbox;base_path;verbose)
     _normalize_package_name(config;verbose)
     _determine_base_path(config;sandbox;verbose)
@@ -132,17 +135,6 @@ D:
     _get_upload_error_hint(payload;stdout;test;config)
     _upload_to_pypi(base_path;test;config;pypirc_path;verbose)
     publish_pypi(config;sandbox;test;verbose;source_readme_path)
-    generate_package_json(config;sandbox)
-    publish_npm(config;sandbox;registry;verbose)
-    generate_dockerfile(config;sandbox;base_image)
-    publish_docker(config;sandbox;registry;tag;verbose)
-    publish_github_packages(config;sandbox;package_type;verbose)
-    parse_publish_block(block_body;meta)
-    publish(config;sandbox;bump;verbose;source_readme_path)
-  src/markpact/cli/helpers.py:
-    e: _resolve_file_body,_parse_blocks_to_state
-    _resolve_file_body(block;verbose)
-    _parse_blocks_to_state(blocks;sandbox;args;verbose)
   src/markpact/cli/__init__.py:
     e: main,_dispatch_subcommand,_parse_main_args,_handle_generation_phase,_process_readme
     main(argv)
@@ -235,6 +227,10 @@ D:
     _print_block_changes(changes)
     _print_conversion_summary(blocks)
     print_conversion_report(result)
+  src/markpact/publish/main.py:
+    e: parse_publish_block,publish
+    parse_publish_block(block_body;meta)
+    publish(config;sandbox;bump;verbose;source_readme_path)
   src/markpact/cli/publish_cmd.py:
     e: _resolve_publish_config,_determine_bump_type,_print_publish_dry_run,_execute_publish_result,_handle_publish_mode
     _resolve_publish_config(args;text_to_parse;readme;blocks;run_command;verbose)
@@ -257,6 +253,10 @@ D:
     infer_publish_config(readme_path;markdown;blocks;run_command)
     prompt_publish_config(config)
     ensure_publish_block_in_readme(readme_path;config)
+  src/markpact/publish/docker_pub.py:
+    e: generate_dockerfile,publish_docker
+    generate_dockerfile(config;sandbox;base_image)
+    publish_docker(config;sandbox;registry;tag;verbose)
   src/markpact/config.py:
     e: get_env_path,ensure_config_dir,load_env,save_env,init_env,set_config,set_model,set_api_key,set_api_base,apply_preset,show_config,list_providers
     get_env_path()
@@ -327,6 +327,11 @@ D:
   src/markpact/cli/pack_cmd.py:
     e: handle_pack_cli
     handle_pack_cli(argv)
+  src/markpact/publish/npm.py:
+    e: _build_npm_description,generate_package_json,publish_npm
+    _build_npm_description(config;sandbox)
+    generate_package_json(config;sandbox)
+    publish_npm(config;sandbox;registry;verbose)
   src/markpact/publish/version.py:
     e: bump_version,extract_version_from_readme,update_version_in_readme
     bump_version(version;bump_type)
@@ -341,8 +346,21 @@ D:
     run_cmd(cmd;sandbox;verbose)
     ensure_venv(sandbox;verbose)
     install_deps(deps;sandbox;verbose)
+  src/markpact/publish/github.py:
+    e: publish_github_packages
+    publish_github_packages(config;sandbox;package_type;verbose)
+  scripts/sync_version.py:
+    e: get_pyproject_version,get_bumpversion_version,sync_bumpversion
+    get_pyproject_version()
+    get_bumpversion_version()
+    sync_bumpversion()
   src/markpact/publish/models.py:
     e: PublishConfig,PublishResult
     PublishConfig: __post_init__(0)  # Configuration for publishing...
     PublishResult:  # Result of a publish operation...
+  examples/sync-workflow/src/app.py:
+    e: root
+    root()
   src/markpact/__init__.py:
+  src/markpact/publisher.py:
+  src/markpact/publish/__init__.py:

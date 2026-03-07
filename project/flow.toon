@@ -1,35 +1,37 @@
-# markpact/flow | 264 func | 8 pipelines | 9 hub-types | 2026-03-07
+# markpact/flow | 261 func | 5 pipelines | 9 hub-types | 2026-03-07
 
-PIPELINES[8] (Core:3, IO:1, Refactor:3, Unknown:1):
-  Src [IO]: list[str] | None → None
+PIPELINES[5] (IO:1, Refactor:2, Unknown:2):
+  Src [Refactor]: list[str] | None → str
               → main(argv:list[str] | None) → int       CC=7    pure ▶
               → _dispatch_subcommand(cmd:str, argv:list[str]) → int CC=4    pure
               → handle_sync_cli(argv:list[str]) → int   CC=14   IO
               → _execute_recursive_sync(args, readme_path:Path, source_dir:Path, exclude_sync:set, dry_run:bool, verbose:bool) → int CC=11   IO
               → sync_readme_recursive(readme_path:str | Path, source_dir:str | Path) → list[SyncResult] CC=1    IO
               → sync_readme(readme_path:str | Path, source_dir:str | Path) → SyncResult CC=6    IO
-              → create_backup(readme_path:Path) → Path | None CC=3    IO
-              → _prune_backups(bak_dir:Path) → None     CC=2    IO ■
-              PURITY: 2/8 pure  BOTTLENECK: handle_sync_cli(CC=14)
+              → _process_block(m:re.Match) → str        CC=15   IO  !!
+              → _build_header_suffix(rest_of_header:str, new_body:str, hash_blocks:bool) → str CC=2    pure
+              → _content_sha256(body:str) → str         CC=1    pure ■
+              PURITY: 4/9 pure  BOTTLENECK: _process_block(CC=15)
 
-  Src [Refactor]: list[str] | None → int
+  Src [IO]: list[str] | None → list[str]
               → main(argv:list[str] | None) → int       CC=7    pure ▶
               → _process_readme(args, readme:Path, verbose:bool) → int CC=14   IO
-              → _handle_normal_run(args, sandbox:Sandbox, run_command:str | None, deps:list[str], readme:Path, verbose:bool) → int CC=5    IO
-              → run_with_auto_fix_llm(cmd:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool, max_retries:int, use_llm:bool) → int CC=18   IO  !!
-              → _handle_missing_module_error(error_output:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool) → bool CC=5    IO
-              → install_deps(deps:list[str], sandbox:Sandbox, verbose:bool) → None CC=3    pure
-              → ensure_venv(sandbox:Sandbox, verbose:bool) → None CC=3    pure
-              → run_cmd(cmd:str, sandbox:Sandbox, verbose:bool) → int CC=3    IO ■
-              PURITY: 3/8 pure  BOTTLENECK: run_with_auto_fix_llm(CC=18)
+              → _handle_publish_mode(args, config, sandbox:Sandbox, readme:Path, text_to_parse:str, blocks, run_command:str | None, verbose:bool) → int CC=5    pure
+              → publish(config:PublishConfig, sandbox:Sandbox, bump:Optional[str], verbose:bool, source_readme_path:Optional[Path]) → PublishResult CC=9    IO
+              → publish_github_packages(config:PublishConfig, sandbox:Sandbox, package_type:str, verbose:bool) → PublishResult CC=3    pure
+              → publish_npm(config:PublishConfig, sandbox:Sandbox, registry:str, verbose:bool) → PublishResult CC=6    IO
+              → generate_package_json(config:PublishConfig, sandbox:Sandbox) → Path CC=2    IO
+              → _build_npm_description(config:PublishConfig, sandbox:Sandbox) → str CC=3    mutation
+              → _extract_readme_description(base_path:Path) → list[str] CC=8    IO ■
+              PURITY: 3/9 pure  BOTTLENECK: _process_readme(CC=14)
 
-  Examples [Refactor]: ? → str
+  Examples [Unknown]: ? → ?
               → main()                                  CC=6    IO ▶
-              → run_live(prompt_key:str, prompt:str, model:str) CC=51   IO  !!
-              → _step_generate_contract(session:LiveSession, config, pdf, prompt:str) → tuple[str, float] CC=2    IO
-              → generate_contract(prompt:str, config:Optional[GeneratorConfig], verbose:bool) → str CC=5    IO
-              → _fix_unclosed_blocks(content:str) → str CC=7    mutation ■
-              PURITY: 0/5 pure  BOTTLENECK: run_live(CC=51)
+              → run_live(prompt_key:str, prompt:str, model:str) CC=8    IO
+              → _finalize(session, pdf, blocks, readme_path, prompt_key) CC=3    IO
+              → _print_summary(session:LiveSession, blocks:list, readme_path:Path) CC=5    IO
+              → ok(text, detail)                        CC=2    IO ■
+              PURITY: 0/5 pure  BOTTLENECK: run_live(CC=8)
 
   Src [Unknown]: Path → bool
               → run_docker_with_tests(sandbox_path:Path, test_body:str, image_name:str, port:int, verbose:bool, auto_find_port:bool) → tuple[int, TestSuite] CC=3    pure ▶
@@ -43,41 +45,23 @@ PIPELINES[8] (Core:3, IO:1, Refactor:3, Unknown:1):
               → fix_port_in_readme(readme_path:Path, new_port:int) → bool CC=3    IO ■
               PURITY: 1/3 pure  BOTTLENECK: run_with_auto_fix(CC=6)
 
-  Src [Core]: str → GeneratorConfig
-              → generate_publish_config_with_llm(markdown:str, verbose:bool) → Optional[PublishConfig] CC=8    pure ▶
-              → _setup_llm_for_publish() → tuple        CC=3    pure
-              → from_env(cls) → GeneratorConfig         CC=1    pure ■
-              PURITY: 3/3 pure  BOTTLENECK: generate_publish_config_with_llm(CC=8)
-
-  Src [Core]: Path → bool
-              → infer_publish_config(readme_path:Path, markdown:str, blocks:list[object], run_command:str | None) → PublishConfig CC=2    pure ▶
-              → _detect_registry(flags:dict[str, bool], run_command:str | None) → str CC=7    pure
-              → _is_web_service(run_command:str | None) → bool CC=3    pure ■
-              PURITY: 3/3 pure  BOTTLENECK: _detect_registry(CC=7)
-
-  Src [Core]: Path → dict[str, bool]
-              → infer_publish_config(readme_path:Path, markdown:str, blocks:list[object], run_command:str | None) → PublishConfig CC=2    pure ▶
-              → _analyze_blocks_for_types(blocks:list[object]) → dict[str, bool] CC=4    pure
-              → _check_file_type(path:str) → dict[str, bool] CC=2    pure ■
-              PURITY: 3/3 pure  BOTTLENECK: _analyze_blocks_for_types(CC=4)
-
 
 TRANSFORMS (fan-out ≥10):
-  run_live(prompt_key:str, prompt:str, model:str)         fan=50   !! mutation-heavy
-  sync_readme(readme_path:str | Path, source_dir:str | Path) → SyncResult fan=21   !! side-effects
-  add_untracked_blocks(readme_path:str | Path, source_dir:str | Path, paths:list[str]) → int fan=19   fan=19
+  run_live(prompt_key:str, prompt:str, model:str)         fan=19   fan=19
   _step_analyze_blocks(session:LiveSession, blocks:list) → list fan=18   fan=18
   parse_jupyter(path:Path) → Notebook                     fan=17   fan=17
   _process_readme(args, readme:Path, verbose:bool) → int  fan=16   fan=16
   handle_config_cli(argv:list[str]) → int                 fan=15   fan=15
   pack_directory(source_dir:str | Path, output:str | Path | None) → PackResult fan=14   fan=14
-  parse_publish_block(block_body:str, meta:str) → PublishConfig fan=14   fan=14
-  _step_generate_contract(session:LiveSession, config, pdf, prompt:str) → tuple[str, float] fan=14   fan=14
   sync_readme_recursive(readme_path:str | Path, source_dir:str | Path) → list[SyncResult] fan=14   fan=14
   _handle_llm_generation(args, verbose:bool) → tuple[int, Path | None] fan=14   fan=14
+  _step_generate_contract(session:LiveSession, config, pdf, prompt:str) → tuple[str, float] fan=14   fan=14
+  _pdf_analyze(pdf, readme, blocks, analysis_checks) → AnalysisResult fan=14   fan=14
+  _finalize(session, pdf, blocks, readme_path, prompt_key) fan=14   fan=14
+  parse_publish_block(block_body:str, meta:str) → PublishConfig fan=14   fan=14
   parse_blocks_recursive(text:str) → list[Block]          fan=13   fan=13
   _collect_files(src:Path, output_path:Path, exclude_patterns:set[str], include_patterns:Optional[list[str]], verbose:bool) → list[Path] fan=13   fan=13
-  publish_pypi(config:PublishConfig, sandbox:Sandbox, test:bool, verbose:bool, source_readme_path:Optional[Path]) → PublishResult fan=13   fan=13
+  handle_sync_cli(argv:list[str]) → int                   fan=13   fan=13
 
 CONTRACTS:
   Pipeline: Src
@@ -107,17 +91,21 @@ CONTRACTS:
     sync_readme(readme_path:str | Path, source_dir:str | Path) → SyncResult
       IN:  readme_path:str | Path, source_dir:str | Path
       OUT: SyncResult
-      SIDE-EFFECT: IO(read_text, write_text, print)
+      SIDE-EFFECT: IO(read_text, write_text)
 
-    create_backup(readme_path:Path) → Path | None
-      IN:  readme_path:Path
-      OUT: Path | None
-      SIDE-EFFECT: IO(mkdir, print)
+    _process_block(m:re.Match) → str
+      IN:  m:re.Match
+      OUT: str
+      SIDE-EFFECT: IO(print, print, print)
+      SMELL: CC=15 → split
 
-    _prune_backups(bak_dir:Path) → None
-      IN:  bak_dir:Path
-      OUT: None
-      SIDE-EFFECT: IO(unlink)
+    _build_header_suffix(rest_of_header:str, new_body:str, hash_blocks:bool) → str
+      IN:  rest_of_header:str, new_body:str, hash_blocks:bool
+      OUT: str
+
+    _content_sha256(body:str) → str
+      IN:  body:str
+      OUT: str
 
   Pipeline: Src
     main(argv:list[str] | None) → int
@@ -129,34 +117,38 @@ CONTRACTS:
       OUT: int
       SIDE-EFFECT: IO(read_text, print, print)
 
-    _handle_normal_run(args, sandbox:Sandbox, run_command:str | None, deps:list[str], readme:Path, verbose:bool) → int
-      IN:  args, sandbox:Sandbox, run_command:str | None, deps:list[str], readme:Path, verbose:bool
+    _handle_publish_mode(args, config, sandbox:Sandbox, readme:Path, text_to_parse:str, blocks, run_command:str | None, verbose:bool) → int
+      IN:  args, config, sandbox:Sandbox, readme:Path, text_to_parse:str, blocks, run_command:str | None, verbose:bool
       OUT: int
+
+    publish(config:PublishConfig, sandbox:Sandbox, bump:Optional[str], verbose:bool, source_readme_path:Optional[Path]) → PublishResult
+      IN:  config:PublishConfig, sandbox:Sandbox, bump:Optional[str], verbose:bool, source_readme_path:Optional[Path]
+      OUT: PublishResult
       SIDE-EFFECT: IO(print)
 
-    run_with_auto_fix_llm(cmd:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool, max_retries:int, use_llm:bool) → int
-      IN:  cmd:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool, max_retries:int, use_llm:bool
-      OUT: int
-      SIDE-EFFECT: IO(print, print, print)
-      SMELL: CC=18 → split
+    publish_github_packages(config:PublishConfig, sandbox:Sandbox, package_type:str, verbose:bool) → PublishResult
+      IN:  config:PublishConfig, sandbox:Sandbox, package_type:str, verbose:bool
+      OUT: PublishResult
 
-    _handle_missing_module_error(error_output:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool) → bool
-      IN:  error_output:str, sandbox:Sandbox, readme_path:Optional[Path], verbose:bool
-      OUT: bool
-      SIDE-EFFECT: IO(print, print)
+    publish_npm(config:PublishConfig, sandbox:Sandbox, registry:str, verbose:bool) → PublishResult
+      IN:  config:PublishConfig, sandbox:Sandbox, registry:str, verbose:bool
+      OUT: PublishResult
+      SIDE-EFFECT: IO(print, write_text)
 
-    install_deps(deps:list[str], sandbox:Sandbox, verbose:bool) → None
-      IN:  deps:list[str], sandbox:Sandbox, verbose:bool
-      OUT: None
+    generate_package_json(config:PublishConfig, sandbox:Sandbox) → Path
+      IN:  config:PublishConfig, sandbox:Sandbox
+      OUT: Path
+      SIDE-EFFECT: IO(write_text, dumps)
 
-    ensure_venv(sandbox:Sandbox, verbose:bool) → None
-      IN:  sandbox:Sandbox, verbose:bool
-      OUT: None
+    _build_npm_description(config:PublishConfig, sandbox:Sandbox) → str
+      IN:  config:PublishConfig, sandbox:Sandbox
+      OUT: str
+      SIDE-EFFECT: pure
 
-    run_cmd(cmd:str, sandbox:Sandbox, verbose:bool) → int
-      IN:  cmd:str, sandbox:Sandbox, verbose:bool
-      OUT: int
-      SIDE-EFFECT: IO(print)
+    _extract_readme_description(base_path:Path) → list[str]
+      IN:  base_path:Path
+      OUT: list[str]
+      SIDE-EFFECT: IO(read_text)
 
   Pipeline: Examples
     main()
@@ -167,23 +159,22 @@ CONTRACTS:
     run_live(prompt_key:str, prompt:str, model:str)
       IN:  prompt_key:str, prompt:str, model:str
       OUT: None
-      SIDE-EFFECT: IO(mkdir, print, write_text)
-      SMELL: CC=51 → split
+      SIDE-EFFECT: IO(print, write_text, print)
 
-    _step_generate_contract(session:LiveSession, config, pdf, prompt:str) → tuple[str, float]
-      IN:  session:LiveSession, config, pdf, prompt:str
-      OUT: tuple[str, float]
+    _finalize(session, pdf, blocks, readme_path, prompt_key)
+      IN:  session, pdf, blocks, readme_path, prompt_key
+      OUT: None
+      SIDE-EFFECT: IO(print, print, print)
+
+    _print_summary(session:LiveSession, blocks:list, readme_path:Path)
+      IN:  session:LiveSession, blocks:list, readme_path:Path
+      OUT: None
+      SIDE-EFFECT: IO(print, print, print)
+
+    ok(text, detail)
+      IN:  text, detail
+      OUT: None
       SIDE-EFFECT: IO(print)
-
-    generate_contract(prompt:str, config:Optional[GeneratorConfig], verbose:bool) → str
-      IN:  prompt:str, config:Optional[GeneratorConfig], verbose:bool
-      OUT: str
-      SIDE-EFFECT: IO(print)
-
-    _fix_unclosed_blocks(content:str) → str
-      IN:  content:str
-      OUT: str
-      SIDE-EFFECT: pure
 
   Pipeline: Src
     run_docker_with_tests(sandbox_path:Path, test_body:str, image_name:str, port:int, verbose:bool, auto_find_port:bool) → tuple[int, TestSuite]
@@ -215,100 +206,57 @@ CONTRACTS:
       OUT: bool
       SIDE-EFFECT: IO(read_text, write_text, write_text)
 
-  Pipeline: Src
-    generate_publish_config_with_llm(markdown:str, verbose:bool) → Optional[PublishConfig]
-      IN:  markdown:str, verbose:bool
-      OUT: Optional[PublishConfig]
 
-    _setup_llm_for_publish() → tuple
-      IN:  ()
-      OUT: tuple
-
-    from_env(cls) → GeneratorConfig
-      IN:  cls
-      OUT: GeneratorConfig
-
-  Pipeline: Src
-    infer_publish_config(readme_path:Path, markdown:str, blocks:list[object], run_command:str | None) → PublishConfig
-      IN:  readme_path:Path, markdown:str, blocks:list[object], run_command:str | None
-      OUT: PublishConfig
-
-    _detect_registry(flags:dict[str, bool], run_command:str | None) → str
-      IN:  flags:dict[str, bool], run_command:str | None
-      OUT: str
-
-    _is_web_service(run_command:str | None) → bool
-      IN:  run_command:str | None
-      OUT: bool
-
-  Pipeline: Src
-    infer_publish_config(readme_path:Path, markdown:str, blocks:list[object], run_command:str | None) → PublishConfig
-      IN:  readme_path:Path, markdown:str, blocks:list[object], run_command:str | None
-      OUT: PublishConfig
-
-    _analyze_blocks_for_types(blocks:list[object]) → dict[str, bool]
-      IN:  blocks:list[object]
-      OUT: dict[str, bool]
-
-    _check_file_type(path:str) → dict[str, bool]
-      IN:  path:str
-      OUT: dict[str, bool]
-      INVARIANT: raises on invalid input
-
-
-DATA_TYPES (by cross-function usage) [252 annotated, 0 inferred / 264 functions]:
-  str                  consumed:136 produced:50   !! HUB-TYPE → split interface
-  bool                 consumed:90  produced:19   !! HUB-TYPE → split interface
-  Path                 consumed:74  produced:11   !! HUB-TYPE → split interface
-  int                  consumed:17  produced:26   !! HUB-TYPE → split interface
-  Sandbox              consumed:25  produced:0    !! HUB-TYPE → split interface
-  PublishConfig        consumed:16  produced:7    !! HUB-TYPE → split interface
-  list[str]            consumed:15  produced:7    !! HUB-TYPE → split interface
-  str | None           consumed:14  produced:4    !! HUB-TYPE → split interface
+DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]:
+  str                  consumed:127 produced:44   !! HUB-TYPE → split interface
+  bool                 consumed:90  produced:17   !! HUB-TYPE → split interface
+  Path                 consumed:75  produced:11   !! HUB-TYPE → split interface
+  int                  consumed:18  produced:26   !! HUB-TYPE → split interface
+  list[str]            consumed:17  produced:9    !! HUB-TYPE → split interface
+  Sandbox              consumed:26  produced:0    !! HUB-TYPE → split interface
+  PublishConfig        consumed:16  produced:4    !! HUB-TYPE → split interface
+  str | None           consumed:11  produced:4    !! HUB-TYPE → split interface
   Notebook             consumed:8   produced:6  
   list                 consumed:11  produced:2    !! HUB-TYPE → split interface
   dict[str, str]       consumed:1   produced:10   output-heavy
-  dict                 consumed:5   produced:4  
-  dict[str, bool]      consumed:3   produced:5  
+  dict                 consumed:5   produced:5  
   Path | None          consumed:6   produced:2  
+  str | Path           consumed:7   produced:0    input-heavy (read-only flow)
   LiveSession          consumed:7   produced:0    input-heavy (read-only flow)
   list[Path]           consumed:5   produced:2  
-  str | Path           consumed:7   produced:0    input-heavy (read-only flow)
   PublishResult        consumed:0   produced:5    output-heavy
-  subprocess.CompletedProcess consumed:2   produced:3  
+  dict[str, bool]      consumed:2   produced:3  
   GeneratorConfig      consumed:3   produced:2  
+  subprocess.CompletedProcess consumed:1   produced:3    narrow scope
 
   HUB TYPES (consumed ≥10):
-    str → 136 consumers → split into:
+    str → 127 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
     bool → 90 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    Path → 74 consumers → split into:
+    Path → 75 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    int → 17 consumers → split into:
+    int → 18 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    Sandbox → 25 consumers → split into:
+    list[str] → 17 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    Sandbox → 26 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
     PublishConfig → 16 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    list[str] → 15 consumers → split into:
-      - (analyze consumers to suggest sub-interfaces)
-    str | None → 14 consumers → split into:
+    str | None → 11 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
     list → 11 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
 
 SIDE_EFFECTS:
-  IO:        load_secrets, _prompt_value, resolve_template, ensure_config_dir, load_env, save_env, Sandbox.__init__, Sandbox.write_file, Sandbox.write_requirements, stop_existing_container
+  IO:        get_pyproject_version, get_bumpversion_version, sync_bumpversion, ensure_config_dir, load_env, save_env, Sandbox.__init__, Sandbox.write_file, Sandbox.write_requirements, load_secrets
   Mutation:  show_config, list_providers, _parse_rmd_code_chunks, _parse_quarto_code_chunks, extract_dependencies, _generate_header, _extract_and_format_deps, _process_notebook_cells, _generate_file_blocks, parse_blocks
-  Pure:      _find_secrets_file, has_template_placeholders, get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset, find_free_port
+  Pure:      get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset, find_free_port, Sandbox.has_venv, Sandbox.clean
 
   PIPELINE PURITY:
-    Src             █░░░ 25% pure
-    Src             █░░░ 37% pure
+    Src             █░░░ 44% pure
+    Src             █░░░ 33% pure
     Examples        ░░░░ 0% pure
     Src             █░░░ 33% pure
     Src             █░░░ 33% pure
-    Src             ████ 100% pure
-    Src             ████ 100% pure
-    Src             ████ 100% pure

@@ -1,13 +1,13 @@
-# code2llm | 26f 6621L | py:26 | 2026-03-07
-# CC̄=4.9 | critical:28/264 | dups:0 | cycles:1
+# code2llm | 33f 6361L | py:33 | 2026-03-07
+# CC̄=4.8 | critical:25/261 | dups:0 | cycles:1
 
 HEALTH[6]:
   🟡 CC    run_with_auto_fix_llm CC=18 (limit:15)
-  🟡 CC    _parse_pypirc_section CC=15 (limit:15)
-  🟡 CC    _step_analyze_blocks CC=20 (limit:15)
-  🟡 CC    run_live CC=51 (limit:15)
   🟡 CC    _parse_blocks_to_state CC=15 (limit:15)
-  🟡 CC    add_untracked_blocks CC=18 (limit:15)
+  🟡 CC    _process_block CC=15 (limit:15)
+  🟡 CC    _step_analyze_blocks CC=20 (limit:15)
+  🟡 CC    _pdf_analyze CC=20 (limit:15)
+  🟡 CC    _parse_pypirc_section CC=15 (limit:15)
 
 REFACTOR[2]:
   1. split 6 high-CC methods  (CC>15)
@@ -16,46 +16,54 @@ REFACTOR[2]:
 COUPLING: no cross-package imports detected
 
 LAYERS:
-  src/                            CC̄=4.9    ←in:0  →out:0
-  │ !! publisher                 1227L  2C   48m  CC=15     ←3
+  src/                            CC̄=4.8    ←in:0  →out:0
   │ !! notebook_converter         710L  2C   25m  CC=11     ←1
-  │ !! syncer                     621L  1C   16m  CC=18     ←1
+  │ !! syncer                     612L  1C   21m  CC=15     ←1
+  │ !! pypi                       445L  0C   21m  CC=15     ←3
   │ !  packer                     431L  1C   12m  CC=11     ←1
+  │ !! auto_fix                   427L  0C   15m  CC=18     ←1
   │ docker_runner              417L  0C   16m  CC=8      ←1
-  │ !! auto_fix                   388L  0C   15m  CC=18     ←1
-  │ generator                  362L  1C   11m  CC=8      ←5
+  │ generator                  362L  1C   11m  CC=8      ←4
   │ !  converter                  320L  2C   10m  CC=11     ←1
   │ !  sync_cmd                   291L  0C   11m  CC=14     ←1
-  │ helpers                    226L  0C   13m  CC=9      ←0
+  │ helpers                    226L  0C   13m  CC=9      ←4
   │ !  __init__                   205L  0C    5m  CC=14     ←0
   │ config                     204L  0C   12m  CC=8      ←2
   │ template                   184L  0C    5m  CC=6      ←1
   │ !  parser                     154L  1C    4m  CC=13     ←2
   │ !  convert_cmd                112L  0C    5m  CC=12     ←1
-  │ llm_config                 107L  0C    5m  CC=8      ←0
+  │ !  main                       110L  0C    2m  CC=11     ←3
+  │ docker_pub                 108L  0C    2m  CC=9      ←2
+  │ llm_config                 107L  0C    5m  CC=8      ←1
   │ run_cmd                    105L  0C    7m  CC=7      ←1
+  │ npm                        100L  0C    3m  CC=6      ←2
   │ !  publish_cmd                 95L  0C    5m  CC=10     ←1
   │ !  config_cmd                  74L  0C    1m  CC=12     ←1
-  │ version                     72L  0C    3m  CC=4      ←0
+  │ version                     72L  0C    3m  CC=4      ←2
   │ !! helpers                     66L  0C    2m  CC=15     ←1
   │ pack_cmd                    62L  0C    1m  CC=6      ←1
   │ sandbox                     59L  1C    6m  CC=3      ←3
-  │ __init__                    55L  0C    0m  CC=0.0    ←0
+  │ __init__                    56L  0C    0m  CC=0.0    ←0
+  │ __init__                    54L  0C    0m  CC=0.0    ←0
   │ runner                      42L  0C    3m  CC=3      ←2
+  │ github                      37L  0C    1m  CC=3      ←1
   │ models                      32L  2C    1m  CC=2      ←0
+  │ publisher                   27L  0C    0m  CC=0.0    ←0
+  │
+  scripts/                        CC̄=2.0    ←in:0  →out:0
+  │ sync_version                55L  0C    3m  CC=2      ←0
   │
 
 DUPLICATES[0]: none
 
-FUNCTIONS (CC≥10, 28 of 242):
+FUNCTIONS (CC≥10, 25 of 231):
    18.0  run_with_auto_fix_llm                      29n   3exit  loops+cond+ret  !! split
-   18.0  add_untracked_blocks                       25n   4exit  loops+cond+ret  !! split
-   15.0  _parse_pypirc_section                       7n   2exit  cond+ret  !! split
    15.0  _parse_blocks_to_state                     19n   3exit  loops+cond+ret  !! split
+   15.0  _process_block                             24n   5exit  cond+ret  !! split
+   15.0  _parse_pypirc_section                       7n   2exit  cond+ret  !! split
    14.0  _process_readme                            27n   8exit  cond+ret
    14.0  handle_sync_cli                            26n   9exit  cond+ret
    13.0  parse_blocks_recursive                     21n   3exit  loops+cond+ret
-   12.0  generate_pyproject_toml                    18n   2exit  loops+cond+ret
    12.0  _execute_single_sync                       17n   4exit  cond+ret
    12.0  _handle_markdown_conversion                17n   4exit  cond+ret
    12.0  handle_config_cli                          30n   9exit  cond+ret
@@ -64,53 +72,49 @@ FUNCTIONS (CC≥10, 28 of 242):
    11.0  suggest_run_command                        26n   6exit  loops+cond+ret
    11.0  _process_notebook_cells                    20n   2exit  loops+cond+ret
    11.0  pack_directory                             15n   4exit  cond+ret
-   11.0  generate_package_json                      16n   2exit  loops+cond+ret
-   11.0  parse_publish_block                        16n   2exit  loops+cond+ret
    11.0  _print_conversion_summary                   9n   1exit  loops+cond
    11.0  find_untracked_files                       15n   3exit  loops+cond+ret
    11.0  _execute_recursive_sync                    15n   4exit  loops+cond+ret
    11.0  _handle_llm_generation                      8n   3exit  cond+ret
+   11.0  parse_publish_block                        16n   2exit  loops+cond+ret
    10.0  _collect_files                             16n   2exit  loops+cond+ret
-   10.0  _copy_readme                               16n   1exit  cond
-   10.0  generate_dockerfile                        16n   2exit  loops+cond+ret
    10.0  suggest_filename                           22n   7exit  cond+ret
-   10.0  _resolve_publish_config                    12n   3exit  cond+ret
    10.0  print_sync_report                          16n   2exit  loops+cond+ret
+   10.0  _resolve_publish_config                    12n   3exit  cond+ret
+   10.0  _copy_readme                               16n   1exit  cond
 
   summary:
-    critical(≥10): 28 | high(5-10): 77 | medium(2-5): 108 | low(<2): 29
-    12% CC≥10  43% CC≥5
+    critical(≥10): 25 | high(5-10): 73 | medium(2-5): 103 | low(<2): 30
+    11% CC≥10  42% CC≥5
 
 HOTSPOTS:
-  #1  sync_readme                          fan=21   "calls 21 functions"
-  #2  add_untracked_blocks                 fan=19   "calls 19 functions"
-  #3  parse_jupyter                        fan=17   "calls 17 functions"
-  #4  _process_readme                      fan=16   "analysis pipeline, 16 stages"
-  #5  handle_config_cli                    fan=15   "calls 15 functions"
-  #6  pack_directory                       fan=14   "calls 14 functions"
+  #1  parse_jupyter                        fan=17   "calls 17 functions"
+  #2  _process_readme                      fan=16   "analysis pipeline, 16 stages"
+  #3  handle_config_cli                    fan=15   "calls 15 functions"
+  #4  pack_directory                       fan=14   "calls 14 functions"
+  #5  sync_readme_recursive                fan=14   "calls 14 functions"
+  #6  _handle_llm_generation               fan=14   "calls 14 functions"
   #7  parse_publish_block                  fan=14   "calls 14 functions"
-  #8  sync_readme_recursive                fan=14   "calls 14 functions"
-  #9  _handle_llm_generation               fan=14   "calls 14 functions"
-  #10 parse_blocks_recursive               fan=13   "calls 13 functions"
+  #8  parse_blocks_recursive               fan=13   "calls 13 functions"
+  #9  _collect_files                       fan=13   "calls 13 functions"
+  #10 handle_sync_cli                      fan=13   "calls 13 functions"
 
 CLASSES:
   Sandbox                        ████████████████████████   5m  CC̄=1.4   max=2   
   Block                          █████████                  2m  CC̄=2.0   max=2   
   GeneratorConfig                █████████                  2m  CC̄=1.5   max=2   
   PackResult                     ████                       1m  CC̄=3.0   max=3   
-  PublishConfig                  ████                       1m  CC̄=2.0   max=2   
   SyncResult                     ████                       1m  CC̄=3.0   max=3   
   PublishConfig                  ████                       1m  CC̄=2.0   max=2   
   NotebookCell                                              0m  CC̄=0.0   max=0.0 
   Notebook                                                  0m  CC̄=0.0   max=0.0 
-  PublishResult                                             0m  CC̄=0.0   max=0.0 
   ConvertedBlock                                            0m  CC̄=0.0   max=0.0 
   ConversionResult                                          0m  CC̄=0.0   max=0.0 
   PublishResult                                             0m  CC̄=0.0   max=0.0 
 
 D:
   examples/demo_live_markpact.py:
-    e: StepRecord,LiveSession,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,_step_generate_contract,_step_parse_blocks,_step_validate_blocks,_step_analyze_blocks,_step_sha_integrity,_save_outputs,_print_summary,run_live,_fallback_readme,main
+    e: StepRecord,LiveSession,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,_step_generate_contract,_step_parse_blocks,_step_validate_blocks,_step_analyze_blocks,_step_sha_integrity,_save_outputs,_print_summary,_pdf_generate,_pdf_parse,_pdf_validate,_pdf_analyze,_pdf_sha,_setup_session,_finalize,run_live,_fallback_readme,main
     StepRecord
     LiveSession
       add_step(5)  CC=1.0
@@ -131,12 +135,19 @@ D:
     _step_sha_integrity(session,readme,blocks)
     _save_outputs(session,pdf,readme,prompt_key)
     _print_summary(session,blocks,readme_path)
+    _pdf_generate(pdf,session,config,readme,prompt_key,prompt,dur,readme_path)
+    _pdf_parse(pdf,readme,blocks)
+    _pdf_validate(pdf,readme,blocks,all_required_ok)
+    _pdf_analyze(pdf,readme,blocks,analysis_checks)
+    _pdf_sha(pdf,readme,blocks,sha_checks)
+    _setup_session(prompt_key,prompt,model)
+    _finalize(session,pdf,blocks,readme_path,prompt_key)
     run_live(prompt_key,prompt,model)
     _fallback_readme(prompt)
     main()
   src/markpact/auto_fix.py:
     e: detect_error_type,fix_port_in_readme,_setup_env_with_venv_simple,_run_and_print,_handle_port_error_simple,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,_setup_env_with_venv,_run_subprocess,_handle_port_error,_handle_missing_module_error,_try_llm_fix,run_with_auto_fix_llm
-    detect_error_type(error_output)
+    detect_error_type(error_output,exit_code,cmd)
     fix_port_in_readme(readme_path,new_port)
     _setup_env_with_venv_simple(sandbox)
     _run_and_print(cmd,sandbox,env,verbose)
@@ -151,8 +162,12 @@ D:
     _handle_missing_module_error(error_output,sandbox,readme_path,verbose)
     _try_llm_fix(error_type,error_output,readme_path,verbose)
     run_with_auto_fix_llm(cmd,sandbox,readme_path,verbose,max_retries,use_llm)
+  src/markpact/cli/helpers.py:
+    e: _resolve_file_body,_parse_blocks_to_state
+    _resolve_file_body(block,verbose)
+    _parse_blocks_to_state(blocks,sandbox,args,verbose)
   src/markpact/syncer.py:
-    e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,_content_sha256,_update_header_hash,sync_readme,sync_readme_recursive,_detect_lang,add_untracked_blocks,print_sync_report
+    e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,_content_sha256,_build_header_suffix,_read_source_file,_process_block,sync_readme,sync_readme_recursive,_detect_lang,_build_block,_collect_untracked_blocks,_write_new_blocks,add_untracked_blocks,print_sync_report
     SyncResult  # Result of a sync operation....
       summary(0)  CC=3.0
     _backup_dir(readme_path)
@@ -164,39 +179,22 @@ D:
     find_untracked_files(text,source_dir)
     diff_block(rel_path,old_body,new_body)
     _content_sha256(body)
-    _update_header_hash(prefix,rel_path,new_hash)
+    _build_header_suffix(rest_of_header,new_body,hash_blocks)
+    _read_source_file(src,rel_path)
+    _process_block(m)
     sync_readme(readme_path,source_dir)
     sync_readme_recursive(readme_path,source_dir)
     _detect_lang(rel_path)
+    _build_block(rel_path,content)
+    _collect_untracked_blocks(src,paths,tracked)
+    _write_new_blocks(readme,text,new_blocks)
     add_untracked_blocks(readme_path,source_dir,paths)
     print_sync_report(result)
-  src/markpact/publisher.py:
-    e: PublishConfig,PublishResult,_slugify,_first_heading,_first_paragraph,_format_subprocess_failure,_check_file_type,_analyze_blocks_for_types,_is_web_service,_detect_registry,_build_package_name,_get_default_author,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,_setup_llm_for_publish,_set_provider_api_key_for_publish,_call_llm_for_publish_config,_extract_publish_block_from_response,generate_publish_config_with_llm,bump_version,extract_version_from_readme,update_version_in_readme,get_license_classifier,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi,generate_package_json,publish_npm,generate_dockerfile,publish_docker,publish_github_packages,parse_publish_block,publish
-    PublishConfig  # Configuration for publishing...
-      __post_init__(0)  CC=2.0
-    PublishResult  # Result of a publish operation...
-    _slugify(name)
-    _first_heading(markdown)
-    _first_paragraph(markdown)
-    _format_subprocess_failure(result)
-    _check_file_type(path)
-    _analyze_blocks_for_types(blocks)
-    _is_web_service(run_command)
-    _detect_registry(flags,run_command)
-    _build_package_name(base_name,registry)
-    _get_default_author()
-    infer_publish_config(readme_path,markdown,blocks,run_command)
-    prompt_publish_config(config)
-    ensure_publish_block_in_readme(readme_path,config)
-    _setup_llm_for_publish()
-    _set_provider_api_key_for_publish(cfg)
-    _call_llm_for_publish_config(litellm,cfg,markdown)
-    _extract_publish_block_from_response(content)
-    generate_publish_config_with_llm(markdown,verbose)
-    bump_version(version,bump_type)
-    extract_version_from_readme(readme_path)
-    update_version_in_readme(readme_path,new_version)
+  src/markpact/publish/pypi.py:
+    e: get_license_classifier,_extract_readme_description,_build_description,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi
     get_license_classifier(license_name)
+    _extract_readme_description(base_path)
+    _build_description(config,base_path)
     generate_pyproject_toml(config,sandbox,base_path,verbose)
     _normalize_package_name(config,verbose)
     _determine_base_path(config,sandbox,verbose)
@@ -215,17 +213,6 @@ D:
     _get_upload_error_hint(payload,stdout,test,config)
     _upload_to_pypi(base_path,test,config,pypirc_path,verbose)
     publish_pypi(config,sandbox,test,verbose,source_readme_path)
-    generate_package_json(config,sandbox)
-    publish_npm(config,sandbox,registry,verbose)
-    generate_dockerfile(config,sandbox,base_image)
-    publish_docker(config,sandbox,registry,tag,verbose)
-    publish_github_packages(config,sandbox,package_type,verbose)
-    parse_publish_block(block_body,meta)
-    publish(config,sandbox,bump,verbose,source_readme_path)
-  src/markpact/cli/helpers.py:
-    e: _resolve_file_body,_parse_blocks_to_state
-    _resolve_file_body(block,verbose)
-    _parse_blocks_to_state(blocks,sandbox,args,verbose)
   src/markpact/cli/__init__.py:
     e: main,_dispatch_subcommand,_parse_main_args,_handle_generation_phase,_process_readme
     main(argv)
@@ -320,6 +307,10 @@ D:
     _print_block_changes(changes)
     _print_conversion_summary(blocks)
     print_conversion_report(result)
+  src/markpact/publish/main.py:
+    e: parse_publish_block,publish
+    parse_publish_block(block_body,meta)
+    publish(config,sandbox,bump,verbose,source_readme_path)
   src/markpact/cli/publish_cmd.py:
     e: _resolve_publish_config,_determine_bump_type,_print_publish_dry_run,_execute_publish_result,_handle_publish_mode
     _resolve_publish_config(args,text_to_parse,readme,blocks,run_command,verbose)
@@ -342,6 +333,10 @@ D:
     infer_publish_config(readme_path,markdown,blocks,run_command)
     prompt_publish_config(config)
     ensure_publish_block_in_readme(readme_path,config)
+  src/markpact/publish/docker_pub.py:
+    e: generate_dockerfile,publish_docker
+    generate_dockerfile(config,sandbox,base_image)
+    publish_docker(config,sandbox,registry,tag,verbose)
   src/markpact/config.py:
     e: get_env_path,ensure_config_dir,load_env,save_env,init_env,set_config,set_model,set_api_key,set_api_base,apply_preset,show_config,list_providers
     get_env_path()
@@ -413,6 +408,11 @@ D:
   src/markpact/cli/pack_cmd.py:
     e: handle_pack_cli
     handle_pack_cli(argv)
+  src/markpact/publish/npm.py:
+    e: _build_npm_description,generate_package_json,publish_npm
+    _build_npm_description(config,sandbox)
+    generate_package_json(config,sandbox)
+    publish_npm(config,sandbox,registry,verbose)
   src/markpact/publish/version.py:
     e: bump_version,extract_version_from_readme,update_version_in_readme
     bump_version(version,bump_type)
@@ -428,9 +428,22 @@ D:
     run_cmd(cmd,sandbox,verbose)
     ensure_venv(sandbox,verbose)
     install_deps(deps,sandbox,verbose)
+  src/markpact/publish/github.py:
+    e: publish_github_packages
+    publish_github_packages(config,sandbox,package_type,verbose)
+  scripts/sync_version.py:
+    e: get_pyproject_version,get_bumpversion_version,sync_bumpversion
+    get_pyproject_version()
+    get_bumpversion_version()
+    sync_bumpversion()
   src/markpact/publish/models.py:
     e: PublishConfig,PublishResult
     PublishConfig  # Configuration for publishing...
       __post_init__(0)  CC=2.0
     PublishResult  # Result of a publish operation...
+  examples/sync-workflow/src/app.py:
+    e: root
+    root()
   src/markpact/__init__.py:
+  src/markpact/publisher.py:
+  src/markpact/publish/__init__.py:

@@ -60,13 +60,13 @@
 </p>
 
 <div class="grid">
-  <div class="card"><div class="value">4.9</div><div class="label">Avg CC</div></div>
-  <div class="card"><div class="value">28</div><div class="label">Critical (CC≥10)</div></div>
-  <div class="card"><div class="value">242</div><div class="label">Functions</div></div>
-  <div class="card"><div class="value">13</div><div class="label">Classes</div></div>
-  <div class="card"><div class="value">25</div><div class="label">Files</div></div>
-  <div class="card"><div class="value">8987</div><div class="label">Lines</div></div>
-  <div class="card"><div class="value">2</div><div class="label">Duplicates</div></div>
+  <div class="card"><div class="value">4.8</div><div class="label">Avg CC</div></div>
+  <div class="card"><div class="value">25</div><div class="label">Critical (CC≥10)</div></div>
+  <div class="card"><div class="value">231</div><div class="label">Functions</div></div>
+  <div class="card"><div class="value">11</div><div class="label">Classes</div></div>
+  <div class="card"><div class="value">30</div><div class="label">Files</div></div>
+  <div class="card"><div class="value">9637</div><div class="label">Lines</div></div>
+  <div class="card"><div class="value">0</div><div class="label">Duplicates</div></div>
   <div class="card"><div class="value">1</div><div class="label">Cycles</div></div>
 </div>
 
@@ -86,20 +86,6 @@
 <table>
   <thead><tr><th>Severity</th><th>Target</th><th>Type</th><th>Value</th><th>Limit</th></tr></thead>
   <tbody>
-            <tr class="critical">
-                <td><span class="badge critical">critical</span></td>
-                <td>sync_readme</td>
-                <td>high_fan_out</td>
-                <td>21</td>
-                <td>10</td>
-            </tr>
-            <tr class="error">
-                <td><span class="badge error">error</span></td>
-                <td>add_untracked_blocks</td>
-                <td>high_fan_out</td>
-                <td>19</td>
-                <td>10</td>
-            </tr>
             <tr class="error">
                 <td><span class="badge error">error</span></td>
                 <td>parse_jupyter</td>
@@ -130,9 +116,16 @@
             </tr>
             <tr class="warning">
                 <td><span class="badge warning">warning</span></td>
-                <td>add_untracked_blocks</td>
+                <td>_parse_blocks_to_state</td>
                 <td>cc_exceeded</td>
-                <td>18</td>
+                <td>15</td>
+                <td>15</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
+                <td>_process_block</td>
+                <td>cc_exceeded</td>
+                <td>15</td>
                 <td>15</td>
             </tr>
             <tr class="warning">
@@ -144,21 +137,7 @@
             </tr>
             <tr class="warning">
                 <td><span class="badge warning">warning</span></td>
-                <td>_parse_blocks_to_state</td>
-                <td>cc_exceeded</td>
-                <td>15</td>
-                <td>15</td>
-            </tr>
-            <tr class="warning">
-                <td><span class="badge warning">warning</span></td>
                 <td>pack_directory</td>
-                <td>high_fan_out</td>
-                <td>14</td>
-                <td>10</td>
-            </tr>
-            <tr class="warning">
-                <td><span class="badge warning">warning</span></td>
-                <td>parse_publish_block</td>
                 <td>high_fan_out</td>
                 <td>14</td>
                 <td>10</td>
@@ -179,6 +158,13 @@
             </tr>
             <tr class="warning">
                 <td><span class="badge warning">warning</span></td>
+                <td>parse_publish_block</td>
+                <td>high_fan_out</td>
+                <td>14</td>
+                <td>10</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
                 <td>parse_blocks_recursive</td>
                 <td>high_fan_out</td>
                 <td>13</td>
@@ -187,6 +173,20 @@
             <tr class="warning">
                 <td><span class="badge warning">warning</span></td>
                 <td>_collect_files</td>
+                <td>high_fan_out</td>
+                <td>13</td>
+                <td>10</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
+                <td>handle_sync_cli</td>
+                <td>high_fan_out</td>
+                <td>13</td>
+                <td>10</td>
+            </tr>
+            <tr class="warning">
+                <td><span class="badge warning">warning</span></td>
+                <td>publish_pypi</td>
                 <td>high_fan_out</td>
                 <td>13</td>
                 <td>10</td>
@@ -201,21 +201,6 @@
 <table>
   <thead><tr><th>Function</th><th>Fan-out</th><th>Note</th></tr></thead>
   <tbody>
-            <tr>
-                <td><strong>sync_readme</strong></td>
-                <td>21</td>
-                <td>Sync source directory files into README.md markpact:file blocks.
-
-Reads all mark</td>
-            </tr>
-            <tr>
-                <td><strong>add_untracked_blocks</strong></td>
-                <td>19</td>
-                <td>Append new markpact:file blocks for untracked files to README.
-
-Args:
-    readme</td>
-            </tr>
             <tr>
                 <td><strong>parse_jupyter</strong></td>
                 <td>17</td>
@@ -240,14 +225,6 @@ Args:
     source_dir: Director</td>
             </tr>
             <tr>
-                <td><strong>parse_publish_block</strong></td>
-                <td>14</td>
-                <td>Parse publish block content into config.
-
-Args:
-    block_body: The body of the </td>
-            </tr>
-            <tr>
                 <td><strong>sync_readme_recursive</strong></td>
                 <td>14</td>
                 <td>Sync README and all included sub-READMEs recursively.
@@ -260,79 +237,99 @@ Finds ``<!-- markpact:inc</td>
                 <td>Handle --prompt or --example LLM generation. Returns (exit_code, readme_path_or_</td>
             </tr>
             <tr>
+                <td><strong>parse_publish_block</strong></td>
+                <td>14</td>
+                <td>Parse publish block content into config.
+
+Args:
+    block_body: The body of the </td>
+            </tr>
+            <tr>
                 <td><strong>parse_blocks_recursive</strong></td>
                 <td>13</td>
                 <td>Parse blocks with recursive include resolution.
 
 Resolves ``<!-- markpact:includ</td>
+            </tr>
+            <tr>
+                <td><strong>_collect_files</strong></td>
+                <td>13</td>
+                <td>Collect files to pack, applying exclude/include filters.</td>
+            </tr>
+            <tr>
+                <td><strong>handle_sync_cli</strong></td>
+                <td>13</td>
+                <td>Handle sync subcommand — thin orchestrator dispatching to steps.
+
+CC: ~8 (parse </td>
             </tr></tbody>
 </table>
 </div></div>
 </div>
 
 <div>
-<h2>Refactoring Priorities (11)</h2>
+<h2>Refactoring Priorities (10)</h2>
 <div class="card"><div class="table-wrap">
 <table>
   <thead><tr><th>#</th><th>Action</th><th>Impact</th><th>Effort</th></tr></thead>
   <tbody>
             <tr>
                 <td>1</td>
-                <td>Split god module src/markpact/syncer.py (621L, 1 classes)</td>
+                <td>Split god module src/markpact/syncer.py (612L, 1 classes)</td>
                 <td><span class="badge high">high</span></td>
                 <td>high</td>
             </tr>
             <tr>
                 <td>2</td>
-                <td>Split god module src/markpact/publisher.py (1227L, 2 classes)</td>
-                <td><span class="badge high">high</span></td>
-                <td>high</td>
-            </tr>
-            <tr>
-                <td>3</td>
                 <td>Split god module src/markpact/notebook_converter.py (710L, 2 classes)</td>
                 <td><span class="badge high">high</span></td>
                 <td>high</td>
             </tr>
             <tr>
-                <td>4</td>
+                <td>3</td>
                 <td>Split run_with_auto_fix_llm (CC=18 → target CC<10)</td>
                 <td><span class="badge medium">medium</span></td>
                 <td>low</td>
             </tr>
             <tr>
-                <td>5</td>
-                <td>Split _parse_pypirc_section (CC=15 → target CC<10)</td>
-                <td><span class="badge medium">medium</span></td>
-                <td>low</td>
-            </tr>
-            <tr>
-                <td>6</td>
+                <td>4</td>
                 <td>Split _parse_blocks_to_state (CC=15 → target CC<10)</td>
                 <td><span class="badge medium">medium</span></td>
                 <td>low</td>
             </tr>
             <tr>
-                <td>7</td>
-                <td>Split add_untracked_blocks (CC=18 → target CC<10)</td>
+                <td>5</td>
+                <td>Split _process_block (CC=15 → target CC<10)</td>
                 <td><span class="badge medium">medium</span></td>
                 <td>low</td>
             </tr>
             <tr>
-                <td>8</td>
+                <td>6</td>
+                <td>Split _parse_pypirc_section (CC=15 → target CC<10)</td>
+                <td><span class="badge medium">medium</span></td>
+                <td>low</td>
+            </tr>
+            <tr>
+                <td>7</td>
                 <td>Break circular dependency: src.markpact.parser.parse_blocks_recursive</td>
                 <td><span class="badge medium">medium</span></td>
                 <td>low</td>
             </tr>
             <tr>
+                <td>8</td>
+                <td>Reduce parse_jupyter fan-out (currently 17)</td>
+                <td><span class="badge medium">medium</span></td>
+                <td>medium</td>
+            </tr>
+            <tr>
                 <td>9</td>
-                <td>Reduce sync_readme fan-out (currently 21)</td>
+                <td>Reduce _process_readme fan-out (currently 16)</td>
                 <td><span class="badge medium">medium</span></td>
                 <td>medium</td>
             </tr>
             <tr>
                 <td>10</td>
-                <td>Reduce add_untracked_blocks fan-out (currently 19)</td>
+                <td>Reduce handle_config_cli fan-out (currently 15)</td>
                 <td><span class="badge medium">medium</span></td>
                 <td>medium</td>
             </tr></tbody>
@@ -341,7 +338,7 @@ Resolves ``<!-- markpact:includ</td>
 </div>
 </div>
 
-<footer>Generated by code2llm on 2026-03-07 18:44</footer>
+<footer>Generated by code2llm on 2026-03-07 19:30</footer>
 
 <script>
 const evoCtx = document.getElementById('evoChart').getContext('2d');
@@ -350,8 +347,8 @@ new Chart(evoCtx, {
   data: {
     labels: ['2026-03-05', '2026-03-06', '2026-03-07'],
     datasets: [
-      { label: 'CC avg', data: [6.9, 5.2, 4.9], borderColor: '#3b82f6', tension: .3, yAxisID: 'y' },
-      { label: 'Critical', data: [38, 27, 28], borderColor: '#ef4444', tension: .3, yAxisID: 'y1' }
+      { label: 'CC avg', data: [6.9, 5.2, 4.8], borderColor: '#3b82f6', tension: .3, yAxisID: 'y' },
+      { label: 'Critical', data: [38, 27, 25], borderColor: '#ef4444', tension: .3, yAxisID: 'y1' }
     ]
   },
   options: {
@@ -369,9 +366,9 @@ const modCtx = document.getElementById('modChart').getContext('2d');
 new Chart(modCtx, {
   type: 'bar',
   data: {
-    labels: ['auto_fix.py', 'syncer.py', 'helpers.py', 'publisher.py', '__init__.py', 'sync_cmd.py', 'parser.py', 'config_cmd.py', 'convert_cmd.py', 'converter.py', 'notebook_converter.py', 'packer.py', 'publish_cmd.py', 'helpers.py', 'config.py'],
-    datasets: [{ label: 'Max CC', data: [18, 18, 15, 15, 14, 14, 13, 12, 12, 11, 11, 11, 10, 9, 8],
-      backgroundColor: [18, 18, 15, 15, 14, 14, 13, 12, 12, 11, 11, 11, 10, 9, 8].map(v => v >= 15 ? '#ef4444' : v >= 10 ? '#eab308' : '#22c55e')
+    labels: ['auto_fix.py', 'helpers.py', 'pypi.py', 'syncer.py', '__init__.py', 'sync_cmd.py', 'parser.py', 'config_cmd.py', 'convert_cmd.py', 'converter.py', 'notebook_converter.py', 'packer.py', 'main.py', 'publish_cmd.py', 'docker_pub.py'],
+    datasets: [{ label: 'Max CC', data: [18, 15, 15, 15, 14, 14, 13, 12, 12, 11, 11, 11, 11, 10, 9],
+      backgroundColor: [18, 15, 15, 15, 14, 14, 13, 12, 12, 11, 11, 11, 11, 10, 9].map(v => v >= 15 ? '#ef4444' : v >= 10 ? '#eab308' : '#22c55e')
     }]
   },
   options: {

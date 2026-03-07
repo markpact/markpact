@@ -4,36 +4,35 @@
 
 - **Project**: /home/tom/github/wronai/markpact
 - **Analysis Mode**: static
-- **Total Functions**: 264
-- **Total Classes**: 15
-- **Modules**: 27
-- **Entry Points**: 36
+- **Total Functions**: 261
+- **Total Classes**: 13
+- **Modules**: 35
+- **Entry Points**: 27
 
 ## Architecture by Module
 
-### src.markpact.publisher
-- **Functions**: 48
+### examples.demo_live_markpact
+- **Functions**: 29
 - **Classes**: 2
-- **File**: `publisher.py`
+- **File**: `demo_live_markpact.py`
 
 ### src.markpact.notebook_converter
 - **Functions**: 25
 - **Classes**: 2
 - **File**: `notebook_converter.py`
 
-### examples.demo_live_markpact
-- **Functions**: 22
-- **Classes**: 2
-- **File**: `demo_live_markpact.py`
+### src.markpact.syncer
+- **Functions**: 21
+- **Classes**: 1
+- **File**: `syncer.py`
+
+### src.markpact.publish.pypi
+- **Functions**: 21
+- **File**: `pypi.py`
 
 ### src.markpact.docker_runner
 - **Functions**: 16
 - **File**: `docker_runner.py`
-
-### src.markpact.syncer
-- **Functions**: 16
-- **Classes**: 1
-- **File**: `syncer.py`
 
 ### src.markpact.auto_fix
 - **Functions**: 15
@@ -104,36 +103,16 @@
 
 Main execution flows into the system:
 
-### examples.demo_live_markpact._print_summary
-> Print final summary.
-- **Calls**: examples.demo_live_markpact.hdr, session.elapsed, sum, sum, len, print, print, print
-
 ### examples.demo_live_markpact.main
 - **Calls**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.parse_args, examples.demo_live_markpact.run_live, examples.demo_live_markpact.list_prompts
-
-### src.markpact.publish.helpers.prompt_publish_config
-> Interactively ask user for missing or important publish fields.
-- **Calls**: print, print, ask, ask, ask, ask, ask, ask
 
 ### examples.demo_live_markpact._save_outputs
 > Save README and PDF outputs.
 - **Calls**: readme_path.write_text, examples.demo_live_markpact.ok, print, str, pdf.page_no, range, pdf.output, examples.demo_live_markpact.ok
 
-### src.markpact.publisher.ensure_publish_block_in_readme
-> Insert a markpact:publish block into README if none exists.
-- **Calls**: readme_path.read_text, re.search, lines.append, None.join, re.search, readme_path.write_text, lines.append, lines.append
-
 ### src.markpact.publish.helpers.ensure_publish_block_in_readme
 > Insert a markpact:publish block into README if none exists.
 - **Calls**: readme_path.read_text, re.search, lines.append, None.join, re.search, readme_path.write_text, lines.append, lines.append
-
-### src.markpact.publish.helpers.infer_publish_config
-> Infer a reasonable PublishConfig for READMEs without markpact:publish.
-
-Heuristics:
-- If package.json exists or there are JS/TS file blocks -> npm
-- I
-- **Calls**: src.markpact.publish.helpers._first_heading, src.markpact.publish.helpers._first_paragraph, src.markpact.publish.helpers._analyze_blocks_for_types, src.markpact.publish.helpers._detect_registry, src.markpact.publish.helpers._slugify, src.markpact.publish.helpers._build_package_name, PublishConfig, os.environ.get
 
 ### src.markpact.docker_runner.stream_docker_logs
 > Stream logs from Docker container.
@@ -143,10 +122,6 @@ Heuristics:
 > Build, run Docker container, execute tests, and return results.
 - **Calls**: src.markpact.docker_runner._build_docker_image, src.markpact.docker_runner._resolve_docker_port, src.markpact.docker_runner._start_docker_container, src.markpact.docker_runner._run_docker_tests, src.markpact.docker_runner._stop_docker_container, TestSuite, TestSuite, TestResult
 
-### src.markpact.publisher.extract_version_from_readme
-> Extract version from README markpact:publish block.
-- **Calls**: readme_path.read_text, re.search, re.search, match.group, re.search, version_match.group, None.strip, version_match.group
-
 ### src.markpact.publish.version.extract_version_from_readme
 > Extract version from README markpact:publish block.
 - **Calls**: readme_path.read_text, re.search, re.search, match.group, re.search, version_match.group, None.strip, version_match.group
@@ -154,6 +129,10 @@ Heuristics:
 ### src.markpact.generator.GeneratorConfig.from_env
 > Load config from environment variables
 - **Calls**: cls, os.environ.get, os.environ.get, os.environ.get, float, int, os.environ.get, os.environ.get
+
+### scripts.sync_version.sync_bumpversion
+> Sync .bumpversion.toml with pyproject.toml.
+- **Calls**: scripts.sync_version.get_pyproject_version, scripts.sync_version.get_bumpversion_version, Path, bumpversion.read_text, re.sub, bumpversion.write_text, print
 
 ### src.markpact.docker_runner.run_docker_with_logs
 > Start Docker container and return process for log monitoring.
@@ -166,17 +145,6 @@ Returns:
 > Main entry point for markpact CLI. CC≤5.
 - **Calls**: src.markpact.cli._parse_main_args, src.markpact.cli._handle_generation_phase, isinstance, src.markpact.cli._process_readme, src.markpact.cli._dispatch_subcommand, src.markpact.cli.convert_cmd._handle_list_examples, src.markpact.cli.convert_cmd._handle_list_notebook_formats
 
-### src.markpact.publish.version.bump_version
-> Bump semantic version.
-
-Args:
-    version: Current version (e.g., "1.2.3")
-    bump_type: Type of bump ("major", "minor", "patch")
-
-Returns:
-    New v
-- **Calls**: version.lstrip, v.split, len, int, int, int, None.split
-
 ### src.markpact.auto_fix.run_with_auto_fix
 > Run command with automatic error detection and fixing.
 
@@ -186,22 +154,12 @@ Args:
     readme_path: Path to README.md
 - **Calls**: src.markpact.auto_fix._setup_env_with_venv_simple, range, src.markpact.auto_fix.detect_error_type, src.markpact.auto_fix._run_and_print, src.markpact.auto_fix._handle_port_error_simple
 
-### src.markpact.publish.llm_config.generate_publish_config_with_llm
-> Try to generate a publish config using LLM.
-
-Requires optional dependency markpact[llm].
-- **Calls**: src.markpact.publish.llm_config._setup_llm_for_publish, src.markpact.publish.llm_config._set_provider_api_key_for_publish, src.markpact.publish.llm_config._call_llm_for_publish_config, src.markpact.publish.llm_config._extract_publish_block_from_response, src.markpact.publisher.parse_publish_block
-
 ### src.markpact.generator.GeneratorConfig.from_file
 > Load config from JSON file
 - **Calls**: json.loads, cls, path.exists, cls.from_env, path.read_text
 
 ### src.markpact.sandbox.Sandbox.__init__
 - **Calls**: None.resolve, self.path.mkdir, Path, os.environ.get
-
-### src.markpact.publish.version.update_version_in_readme
-> Update version in README file.
-- **Calls**: readme_path.read_text, re.sub, readme_path.write_text
 
 ### src.markpact.generator.save_contract
 > Save generated contract to file.
@@ -232,63 +190,58 @@ Args:
 > Return human-readable summary.
 - **Calls**: None.join, lines.append
 
-### examples.demo_live_markpact.LiveSession.add_step
-- **Calls**: self.steps.append, StepRecord
-
 ### src.markpact.syncer.SyncResult.summary
 > Return human-readable summary.
 - **Calls**: None.join, lines.append
 
-### src.markpact.publish.helpers._format_subprocess_failure
-- **Calls**: None.strip, None.strip
+### examples.demo_live_markpact.LiveSession.add_step
+- **Calls**: self.steps.append, StepRecord
 
 ### src.markpact.sandbox.Sandbox.has_venv
 - **Calls**: self.venv_python.exists
+
+### src.markpact.parser.Block.get_path
+> Extract path= from meta
+- **Calls**: re.search
+
+### examples.demo_live_markpact._ascii
+> Transliterate Polish chars to ASCII for PDF rendering.
+- **Calls**: text.translate
+
+### examples.demo_live_markpact.LiveSession.elapsed
+- **Calls**: time.time
+
+### examples.sync-workflow.src.app.root
+- **Calls**: app.get
+
+### src.markpact.publish.models.PublishConfig.__post_init__
 
 ## Process Flows
 
 Key execution flows identified:
 
-### Flow 1: _print_summary
-```
-_print_summary [examples.demo_live_markpact]
-  └─> hdr
-```
-
-### Flow 2: main
+### Flow 1: main
 ```
 main [examples.demo_live_markpact]
 ```
 
-### Flow 3: prompt_publish_config
-```
-prompt_publish_config [src.markpact.publish.helpers]
-```
-
-### Flow 4: _save_outputs
+### Flow 2: _save_outputs
 ```
 _save_outputs [examples.demo_live_markpact]
   └─> ok
 ```
 
-### Flow 5: ensure_publish_block_in_readme
+### Flow 3: ensure_publish_block_in_readme
 ```
-ensure_publish_block_in_readme [src.markpact.publisher]
-```
-
-### Flow 6: infer_publish_config
-```
-infer_publish_config [src.markpact.publish.helpers]
-  └─> _first_heading
-  └─> _first_paragraph
+ensure_publish_block_in_readme [src.markpact.publish.helpers]
 ```
 
-### Flow 7: stream_docker_logs
+### Flow 4: stream_docker_logs
 ```
 stream_docker_logs [src.markpact.docker_runner]
 ```
 
-### Flow 8: run_docker_with_tests
+### Flow 5: run_docker_with_tests
 ```
 run_docker_with_tests [src.markpact.docker_runner]
   └─> _build_docker_image
@@ -297,14 +250,35 @@ run_docker_with_tests [src.markpact.docker_runner]
       └─ →> find_free_port
 ```
 
-### Flow 9: extract_version_from_readme
+### Flow 6: extract_version_from_readme
 ```
-extract_version_from_readme [src.markpact.publisher]
+extract_version_from_readme [src.markpact.publish.version]
 ```
 
-### Flow 10: from_env
+### Flow 7: from_env
 ```
 from_env [src.markpact.generator.GeneratorConfig]
+```
+
+### Flow 8: sync_bumpversion
+```
+sync_bumpversion [scripts.sync_version]
+  └─> get_pyproject_version
+  └─> get_bumpversion_version
+```
+
+### Flow 9: run_docker_with_logs
+```
+run_docker_with_logs [src.markpact.docker_runner]
+  └─> stop_existing_container
+  └─ →> find_free_port
+```
+
+### Flow 10: run_with_auto_fix
+```
+run_with_auto_fix [src.markpact.auto_fix]
+  └─> _setup_env_with_venv_simple
+  └─> detect_error_type
 ```
 
 ## Key Classes
@@ -332,11 +306,6 @@ from_env [src.markpact.generator.GeneratorConfig]
 - **Methods**: 1
 - **Key Methods**: src.markpact.packer.PackResult.summary
 
-### src.markpact.publisher.PublishConfig
-> Configuration for publishing
-- **Methods**: 1
-- **Key Methods**: src.markpact.publisher.PublishConfig.__post_init__
-
 ### src.markpact.syncer.SyncResult
 > Result of a sync operation.
 - **Methods**: 1
@@ -355,19 +324,15 @@ from_env [src.markpact.generator.GeneratorConfig]
 > Represents a parsed notebook.
 - **Methods**: 0
 
-### src.markpact.publisher.PublishResult
-> Result of a publish operation
-- **Methods**: 0
-
-### examples.demo_live_markpact.StepRecord
-- **Methods**: 0
-
 ### src.markpact.converter.ConvertedBlock
 > A converted markpact block.
 - **Methods**: 0
 
 ### src.markpact.converter.ConversionResult
 > Result of converting a Markdown file.
+- **Methods**: 0
+
+### examples.demo_live_markpact.StepRecord
 - **Methods**: 0
 
 ### src.markpact.publish.models.PublishResult
@@ -457,38 +422,35 @@ Resolves ``<!-- markpact:include path=sub/README.md
 > Run subprocess with proper error handling.
 - **Output to**: subprocess.run
 
-### src.markpact.publisher._format_subprocess_failure
-- **Output to**: None.strip, None.strip
-
-### src.markpact.publisher._parse_pypirc_section
-> Parse ~/.pypirc and check for valid section. Returns True if valid creds found.
-- **Output to**: pypirc_path.exists, print, configparser.ConfigParser, cp.read, None.strip
-
-### src.markpact.publisher.parse_publish_block
-> Parse publish block content into config.
-
-Args:
-    block_body: The body of the publish block
-    me
-- **Output to**: all_lines.extend, PublishConfig, all_lines.append, None.splitlines, line.strip
-
-### examples.demo_live_markpact._step_parse_blocks
-> Step 2: Parse markpact blocks. Returns (blocks, duration_ms, success).
-- **Output to**: examples.demo_live_markpact.hdr, time.time, src.markpact.parser.parse_blocks, session.add_step, print
-
-### examples.demo_live_markpact._step_validate_blocks
-> Step 3: Validate required blocks. Returns all_required_ok.
-- **Output to**: examples.demo_live_markpact.hdr, print, print, examples.demo_live_markpact.ok, examples.demo_live_markpact.fail
-
-### src.markpact.cli.helpers._parse_blocks_to_state
-> Parse blocks and extract state. Returns state dict with error key if failed.
-- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
-
 ### src.markpact.converter.convert_markdown_to_markpact
 > Convert regular Markdown to markpact format.
 
 Analyzes code blocks and converts them to markpact:* f
 - **Output to**: ConversionResult, re.search, re.compile, pattern.sub, result.changes.append
+
+### src.markpact.cli.helpers._parse_blocks_to_state
+> Parse blocks and extract state. Returns state dict with error key if failed.
+- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
+
+### src.markpact.syncer._process_block
+> Process a single markpact:file block match. CC≤8.
+- **Output to**: src.markpact.syncer._read_source_file, src.markpact.syncer._build_header_suffix, result.details.append, m.group, m.group
+
+### src.markpact.cli._parse_main_args
+> Build and parse the main argument parser.
+- **Output to**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
+
+### src.markpact.cli._process_readme
+> Parse blocks, extract state, dispatch to mode handler.
+- **Output to**: Sandbox, readme.read_text, src.markpact.cli.convert_cmd._handle_markdown_conversion, getattr, src.markpact.cli.helpers._parse_blocks_to_state
+
+### src.markpact.cli.sync_cmd._build_sync_parser
+> Build the sync subcommand argument parser.
+- **Output to**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
+
+### src.markpact.cli.convert_cmd._handle_list_notebook_formats
+> Handle --list-notebook-formats flag.
+- **Output to**: print, None.items, print, print, src.markpact.notebook_converter.get_supported_formats
 
 ## Behavioral Patterns
 
@@ -501,46 +463,46 @@ Analyzes code blocks and converts them to markpact:* f
 
 Functions exposed as public API (no underscore prefix):
 
-- `examples.demo_live_markpact.run_live` - 105 calls
-- `src.markpact.syncer.sync_readme` - 41 calls
 - `src.markpact.cli.config_cmd.handle_config_cli` - 35 calls
 - `src.markpact.notebook_converter.parse_zeppelin` - 30 calls
 - `src.markpact.notebook_converter.parse_databricks` - 30 calls
-- `src.markpact.syncer.add_untracked_blocks` - 28 calls
 - `src.markpact.notebook_converter.parse_jupyter` - 24 calls
+- `examples.demo_live_markpact.run_live` - 22 calls
 - `src.markpact.template.resolve_template` - 20 calls
 - `src.markpact.packer.pack_directory` - 20 calls
 - `src.markpact.converter.convert_markdown_to_markpact` - 19 calls
 - `src.markpact.parser.parse_blocks` - 18 calls
 - `src.markpact.parser.parse_blocks_recursive` - 18 calls
-- `examples.demo_live_markpact.show_menu` - 18 calls
-- `examples.demo_live_markpact.main` - 18 calls
 - `src.markpact.syncer.sync_readme_recursive` - 18 calls
 - `src.markpact.syncer.print_sync_report` - 18 calls
+- `examples.demo_live_markpact.show_menu` - 18 calls
+- `examples.demo_live_markpact.main` - 18 calls
 - `src.markpact.notebook_converter.notebook_to_markpact` - 16 calls
-- `src.markpact.publisher.prompt_publish_config` - 16 calls
 - `src.markpact.publish.helpers.prompt_publish_config` - 16 calls
-- `src.markpact.publisher.generate_pyproject_toml` - 15 calls
-- `src.markpact.publisher.parse_publish_block` - 15 calls
+- `src.markpact.syncer.sync_readme` - 15 calls
 - `src.markpact.cli.pack_cmd.handle_pack_cli` - 15 calls
+- `src.markpact.publish.main.parse_publish_block` - 15 calls
 - `src.markpact.auto_fix.run_with_auto_fix_llm` - 14 calls
-- `src.markpact.publisher.publish_pypi` - 14 calls
 - `src.markpact.cli.sync_cmd.handle_sync_cli` - 14 calls
-- `src.markpact.publisher.generate_package_json` - 13 calls
+- `src.markpact.publish.pypi.publish_pypi` - 14 calls
 - `src.markpact.config.load_env` - 12 calls
 - `src.markpact.packer.print_pack_report` - 12 calls
-- `src.markpact.publisher.ensure_publish_block_in_readme` - 12 calls
-- `src.markpact.publisher.generate_dockerfile` - 12 calls
-- `src.markpact.publisher.publish_docker` - 12 calls
 - `src.markpact.syncer.find_untracked_files` - 12 calls
+- `src.markpact.syncer.add_untracked_blocks` - 12 calls
 - `src.markpact.publish.helpers.ensure_publish_block_in_readme` - 12 calls
+- `src.markpact.publish.docker_pub.publish_docker` - 12 calls
 - `src.markpact.docker_runner.generate_dockerfile` - 11 calls
-- `src.markpact.publisher.infer_publish_config` - 11 calls
 - `src.markpact.publish.helpers.infer_publish_config` - 11 calls
 - `src.markpact.template.load_secrets` - 10 calls
 - `src.markpact.notebook_converter.extract_dependencies` - 10 calls
-- `src.markpact.publisher.publish_npm` - 10 calls
 - `src.markpact.syncer.create_backup` - 10 calls
+- `src.markpact.publish.npm.publish_npm` - 10 calls
+- `src.markpact.config.save_env` - 9 calls
+- `src.markpact.config.list_providers` - 9 calls
+- `src.markpact.docker_runner.stream_docker_logs` - 9 calls
+- `src.markpact.docker_runner.run_docker_with_tests` - 9 calls
+- `src.markpact.notebook_converter.convert_notebook` - 9 calls
+- `src.markpact.converter.suggest_filename` - 9 calls
 
 ## System Interactions
 
@@ -548,14 +510,8 @@ How components interact:
 
 ```mermaid
 graph TD
-    _print_summary --> hdr
-    _print_summary --> elapsed
-    _print_summary --> sum
-    _print_summary --> len
     main --> ArgumentParser
     main --> add_argument
-    prompt_publish_confi --> print
-    prompt_publish_confi --> ask
     _save_outputs --> write_text
     _save_outputs --> ok
     _save_outputs --> print
@@ -565,11 +521,6 @@ graph TD
     ensure_publish_block --> search
     ensure_publish_block --> append
     ensure_publish_block --> join
-    infer_publish_config --> _first_heading
-    infer_publish_config --> _first_paragraph
-    infer_publish_config --> _analyze_blocks_for_
-    infer_publish_config --> _detect_registry
-    infer_publish_config --> _slugify
     stream_docker_logs --> time
     stream_docker_logs --> readline
     stream_docker_logs --> print
@@ -578,6 +529,17 @@ graph TD
     run_docker_with_test --> _build_docker_image
     run_docker_with_test --> _resolve_docker_port
     run_docker_with_test --> _start_docker_contai
+    run_docker_with_test --> _run_docker_tests
+    run_docker_with_test --> _stop_docker_contain
+    extract_version_from --> read_text
+    extract_version_from --> search
+    extract_version_from --> group
+    from_env --> cls
+    from_env --> get
+    from_env --> float
+    sync_bumpversion --> get_pyproject_versio
+    sync_bumpversion --> get_bumpversion_vers
+    sync_bumpversion --> Path
 ```
 
 ## Reverse Engineering Guidelines

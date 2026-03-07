@@ -1,13 +1,11 @@
-# markpact | 40f 9981L | python:41
+# markpact | 51f 10664L | python:51
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
-M[40]:
-  examples/demo_live_markpact.py,765
-  src/markpact/publish/helpers.py,178
-  src/markpact/publish/llm_config.py,82
-  src/markpact/publish/models.py,25
-  src/markpact/publish/version.py,49
-  src/markpact/__init__.py,50
-  src/markpact/auto_fix.py,293
+M[51]:
+  examples/demo_live_markpact.py,777
+  examples/sync-workflow/src/app.py,5
+  scripts/sync_version.py,47
+  src/markpact/__init__.py,51
+  src/markpact/auto_fix.py,325
   src/markpact/cli/__init__.py,149
   src/markpact/cli/config_cmd.py,59
   src/markpact/cli/convert_cmd.py,99
@@ -23,23 +21,36 @@ M[40]:
   src/markpact/notebook_converter.py,559
   src/markpact/packer.py,344
   src/markpact/parser.py,114
-  src/markpact/publisher.py,935
+  src/markpact/publish/__init__.py,51
+  src/markpact/publish/docker_pub.py,80
+  src/markpact/publish/github.py,32
+  src/markpact/publish/helpers.py,178
+  src/markpact/publish/llm_config.py,82
+  src/markpact/publish/main.py,90
+  src/markpact/publish/models.py,25
+  src/markpact/publish/npm.py,79
+  src/markpact/publish/pypi.py,361
+  src/markpact/publish/version.py,49
+  src/markpact/publisher.py,25
   src/markpact/runner.py,30
   src/markpact/sandbox.py,46
-  src/markpact/syncer.py,478
+  src/markpact/syncer.py,469
   src/markpact/template.py,125
   src/markpact/tester.py,237
   tests/__init__.py,0
+  tests/test_auto_fix.py,76
   tests/test_cli.py,118
+  tests/test_cli_subcommands.py,148
   tests/test_converter.py,85
   tests/test_examples.py,18
   tests/test_generator.py,99
   tests/test_include.py,141
   tests/test_notebook_converter.py,197
   tests/test_parser.py,81
+  tests/test_publish.py,273
   tests/test_runner.py,73
   tests/test_sandbox.py,34
-  tests/test_syncer.py,538
+  tests/test_syncer.py,703
   tests/test_template.py,140
 D:
   examples/demo_live_markpact.py:
@@ -55,40 +66,20 @@ D:
     wait(text)
     wait_done(ok_flag=True)
     info(text)
-  src/markpact/publish/helpers.py:
-    i: os,re,sys,models.PublishConfig,pathlib.Path
-    e: infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme
-    _slugify(name:str)->str
-    _first_heading(markdown:str)->str
-    _first_paragraph(markdown:str)->str
-    _format_subprocess_failure(result)->str
-    _check_file_type(path:str)->dict[str, bool]
-    _analyze_blocks_for_types(blocks:list[object])->dict[str, bool]
-    _is_web_service(run_command:Any)->bool
-    _detect_registry(flags:dict[str;bool];run_command:Any)->str
-  src/markpact/publish/llm_config.py:
-    i: os,re,models.PublishConfig,typing.Optional
-    e: generate_publish_config_with_llm
-    _setup_llm_for_publish()->tuple
-    _set_provider_api_key_for_publish(cfg)->None
-    _call_llm_for_publish_config(litellm;cfg;markdown:str)->Optional[str]
-    _extract_publish_block_from_response(content:str)->tuple[Optional[str], Optional[str]]
-    generate_publish_config_with_llm(markdown:str;verbose:bool=False)->Optional[PublishConfig]
-  src/markpact/publish/models.py:
-    i: dataclasses.dataclass
-    e: PublishConfig,PublishResult
-    PublishConfig: __post_init__(0)  # Configuration for publishing
-    PublishResult:   # Result of a publish operation
-  src/markpact/publish/version.py:
-    i: re,pathlib.Path,typing.Optional
-    e: bump_version,extract_version_from_readme,update_version_in_readme
-    bump_version(version:str;bump_type:str='patch')->str
-    extract_version_from_readme(readme_path:Path)->Optional[str]
-    update_version_in_readme(readme_path:Path;new_version:str)->bool
+  examples/sync-workflow/src/app.py:
+    i: fastapi.FastAPI
+    e: root
+    root()
+  scripts/sync_version.py:
+    i: re,sys,argparse,pathlib.Path
+    e: get_pyproject_version,get_bumpversion_version,sync_bumpversion
+    get_pyproject_version()
+    get_bumpversion_version()
+    sync_bumpversion()
   src/markpact/auto_fix.py:
-    i: os,re,subprocess,pathlib.Path,sandbox.{Sandbox,find_free_port},typing.Optional
+    i: os,re,subprocess,fixop.classify._fixop_classify,fixop.ports.{find_free_port_near,is_port_free},pathlib.Path,sandbox.{Sandbox,find_free_port},typing.Optional
     e: detect_error_type,fix_port_in_readme,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,run_with_auto_fix_llm
-    detect_error_type(error_output:str)->Optional[str]
+    detect_error_type(error_output:str;exit_code:int=1;cmd:str='')->Optional[str]
     fix_port_in_readme(readme_path:Path;new_port:int)->bool
     _setup_env_with_venv_simple(sandbox:Sandbox)->dict
     _run_and_print(cmd:str;sandbox:Sandbox;env:dict;verbose:bool)->subprocess.CompletedProcess
@@ -228,19 +219,67 @@ D:
     Block: get_path(0),get_meta_value(1)
     parse_blocks(text:str)->list[Block]
     parse_blocks_recursive(text:str)->list[Block]
-  src/markpact/publisher.py:
-    i: json,os,re,subprocess,sys,dataclasses.dataclass,pathlib.Path,sandbox.Sandbox,typing.Optional
-    e: PublishConfig,PublishResult,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,generate_publish_config_with_llm,bump_version,extract_version_from_readme
-    PublishConfig: __post_init__(0)  # Configuration for publishing
-    PublishResult:   # Result of a publish operation
+  src/markpact/publish/docker_pub.py:
+    i: subprocess,helpers._format_subprocess_failure,models.{PublishConfig,PublishResult},pathlib.Path,pypi._build_description,sandbox.Sandbox,typing.Optional
+    e: generate_dockerfile,publish_docker
+    generate_dockerfile(config:PublishConfig;sandbox:Sandbox;base_image:str='python:3.12-slim')->Path
+    publish_docker(config:PublishConfig;sandbox:Sandbox;registry:str='docker.io';tag:Optional[str]=None;verbose:bool=True)->PublishResult
+  src/markpact/publish/github.py:
+    i: models.{PublishConfig,PublishResult},sandbox.Sandbox
+    e: publish_github_packages
+    publish_github_packages(config:PublishConfig;sandbox:Sandbox;package_type:str='npm';verbose:bool=True)->PublishResult
+  src/markpact/publish/helpers.py:
+    i: os,re,sys,models.PublishConfig,pathlib.Path
+    e: infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme
     _slugify(name:str)->str
     _first_heading(markdown:str)->str
     _first_paragraph(markdown:str)->str
-    _format_subprocess_failure(result:Any)->str
+    _format_subprocess_failure(result)->str
     _check_file_type(path:str)->dict[str, bool]
     _analyze_blocks_for_types(blocks:list[object])->dict[str, bool]
     _is_web_service(run_command:Any)->bool
     _detect_registry(flags:dict[str;bool];run_command:Any)->str
+  src/markpact/publish/llm_config.py:
+    i: os,re,models.PublishConfig,typing.Optional
+    e: generate_publish_config_with_llm
+    _setup_llm_for_publish()->tuple
+    _set_provider_api_key_for_publish(cfg)->None
+    _call_llm_for_publish_config(litellm;cfg;markdown:str)->Optional[str]
+    _extract_publish_block_from_response(content:str)->tuple[Optional[str], Optional[str]]
+    generate_publish_config_with_llm(markdown:str;verbose:bool=False)->Optional[PublishConfig]
+  src/markpact/publish/main.py:
+    i: models.{PublishConfig,PublishResult},pathlib.Path,sandbox.Sandbox,typing.Optional,version.bump_version
+    e: parse_publish_block,publish
+    parse_publish_block(block_body:str;meta:str='')->PublishConfig
+    publish(config:PublishConfig;sandbox:Sandbox;bump:Optional[str]=None;verbose:bool=True;source_readme_path:Optional[Path]=None)->PublishResult
+  src/markpact/publish/models.py:
+    i: dataclasses.dataclass
+    e: PublishConfig,PublishResult
+    PublishConfig: __post_init__(0)  # Configuration for publishing
+    PublishResult:   # Result of a publish operation
+  src/markpact/publish/npm.py:
+    i: json,subprocess,helpers._format_subprocess_failure,models.{PublishConfig,PublishResult},pathlib.Path,pypi._extract_readme_description,sandbox.Sandbox
+    e: generate_package_json,publish_npm
+    _build_npm_description(config:PublishConfig;sandbox:Sandbox)->str
+    generate_package_json(config:PublishConfig;sandbox:Sandbox)->Path
+    publish_npm(config:PublishConfig;sandbox:Sandbox;registry:str='https://registry.npmjs.org';verbose:bool=True)->PublishResult
+  src/markpact/publish/pypi.py:
+    i: json,os,re,subprocess,sys,helpers._format_subprocess_failure,models.PublishConfig,pathlib.Path,sandbox.Sandbox,typing.Optional
+    e: get_license_classifier,generate_pyproject_toml,publish_pypi
+    get_license_classifier(license_name:str)->str
+    _extract_readme_description(base_path:Path)->list[str]
+    _build_description(config:PublishConfig;base_path:Path)->str
+    generate_pyproject_toml(config;sandbox;base_path=None;verbose=True)
+    _normalize_package_name(config:PublishConfig;verbose:bool)->None
+    _determine_base_path(config:PublishConfig;sandbox:Sandbox;verbose:bool)->Path
+    _detect_build_backend(pyproject_path:Path)->str | None
+    _ensure_build_backend(build_backend:Any;verbose:bool)->None
+  src/markpact/publish/version.py:
+    i: re,pathlib.Path,typing.Optional
+    e: bump_version,extract_version_from_readme,update_version_in_readme
+    bump_version(version:str;bump_type:str='patch')->str
+    extract_version_from_readme(readme_path:Path)->Optional[str]
+    update_version_in_readme(readme_path:Path;new_version:str)->bool
   src/markpact/runner.py:
     i: os,subprocess,sys,pathlib.Path,sandbox.Sandbox
     e: run_cmd,ensure_venv,install_deps
@@ -283,6 +322,13 @@ D:
     run_tests_from_block(test_body:str;base_url:str='http://localhost:8000')->TestSuite
     run_service_with_tests(run_command:str;test_body:str;sandbox:Sandbox;port:int=8000;verbose:bool=True)->tuple[int, TestSuite]
     run_shell_tests(test_body:str;sandbox:Sandbox;verbose:bool=True)->TestSuite
+  tests/test_auto_fix.py:
+    i: tempfile,pytest,markpact.auto_fix.{add_missing_dependency,detect_error_type,extract_module_name,fix_port_in_readme},pathlib.Path,unittest.mock.patch
+    e: TestDetectErrorType,TestFixPortInReadme,TestExtractModuleName,TestAddMissingDependency
+    TestDetectErrorType: test_port_in_use(0),test_missing_module(0),test_syntax_error(0),test_import_error(0),test_unknown_error(0)
+    TestFixPortInReadme: test_replaces_env_var_port(1),test_replaces_direct_port(1),test_no_port_returns_false(1)
+    TestExtractModuleName: test_single_module(0),test_dotted_module(0),test_double_quotes(0),test_no_match(0)
+    TestAddMissingDependency: test_adds_to_deps_block(1),test_already_present(1),test_no_deps_block(1)
   tests/test_cli.py:
     i: tempfile,markpact.cli.main,pathlib.Path
     e: test_cli_help,test_cli_version,test_cli_file_not_found,test_cli_dry_run,test_cli_dry_run_new_header,test_cli_convert_only,test_cli_auto_no_markpact,test_cli_save_converted
@@ -294,6 +340,14 @@ D:
     test_cli_convert_only(capsys)
     test_cli_auto_no_markpact(capsys)
     test_cli_save_converted()
+  tests/test_cli_subcommands.py:
+    i: tempfile,pytest,markpact.cli.{_dispatch_subcommand,_parse_main_args,main},pathlib.Path,unittest.mock.patch
+    e: TestDispatch,TestParseMainArgs,TestSyncSubcommand,TestPackSubcommand,TestMainIntegration
+    TestDispatch: test_config_subcommand(1),test_unknown_subcommand_falls_through(0),test_dispatch_returns_1_for_unknown(0)
+    TestParseMainArgs: test_defaults(0),test_dry_run(0),test_quiet(0),test_publish_with_bump(0),test_custom_readme(0)
+    TestSyncSubcommand: test_sync_basic(1),test_sync_dry_run(2),test_sync_nonexistent_file(0),test_sync_list_tracked(2)
+    TestPackSubcommand: test_pack_basic(1),test_pack_dry_run(2),test_pack_nonexistent(0)
+    TestMainIntegration: test_dry_run_with_markpact_blocks(1),test_recursive_dry_run(1),test_quiet_mode_suppresses_parsing(2)
   tests/test_converter.py:
     i: markpact.converter.{convert_markdown_to_markpact,detect_block_type,suggest_filename}
     e: test_detect_deps_python,test_detect_deps_with_versions,test_detect_file_python,test_detect_file_javascript,test_detect_run_command,test_detect_run_python,test_suggest_filename_fastapi,test_suggest_filename_class
@@ -347,6 +401,14 @@ D:
     test_parse_run_block_new_header()
     test_parse_multiple_blocks()
     test_empty_meta()
+  tests/test_publish.py:
+    i: tempfile,pytest,markpact.publish.main.{parse_publish_block,publish},markpact.publish.models.{PublishConfig,PublishResult},markpact.publish.version.{bump_version,extract_version_from_readme,update_version_in_readme},pathlib.Path
+    e: TestPublishConfig,TestPublishResult,TestBumpVersion,TestExtractVersionFromReadme,TestUpdateVersionInReadme,TestParsePublishBlock,TestPublishDispatch,TestSlugify
+    TestPublishConfig: test_defaults(0),test_keywords_none_defaults_to_list(0),test_keywords_preserved(0)
+    TestPublishResult: test_success_result(0),test_failure_result(0)
+    TestBumpVersion: test_patch(0),test_minor(0),test_major(0),test_v_prefix(0),test_default_is_patch(0)
+    TestExtractVersionFromReadme: test_from_publish_block(1),test_from_pyproject_style(1),test_fallback_default(1),test_colon_syntax(1)
+    TestUpdateVersionInReadme: test_updates_version(1),test_no_version_returns_false(1)
   tests/test_runner.py:
     i: tempfile,markpact.runner.{ensure_venv,install_deps,run_cmd},markpact.sandbox.Sandbox,pathlib.Path,unittest.mock.patch
     e: test_run_cmd_simple,test_run_cmd_with_venv,test_ensure_venv_creates_venv,test_ensure_venv_skips_if_disabled,test_ensure_venv_skips_if_exists,test_install_deps_empty,test_install_deps_writes_requirements
