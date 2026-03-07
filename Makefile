@@ -34,9 +34,13 @@ install: ## Install markpact package
 
 dev: ## Install dev dependencies
 	$(PYTHON) -m pip install -e ".[dev]"
+	$(MAKE) fix-editable
+
+fix-editable: ## Fix hatchling editable install (workaround for empty .pth file)
+	@echo "$(PWD)/src" > .venv/lib/python3.13/site-packages/markpact.pth
 
 test: ## Run tests
-	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src $(PYTHON) -m pytest tests/ -v
+	$(PYTHON) -m pytest tests/ -v
 
 test-cov: ## Run tests with coverage
 	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src $(PYTHON) -m pytest tests/ -v --cov=src/markpact --cov-report=term-missing
