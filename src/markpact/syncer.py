@@ -414,6 +414,68 @@ def sync_readme(
     return result
 
 
+def sync_readme_recursive(
+    readme_path: str | Path,
+    source_dir: str | Path,
+    *,
+    exclude_sync: Optional[set[str]] = None,
+    dry_run: bool = False,
+    verbose: bool = False,
+    hash_blocks: bool = False,
+    max_depth: int = 5,
+) -> list[SyncResult]:
+    """Sync README and all included sub-READMEs recursively.
+
+    Finds ``<!-- markpact:include path=sub/README.md -->`` directives
+    and syncs each referenced file against the same source directory.
+
+    Args:
+        readme_path: Path to root README.md
+        source_dir: Path to source directory
+        max_depth: Maximum include nesting depth
+
+    Returns:
+        List of SyncResult, one per README processed.
+    """
+    from .parser import _INCLUDE_COMMENT_RE
+
+    readme = Path(readme_path).resolve()
+    src = Path(source_dir).resolve()
+    results: list[SyncResult] = []
+    seen: set[str] = set()
+
+    def _sync_one(rpath: Path, depth: int) -> None:
+        rpath_str = str(rpath.resolve())
+        if rpath_str in seen or depth > max_depth:
+            return
+        seen.add(rpath_str)
+
+        if not rpath.exists():
+            if verbose:
+                print(f"[markpact] Include not found: {rpath}")
+            return
+
+        result = sync_readme(
+            rpath, src,
+            exclude_sync=exclude_sync,
+            dry_run=dry_run,
+            verbose=verbose,
+            hash_blocks=hash_blocks,
+        )
+        results.append(result)
+
+        # Find includes in this file and recurse
+        text = rpath.read_text(encoding="utf-8")
+        base = rpath.parent
+        for m in _INCLUDE_COMMENT_RE.finditer(text):
+            include_path = m.group(1)
+            child = (base / include_path).resolve()
+            _sync_one(child, depth + 1)
+
+    _sync_one(readme, 0)
+    return results
+
+
 def print_sync_report(result: SyncResult) -> None:
     """Print a formatted report of the sync operation."""
     print()

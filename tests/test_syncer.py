@@ -7,6 +7,7 @@ from markpact.syncer import (
     list_tracked_paths,
     find_untracked_files,
     sync_readme,
+    sync_readme_recursive,
     diff_block,
     create_backup,
     list_backups,
@@ -578,3 +579,102 @@ def test_sync_no_hash_by_default(tmp_path):
 
     updated = readme.read_text()
     assert "sha256=" not in updated
+
+
+# ─── sync_readme_recursive ───────────────────────────────────────────────────
+
+def test_sync_recursive_single_readme(tmp_path):
+    """Without includes, recursive sync behaves like normal sync."""
+    readme = tmp_path / "README.md"
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    readme.write_text(textwrap.dedent("""\
+        ```python markpact:file path=main.py
+        print("old")
+        ```
+    """))
+    (src / "main.py").write_text('print("new")\n')
+
+    results = sync_readme_recursive(readme, src)
+    assert len(results) == 1
+    assert results[0].success
+    assert results[0].updated == 1
+    assert 'print("new")' in readme.read_text()
+
+
+def test_sync_recursive_with_sub_readme(tmp_path):
+    """Recursive sync processes both root and included sub-README."""
+    src = tmp_path / "sandbox"
+    src.mkdir()
+    (src / "deploy").mkdir()
+
+    # Sub-README
+    sub_readme = tmp_path / "deploy" / "README.md"
+    sub_readme.parent.mkdir()
+    sub_readme.write_text(textwrap.dedent("""\
+        ```yaml markpact:file path=deploy/config.yml
+        old_config: true
+        ```
+    """))
+    (src / "deploy" / "config.yml").write_text("new_config: true\n")
+
+    # Root README with include
+    readme = tmp_path / "README.md"
+    readme.write_text(textwrap.dedent("""\
+        ```python markpact:file path=main.py
+        print("old")
+        ```
+
+        <!-- markpact:include path=deploy/README.md -->
+    """))
+    (src / "main.py").write_text('print("new")\n')
+
+    results = sync_readme_recursive(readme, src)
+    assert len(results) == 2
+
+    total_updated = sum(r.updated for r in results)
+    assert total_updated == 2
+
+    assert 'print("new")' in readme.read_text()
+    assert "new_config: true" in sub_readme.read_text()
+
+
+def test_sync_recursive_dry_run(tmp_path):
+    """Recursive sync with dry_run doesn't modify any files."""
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    sub = tmp_path / "sub.md"
+    sub.write_text('```yaml markpact:file path=s.yml\nold\n```\n')
+    (src / "s.yml").write_text("new\n")
+
+    readme = tmp_path / "README.md"
+    original = '```yaml markpact:file path=r.yml\nold\n```\n\n<!-- markpact:include path=sub.md -->\n'
+    readme.write_text(original)
+    (src / "r.yml").write_text("new\n")
+
+    results = sync_readme_recursive(readme, src, dry_run=True)
+    assert len(results) == 2
+    total_updated = sum(r.updated for r in results)
+    assert total_updated == 2
+
+    # Files should NOT have changed
+    assert readme.read_text() == original
+    assert "old" in sub.read_text()
+
+
+def test_sync_recursive_circular(tmp_path):
+    """Circular includes don't cause infinite loops in recursive sync."""
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    a = tmp_path / "a.md"
+    b = tmp_path / "b.md"
+    a.write_text('```yaml markpact:file path=a.yml\nold_a\n```\n\n<!-- markpact:include path=b.md -->\n')
+    b.write_text('```yaml markpact:file path=b.yml\nold_b\n```\n\n<!-- markpact:include path=a.md -->\n')
+    (src / "a.yml").write_text("new_a\n")
+    (src / "b.yml").write_text("new_b\n")
+
+    results = sync_readme_recursive(a, src)
+    assert len(results) == 2  # each file synced once, no infinite loop

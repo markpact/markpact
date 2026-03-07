@@ -101,6 +101,8 @@ def handle_sync_cli(argv: list[str]) -> int:
                         help="List available backups")
     parser.add_argument("--hash", action="store_true",
                         help="Embed/update sha256= content hash in block headers")
+    parser.add_argument("-R", "--recursive", action="store_true",
+                        help="Also sync sub-READMEs referenced by markpact:include directives")
     parser.add_argument("-q", "--quiet", action="store_true",
                         help="Suppress output")
 
@@ -178,6 +180,33 @@ def handle_sync_cli(argv: list[str]) -> int:
     if verbose:
         mode = "Checking" if args.check else ("Previewing" if args.dry_run else "Syncing")
         print(f"[markpact] {mode} {source_dir.name}/ → {readme_path.name}")
+
+    if getattr(args, 'recursive', False):
+        from .syncer import sync_readme_recursive
+        results = sync_readme_recursive(
+            readme_path=readme_path,
+            source_dir=source_dir,
+            exclude_sync=exclude_sync,
+            dry_run=dry_run,
+            verbose=verbose,
+            hash_blocks=getattr(args, 'hash', False),
+        )
+        any_failed = any(not r.success for r in results)
+        total_updated = sum(r.updated for r in results)
+
+        if any_failed:
+            for r in results:
+                if not r.success:
+                    print(f"[markpact] ERROR: {r.message}", file=sys.stderr)
+            return 1
+
+        for r in results:
+            if verbose or args.dry_run:
+                print_sync_report(r)
+
+        if args.check and total_updated > 0:
+            return 1
+        return 0
 
     result = sync_readme(
         readme_path=readme_path,
