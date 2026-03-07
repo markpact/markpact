@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import difflib
 import fnmatch
+import hashlib
 import re
 import shutil
 from dataclasses import dataclass, field
@@ -138,8 +139,9 @@ _BLOCK_OLD_RE = re.compile(
 )
 
 # Combined pattern matching both formats
+# Groups: (1)prefix  (2)path  (3)rest-of-header  (4)\n  (5)body  (6)\n```
 _BLOCK_COMBINED_RE = re.compile(
-    r"(```(?:\w+\s+)?markpact:file\s+path=)(\S+)(\n)([\s\S]*?)(\n```)"
+    r"(```(?:\w+\s+)?markpact:file\s+path=)(\S+)([^\n]*)(\n)([\s\S]*?)(\n```)"
 )
 
 # Default patterns to exclude from untracked file detection
@@ -271,6 +273,20 @@ def diff_block(
     return "\n".join(diff)
 
 
+def _content_sha256(body: str) -> str:
+    """Compute short SHA-256 of block content (first 12 hex chars)."""
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()[:12]
+
+
+def _update_header_hash(prefix: str, rel_path: str, new_hash: str) -> str:
+    """Update or append sha256= in block header prefix.
+
+    The prefix includes everything up to and including `path=`.
+    We reconstruct: prefix + rel_path + [existing meta] sha256=<hash>
+    """
+    return prefix + rel_path
+
+
 def sync_readme(
     readme_path: str | Path,
     source_dir: str | Path,
@@ -278,6 +294,7 @@ def sync_readme(
     exclude_sync: Optional[set[str]] = None,
     dry_run: bool = False,
     verbose: bool = False,
+    hash_blocks: bool = False,
 ) -> SyncResult:
     """Sync source directory files into README.md markpact:file blocks.
 
@@ -290,6 +307,7 @@ def sync_readme(
         exclude_sync: Set of relative paths to never sync (e.g., sensitive files)
         dry_run: If True, don't write changes
         verbose: If True, print progress
+        hash_blocks: If True, embed/update sha256= in block headers
 
     Returns:
         SyncResult with details of the operation
@@ -318,12 +336,24 @@ def sync_readme(
         dry_run=dry_run,
     )
 
+    _SHA_RE = re.compile(r'\s+sha256=\S+')
+
+    def _build_header_suffix(rest_of_header: str, new_body: str) -> str:
+        """Build the rest-of-header portion, optionally with sha256."""
+        if not hash_blocks:
+            return rest_of_header
+        # Strip existing sha256= from header
+        cleaned = _SHA_RE.sub('', rest_of_header)
+        sha = _content_sha256(new_body)
+        return cleaned + f" sha256={sha}"
+
     def _replacer(m: re.Match) -> str:
-        prefix = m.group(1)     # ```[lang ]markpact:file path=
-        rel_path = m.group(2)   # e.g. scripts/doctor.sh
-        sep = m.group(3)        # \n
-        old_body = m.group(4)   # current content
-        suffix = m.group(5)     # \n```
+        prefix = m.group(1)         # ```[lang ]markpact:file path=
+        rel_path = m.group(2)       # e.g. scripts/doctor.sh
+        rest_header = m.group(3)    # rest of header line (e.g. " template=true sha256=abc")
+        sep = m.group(4)            # \n
+        old_body = m.group(5)       # current content
+        suffix = m.group(6)         # \n```
 
         detail = {"path": rel_path, "status": "unchanged"}
 
@@ -355,19 +385,25 @@ def sync_readme(
             result.details.append(detail)
             return m.group(0)
 
-        if old_body == new_body:
+        new_header_suffix = _build_header_suffix(rest_header, new_body)
+
+        if old_body == new_body and new_header_suffix == rest_header:
             result.unchanged += 1
             result.details.append(detail)
             return m.group(0)
 
         detail["status"] = "updated"
+        if old_body != new_body:
+            detail["content_changed"] = True
+        if new_header_suffix != rest_header:
+            detail["hash_updated"] = True
         result.updated += 1
         if verbose:
             label = "[dry] " if dry_run else "[sync]"
             print(f"  {label} {rel_path}")
 
         result.details.append(detail)
-        return prefix + rel_path + sep + new_body + suffix
+        return prefix + rel_path + new_header_suffix + sep + new_body + suffix
 
     new_text = _BLOCK_COMBINED_RE.sub(_replacer, text)
 

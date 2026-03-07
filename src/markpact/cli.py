@@ -99,6 +99,8 @@ def handle_sync_cli(argv: list[str]) -> int:
                         help="Restore README from a specific backup file")
     parser.add_argument("--backups", action="store_true",
                         help="List available backups")
+    parser.add_argument("--hash", action="store_true",
+                        help="Embed/update sha256= content hash in block headers")
     parser.add_argument("-q", "--quiet", action="store_true",
                         help="Suppress output")
 
@@ -183,6 +185,7 @@ def handle_sync_cli(argv: list[str]) -> int:
         exclude_sync=exclude_sync,
         dry_run=dry_run,
         verbose=verbose,
+        hash_blocks=getattr(args, 'hash', False),
     )
 
     if not result.success:
@@ -394,6 +397,33 @@ def _handle_markdown_conversion(args, original_text: str, verbose: bool) -> tupl
     return original_text, False
 
 
+def _resolve_file_body(block, verbose: bool) -> str:
+    """Resolve template placeholders if block has template=true."""
+    is_template = block.get_meta_value("template") in ("true", "yes", "1")
+    if not is_template:
+        return block.body
+
+    from .template import resolve_template, load_secrets, has_template_placeholders
+
+    if not has_template_placeholders(block.body):
+        return block.body
+
+    path = block.get_path() or "<unknown>"
+    if verbose:
+        print(f"[markpact] Resolving template: {path}")
+
+    secrets = load_secrets()
+    body, warnings = resolve_template(
+        block.body,
+        secrets=secrets,
+        interactive=sys.stdin.isatty(),
+        verbose=verbose,
+    )
+    for w in warnings:
+        print(f"[markpact] WARNING: {path}: {w}", file=sys.stderr)
+    return body
+
+
 def _parse_blocks_to_state(blocks, sandbox: Sandbox, args, verbose: bool) -> dict:
     """Parse blocks and extract state. Returns state dict with error key if failed."""
     state = {"deps": [], "run_command": None, "test_blocks": [], "publish_config_block": None, "had_publish_block": False}
@@ -405,10 +435,13 @@ def _parse_blocks_to_state(blocks, sandbox: Sandbox, args, verbose: bool) -> dic
             if not path:
                 print(f"[markpact] ERROR: markpact:file requires path=..., got: {block.meta}", file=sys.stderr)
                 return {"error": True}
+            body = _resolve_file_body(block, verbose)
             if args.dry_run:
-                print(f"[markpact] Would write {sandbox.path / path}")
+                is_tpl = block.get_meta_value("template") in ("true", "yes", "1")
+                tpl_hint = " (template)" if is_tpl else ""
+                print(f"[markpact] Would write {sandbox.path / path}{tpl_hint}")
             else:
-                f = sandbox.write_file(path, block.body)
+                f = sandbox.write_file(path, body)
                 if verbose:
                     print(f"[markpact] wrote {f}")
         elif block.kind == "deps" and "python" in block.meta:
@@ -657,6 +690,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--publish-llm", action="store_true", help="Generate publish config using LLM")
     parser.add_argument("--no-interactive", action="store_true", help="Disable interactive prompts")
     parser.add_argument("--yes", action="store_true", help="Assume defaults for missing config")
+    parser.add_argument("--recursive", "-R", action="store_true", help="Resolve markpact:include directives from sub-READMEs")
     
     args = parser.parse_args(args_list)
     verbose = not args.quiet
@@ -699,7 +733,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[markpact] Parsing {readme}")
     
     # Parse blocks
-    blocks = parse_blocks(text_to_parse)
+    if getattr(args, 'recursive', False):
+        from .parser import parse_blocks_recursive
+        blocks = parse_blocks_recursive(
+            text_to_parse,
+            base_dir=readme.resolve().parent,
+            source_file=str(readme),
+            verbose=verbose,
+        )
+    else:
+        blocks = parse_blocks(text_to_parse)
     state = _parse_blocks_to_state(blocks, sandbox, args, verbose)
     if state.get("error"):
         return 1

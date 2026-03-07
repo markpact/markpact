@@ -494,3 +494,87 @@ def test_sync_then_rollback(tmp_path):
     ok = restore_backup(readme)
     assert ok
     assert readme.read_text() == original
+
+
+# ─── hash_blocks ─────────────────────────────────────────────────────────────
+
+def test_sync_hash_blocks_adds_sha256(tmp_path):
+    readme = tmp_path / "README.md"
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    readme.write_text(textwrap.dedent("""\
+        ```python markpact:file path=main.py
+        print("old")
+        ```
+    """))
+    (src / "main.py").write_text('print("new")\n')
+
+    result = sync_readme(readme, src, hash_blocks=True)
+    assert result.success
+    assert result.updated == 1
+
+    updated = readme.read_text()
+    assert "sha256=" in updated
+    assert 'print("new")' in updated
+
+
+def test_sync_hash_blocks_updates_existing_sha(tmp_path):
+    readme = tmp_path / "README.md"
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    readme.write_text(textwrap.dedent("""\
+        ```python markpact:file path=main.py sha256=oldhash12345
+        print("old")
+        ```
+    """))
+    (src / "main.py").write_text('print("new")\n')
+
+    result = sync_readme(readme, src, hash_blocks=True)
+    assert result.success
+    assert result.updated == 1
+
+    updated = readme.read_text()
+    assert "oldhash12345" not in updated
+    assert "sha256=" in updated
+
+
+def test_sync_hash_blocks_preserves_other_meta(tmp_path):
+    readme = tmp_path / "README.md"
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    readme.write_text(textwrap.dedent("""\
+        ```yaml markpact:file path=.env template=true
+        KEY=old
+        ```
+    """))
+    (src / ".env").write_text("KEY=new\n")
+
+    result = sync_readme(readme, src, hash_blocks=True)
+    assert result.success
+
+    updated = readme.read_text()
+    assert "template=true" in updated
+    assert "sha256=" in updated
+    assert "KEY=new" in updated
+
+
+def test_sync_no_hash_by_default(tmp_path):
+    readme = tmp_path / "README.md"
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    readme.write_text(textwrap.dedent("""\
+        ```python markpact:file path=main.py
+        print("old")
+        ```
+    """))
+    (src / "main.py").write_text('print("new")\n')
+
+    result = sync_readme(readme, src)
+    assert result.success
+
+    updated = readme.read_text()
+    assert "sha256=" not in updated
