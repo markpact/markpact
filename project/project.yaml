@@ -3,58 +3,28 @@ project:
   name: markpact
   repo: /home/tom/github/wronai/markpact
   language: python
-  analyzed_at: '2026-03-06T18:28:44Z'
+  analyzed_at: '2026-03-07T18:44:51Z'
   tool: code2llm
   stats:
-    files: 14
-    lines: 8119
-    functions: 216
+    files: 25
+    lines: 8987
+    functions: 242
     classes: 13
 health:
-  cc_avg: 5.2
-  critical_count: 27
+  cc_avg: 4.9
+  critical_count: 28
   critical_limit: 10
-  duplicates: 0
-  cycles: 0
+  duplicates: 2
+  cycles: 1
   alerts:
-  - type: cc_exceeded
-    target: run_live
-    value: 51
-    limit: 15
-    severity: critical
   - type: high_fan_out
-    target: run_live
-    value: 50
-    limit: 10
-    severity: critical
-  - type: cc_exceeded
-    target: handle_sync_cli
-    value: 35
-    limit: 15
-    severity: critical
-  - type: cc_exceeded
-    target: main
-    value: 30
-    limit: 15
-    severity: critical
-  - type: high_fan_out
-    target: handle_sync_cli
-    value: 28
+    target: sync_readme
+    value: 21
     limit: 10
     severity: critical
   - type: high_fan_out
-    target: main
-    value: 25
-    limit: 10
-    severity: critical
-  - type: cc_exceeded
-    target: _step_analyze_blocks
-    value: 20
-    limit: 15
-    severity: error
-  - type: high_fan_out
-    target: _step_analyze_blocks
-    value: 18
+    target: add_untracked_blocks
+    value: 19
     limit: 10
     severity: error
   - type: high_fan_out
@@ -63,8 +33,8 @@ health:
     limit: 10
     severity: error
   - type: high_fan_out
-    target: sync_readme
-    value: 17
+    target: _process_readme
+    value: 16
     limit: 10
     severity: error
   - type: high_fan_out
@@ -78,7 +48,17 @@ health:
     limit: 15
     severity: warning
   - type: cc_exceeded
+    target: add_untracked_blocks
+    value: 18
+    limit: 15
+    severity: warning
+  - type: cc_exceeded
     target: _parse_pypirc_section
+    value: 15
+    limit: 15
+    severity: warning
+  - type: cc_exceeded
+    target: _parse_blocks_to_state
     value: 15
     limit: 15
     severity: warning
@@ -88,18 +68,23 @@ health:
     limit: 10
     severity: warning
   - type: high_fan_out
-    target: _handle_llm_generation
-    value: 14
-    limit: 10
-    severity: warning
-  - type: high_fan_out
     target: parse_publish_block
     value: 14
     limit: 10
     severity: warning
   - type: high_fan_out
-    target: _step_generate_contract
+    target: sync_readme_recursive
     value: 14
+    limit: 10
+    severity: warning
+  - type: high_fan_out
+    target: _handle_llm_generation
+    value: 14
+    limit: 10
+    severity: warning
+  - type: high_fan_out
+    target: parse_blocks_recursive
+    value: 13
     limit: 10
     severity: warning
   - type: high_fan_out
@@ -113,84 +98,26 @@ health:
     limit: 10
     severity: warning
   - type: high_fan_out
+    target: handle_sync_cli
+    value: 13
+    limit: 10
+    severity: warning
+  - type: high_fan_out
     target: notebook_to_markpact
     value: 12
     limit: 10
     severity: warning
+  - type: high_fan_out
+    target: generate_pyproject_toml
+    value: 12
+    limit: 10
+    severity: warning
+  - type: high_fan_out
+    target: load_env
+    value: 11
+    limit: 10
+    severity: warning
 modules:
-- path: demos/demo_live_markpact.py
-  lines: 954
-  classes: 2
-  methods: 22
-  cc_max: 51
-  inbound_deps: 0
-  exports:
-  - name: StepRecord
-    type: class
-    cc_avg: 0.0
-  - name: LiveSession
-    type: class
-    cc_avg: 1.5
-  - name: hdr
-    type: function
-    cc: 1
-  - name: step
-    type: function
-    cc: 1
-  - name: ok
-    type: function
-    cc: 2
-  - name: fail
-    type: function
-    cc: 2
-  - name: wait
-    type: function
-    cc: 1
-  - name: wait_done
-    type: function
-    cc: 2
-  - name: info
-    type: function
-    cc: 1
-  - name: show_menu
-    type: function
-    cc: 10
-  - name: list_prompts
-    type: function
-    cc: 3
-  - name: run_live
-    type: function
-    cc: 51
-    flag: split
-    fan_out: 50
-  - name: main
-    type: function
-    cc: 6
-    fan_out: 11
-- path: src/markpact/cli.py
-  lines: 736
-  classes: 0
-  methods: 22
-  cc_max: 35
-  inbound_deps: 0
-  exports:
-  - name: handle_pack_cli
-    type: function
-    cc: 6
-  - name: handle_sync_cli
-    type: function
-    cc: 35
-    flag: split
-    fan_out: 28
-  - name: handle_config_cli
-    type: function
-    cc: 12
-    fan_out: 15
-  - name: main
-    type: function
-    cc: 30
-    flag: split
-    fan_out: 25
 - path: src/markpact/auto_fix.py
   lines: 388
   classes: 0
@@ -220,12 +147,64 @@ modules:
     type: function
     cc: 18
     flag: split
+- path: src/markpact/syncer.py
+  lines: 621
+  classes: 1
+  methods: 16
+  cc_max: 18
+  inbound_deps: 1
+  exports:
+  - name: SyncResult
+    type: class
+    cc_avg: 3.0
+  - name: create_backup
+    type: function
+    cc: 3
+    fan_out: 10
+  - name: list_backups
+    type: function
+    cc: 2
+  - name: restore_backup
+    type: function
+    cc: 5
+  - name: list_tracked_paths
+    type: function
+    cc: 2
+  - name: find_untracked_files
+    type: function
+    cc: 11
+    fan_out: 11
+  - name: diff_block
+    type: function
+    cc: 1
+  - name: sync_readme
+    type: function
+    cc: 6
+    fan_out: 21
+  - name: sync_readme_recursive
+    type: function
+    cc: 1
+    fan_out: 14
+  - name: add_untracked_blocks
+    type: function
+    cc: 18
+    flag: split
+    fan_out: 19
+  - name: print_sync_report
+    type: function
+    cc: 10
+- path: src/markpact/cli/helpers.py
+  lines: 66
+  classes: 0
+  methods: 2
+  cc_max: 15
+  inbound_deps: 1
 - path: src/markpact/publisher.py
   lines: 1227
   classes: 2
   methods: 48
   cc_max: 15
-  inbound_deps: 1
+  inbound_deps: 3
   exports:
   - name: PublishConfig
     type: class
@@ -288,6 +267,61 @@ modules:
   - name: publish
     type: function
     cc: 9
+- path: src/markpact/cli/__init__.py
+  lines: 205
+  classes: 0
+  methods: 5
+  cc_max: 14
+  inbound_deps: 0
+  exports:
+  - name: main
+    type: function
+    cc: 7
+- path: src/markpact/cli/sync_cmd.py
+  lines: 291
+  classes: 0
+  methods: 11
+  cc_max: 14
+  inbound_deps: 1
+  exports:
+  - name: handle_sync_cli
+    type: function
+    cc: 14
+    fan_out: 13
+- path: src/markpact/parser.py
+  lines: 154
+  classes: 1
+  methods: 4
+  cc_max: 13
+  inbound_deps: 2
+  exports:
+  - name: Block
+    type: class
+    cc_avg: 2.0
+  - name: parse_blocks
+    type: function
+    cc: 6
+  - name: parse_blocks_recursive
+    type: function
+    cc: 13
+    fan_out: 13
+- path: src/markpact/cli/config_cmd.py
+  lines: 74
+  classes: 0
+  methods: 1
+  cc_max: 12
+  inbound_deps: 1
+  exports:
+  - name: handle_config_cli
+    type: function
+    cc: 12
+    fan_out: 15
+- path: src/markpact/cli/convert_cmd.py
+  lines: 112
+  classes: 0
+  methods: 5
+  cc_max: 12
+  inbound_deps: 1
 - path: src/markpact/converter.py
   lines: 320
   classes: 2
@@ -384,49 +418,34 @@ modules:
   - name: print_pack_report
     type: function
     cc: 6
-- path: src/markpact/syncer.py
-  lines: 416
-  classes: 1
-  methods: 11
-  cc_max: 11
+- path: src/markpact/cli/publish_cmd.py
+  lines: 95
+  classes: 0
+  methods: 5
+  cc_max: 10
   inbound_deps: 1
+- path: src/markpact/publish/helpers.py
+  lines: 226
+  classes: 0
+  methods: 13
+  cc_max: 9
+  inbound_deps: 0
   exports:
-  - name: SyncResult
-    type: class
-    cc_avg: 3.0
-  - name: create_backup
-    type: function
-    cc: 3
-    fan_out: 10
-  - name: list_backups
+  - name: infer_publish_config
     type: function
     cc: 2
-  - name: restore_backup
+  - name: prompt_publish_config
+    type: function
+    cc: 4
+  - name: ensure_publish_block_in_readme
     type: function
     cc: 5
-  - name: list_tracked_paths
-    type: function
-    cc: 2
-  - name: find_untracked_files
-    type: function
-    cc: 11
-    fan_out: 11
-  - name: diff_block
-    type: function
-    cc: 1
-  - name: sync_readme
-    type: function
-    cc: 6
-    fan_out: 17
-  - name: print_sync_report
-    type: function
-    cc: 10
 - path: src/markpact/config.py
   lines: 204
   classes: 0
   methods: 12
   cc_max: 8
-  inbound_deps: 1
+  inbound_deps: 2
   exports:
   - name: get_env_path
     type: function
@@ -518,19 +537,64 @@ modules:
   - name: list_example_prompts
     type: function
     cc: 1
-- path: src/markpact/parser.py
-  lines: 65
-  classes: 1
-  methods: 3
-  cc_max: 6
-  inbound_deps: 2
+- path: src/markpact/publish/llm_config.py
+  lines: 107
+  classes: 0
+  methods: 5
+  cc_max: 8
+  inbound_deps: 0
   exports:
-  - name: Block
-    type: class
-    cc_avg: 2.0
-  - name: parse_blocks
+  - name: generate_publish_config_with_llm
+    type: function
+    cc: 8
+- path: src/markpact/cli/run_cmd.py
+  lines: 105
+  classes: 0
+  methods: 7
+  cc_max: 7
+  inbound_deps: 1
+- path: src/markpact/cli/pack_cmd.py
+  lines: 62
+  classes: 0
+  methods: 1
+  cc_max: 6
+  inbound_deps: 1
+  exports:
+  - name: handle_pack_cli
     type: function
     cc: 6
+- path: src/markpact/template.py
+  lines: 184
+  classes: 0
+  methods: 5
+  cc_max: 6
+  inbound_deps: 1
+  exports:
+  - name: load_secrets
+    type: function
+    cc: 6
+  - name: resolve_template
+    type: function
+    cc: 2
+  - name: has_template_placeholders
+    type: function
+    cc: 2
+- path: src/markpact/publish/version.py
+  lines: 72
+  classes: 0
+  methods: 3
+  cc_max: 4
+  inbound_deps: 0
+  exports:
+  - name: bump_version
+    type: function
+    cc: 4
+  - name: extract_version_from_readme
+    type: function
+    cc: 4
+  - name: update_version_in_readme
+    type: function
+    cc: 2
 - path: src/markpact/runner.py
   lines: 42
   classes: 0
@@ -560,34 +624,42 @@ modules:
   - name: find_free_port
     type: function
     cc: 3
+- path: src/markpact/publish/models.py
+  lines: 32
+  classes: 2
+  methods: 1
+  cc_max: 2
+  inbound_deps: 0
+  exports:
+  - name: PublishConfig
+    type: class
+    cc_avg: 2.0
+  - name: PublishResult
+    type: class
+    cc_avg: 0.0
 - path: src/markpact/__init__.py
-  lines: 49
+  lines: 55
   classes: 0
   methods: 0
   cc_max: 0
   inbound_deps: 0
 hotspots:
-- name: run_live
-  fan_out: 50
-  note: 'Main pipeline: prompt -> generate -> parse -> validate -> PDF.'
-- name: handle_sync_cli
-  fan_out: 28
-  note: Handle sync subcommand - sync source files into README markpact blocks.
-- name: main
-  fan_out: 25
-  note: Main entry point for markpact CLI.
-- name: _step_analyze_blocks
-  fan_out: 18
-  note: Analysis pipeline, 18 stages
-- name: parse_jupyter
-  fan_out: 17
-  note: Parse Jupyter .ipynb notebook.
 - name: sync_readme
-  fan_out: 17
+  fan_out: 21
   note: 'Sync source directory files into README.md markpact:file blocks.
 
 
     Reads all mark'
+- name: add_untracked_blocks
+  fan_out: 19
+  note: "Append new markpact:file blocks for untracked files to README.\n\nArgs:\n\
+    \    readme"
+- name: parse_jupyter
+  fan_out: 17
+  note: Parse Jupyter .ipynb notebook.
+- name: _process_readme
+  fan_out: 16
+  note: Analysis pipeline, 16 stages
 - name: handle_config_cli
   fan_out: 15
   note: Handle config subcommand with its own parser
@@ -595,31 +667,28 @@ hotspots:
   fan_out: 14
   note: "Pack a directory into markpact README.md format.\n\nArgs:\n    source_dir:\
     \ Director"
-- name: _handle_llm_generation
-  fan_out: 14
-  note: Handle --prompt or --example LLM generation. Returns (exit_code, readme_path_or_
 - name: parse_publish_block
   fan_out: 14
   note: "Parse publish block content into config.\n\nArgs:\n    block_body: The body\
     \ of the "
+- name: sync_readme_recursive
+  fan_out: 14
+  note: 'Sync README and all included sub-READMEs recursively.
+
+
+    Finds ``<!-- markpact:inc'
+- name: _handle_llm_generation
+  fan_out: 14
+  note: Handle --prompt or --example LLM generation. Returns (exit_code, readme_path_or_
+- name: parse_blocks_recursive
+  fan_out: 13
+  note: 'Parse blocks with recursive include resolution.
+
+
+    Resolves ``<!-- markpact:includ'
 refactoring:
   priorities:
-  - action: Split handle_sync_cli (CC=35 → target CC<10)
-    impact: high
-    effort: low
-    module: cli.py
-  - action: Split main (CC=30 → target CC<10)
-    impact: high
-    effort: low
-    module: cli.py
-  - action: Split run_live (CC=51 → target CC<10)
-    impact: high
-    effort: low
-    module: demo_live_markpact.py
-  - action: Split god module demos/demo_live_markpact.py (954L, 2 classes)
-    impact: high
-    effort: high
-  - action: Split god module src/markpact/cli.py (736L, 0 classes)
+  - action: Split god module src/markpact/syncer.py (621L, 1 classes)
     impact: high
     effort: high
   - action: Split god module src/markpact/publisher.py (1227L, 2 classes)
@@ -636,17 +705,24 @@ refactoring:
     impact: medium
     effort: low
     module: publisher.py
-  - action: Split _step_analyze_blocks (CC=20 → target CC<10)
+  - action: Split _parse_blocks_to_state (CC=15 → target CC<10)
     impact: medium
     effort: low
-    module: demo_live_markpact.py
-  - action: Reduce run_live fan-out (currently 50)
+    module: helpers.py
+  - action: Split add_untracked_blocks (CC=18 → target CC<10)
+    impact: medium
+    effort: low
+    module: syncer.py
+  - action: 'Break circular dependency: src.markpact.parser.parse_blocks_recursive'
+    impact: medium
+    effort: low
+  - action: Reduce sync_readme fan-out (currently 21)
     impact: medium
     effort: medium
-  - action: Reduce handle_sync_cli fan-out (currently 28)
+  - action: Reduce add_untracked_blocks fan-out (currently 19)
     impact: medium
     effort: medium
-  - action: Reduce main fan-out (currently 25)
+  - action: Reduce parse_jupyter fan-out (currently 17)
     impact: medium
     effort: medium
 evolution:
@@ -659,4 +735,9 @@ evolution:
   cc_avg: 5.2
   critical: 27
   lines: 8119
+  note: Automated analysis
+- date: '2026-03-07'
+  cc_avg: 4.9
+  critical: 28
+  lines: 8987
   note: Automated analysis

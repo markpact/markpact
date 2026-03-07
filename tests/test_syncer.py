@@ -12,6 +12,8 @@ from markpact.syncer import (
     create_backup,
     list_backups,
     restore_backup,
+    add_untracked_blocks,
+    _detect_lang,
     BACKUP_DIR_NAME,
     BACKUP_PREFIX,
     MAX_BACKUPS,
@@ -678,3 +680,332 @@ def test_sync_recursive_circular(tmp_path):
 
     results = sync_readme_recursive(a, src)
     assert len(results) == 2  # each file synced once, no infinite loop
+
+
+def test_sync_recursive_with_hash(tmp_path):
+    """Recursive sync + hash_blocks combined."""
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    sub = tmp_path / "sub.md"
+    sub.write_text('```yaml markpact:file path=cfg.yml\nold_cfg\n```\n')
+    (src / "cfg.yml").write_text("new_cfg\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text(
+        '```python markpact:file path=main.py\nprint("old")\n```\n\n'
+        '<!-- markpact:include path=sub.md -->\n'
+    )
+    (src / "main.py").write_text('print("new")\n')
+
+    results = sync_readme_recursive(readme, src, hash_blocks=True)
+    assert len(results) == 2
+    assert sum(r.updated for r in results) == 2
+
+    # Both files should have sha256= embedded
+    assert "sha256=" in readme.read_text()
+    assert "sha256=" in sub.read_text()
+
+
+# ─── CLI integration smoke test ──────────────────────────────────────────────
+
+def test_sync_cli_recursive_hash(tmp_path):
+    """End-to-end CLI test: markpact sync --recursive --hash."""
+    from markpact.cli import handle_sync_cli
+
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    sub_dir = tmp_path / "deploy"
+    sub_dir.mkdir()
+    sub_readme = sub_dir / "README.md"
+    sub_readme.write_text('```yaml markpact:file path=deploy/conf.yml\nold\n```\n')
+    (src / "deploy").mkdir()
+    (src / "deploy" / "conf.yml").write_text("new\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text(
+        '```python markpact:file path=app.py\nold\n```\n\n'
+        '<!-- markpact:include path=deploy/README.md -->\n'
+    )
+    (src / "app.py").write_text("new\n")
+
+    rc = handle_sync_cli([
+        str(readme), "--source", str(src),
+        "--recursive", "--hash", "-q",
+    ])
+    assert rc == 0
+    assert "sha256=" in readme.read_text()
+    assert "new" in readme.read_text()
+    assert "sha256=" in sub_readme.read_text()
+    assert "new" in sub_readme.read_text()
+
+
+def test_sync_cli_check_recursive_detects_drift(tmp_path):
+    """markpact sync --check --recursive returns 1 when sub-README is out of sync."""
+    from markpact.cli import handle_sync_cli
+
+    src = tmp_path / "sandbox"
+    src.mkdir()
+
+    sub = tmp_path / "sub.md"
+    sub.write_text('```yaml markpact:file path=s.yml\nold\n```\n')
+    (src / "s.yml").write_text("new\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text(
+        '```yaml markpact:file path=r.yml\nsame\n```\n\n'
+        '<!-- markpact:include path=sub.md -->\n'
+    )
+    (src / "r.yml").write_text("same\n")
+
+    rc = handle_sync_cli([
+        str(readme), "--source", str(src),
+        "--recursive", "--check", "-q",
+    ])
+    assert rc == 1  # sub.md has drift
+
+
+# ─── _detect_lang ────────────────────────────────────────────────────────────
+
+def test_detect_lang_python():
+    assert _detect_lang("app.py") == "python"
+
+
+def test_detect_lang_yaml():
+    assert _detect_lang("config.yml") == "yaml"
+    assert _detect_lang("deploy.yaml") == "yaml"
+
+
+def test_detect_lang_bash():
+    assert _detect_lang("run.sh") == "bash"
+
+
+def test_detect_lang_env():
+    assert _detect_lang(".env") == "bash"
+    assert _detect_lang(".env.prod") == "bash"
+    assert _detect_lang(".env.staging") == "bash"
+
+
+def test_detect_lang_dockerfile():
+    assert _detect_lang("Dockerfile") == "dockerfile"
+
+
+def test_detect_lang_makefile():
+    assert _detect_lang("Makefile") == "makefile"
+
+
+def test_detect_lang_container():
+    assert _detect_lang("traefik.container") == "ini"
+    assert _detect_lang("web.service") == "ini"
+
+
+def test_detect_lang_unknown():
+    assert _detect_lang("data.xyz") == ""
+
+
+def test_detect_lang_nested_path():
+    assert _detect_lang("deploy/quadlet/traefik.container") == "ini"
+    assert _detect_lang("src/main.py") == "python"
+
+
+# ─── add_untracked_blocks ────────────────────────────────────────────────────
+
+def test_add_untracked_blocks_basic(tmp_path):
+    """add_untracked_blocks appends new markpact:file blocks."""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "app.py").write_text("print('hello')\n")
+    (src / "config.yaml").write_text("key: value\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n\nSome text.\n")
+
+    added = add_untracked_blocks(readme, src, ["app.py", "config.yaml"])
+    assert added == 2
+
+    content = readme.read_text()
+    assert "markpact:file path=app.py" in content
+    assert "markpact:file path=config.yaml" in content
+    assert "print('hello')" in content
+    assert "key: value" in content
+
+
+def test_add_untracked_blocks_detects_lang(tmp_path):
+    """add_untracked_blocks uses correct language identifier."""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "run.sh").write_text("echo hi\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n")
+
+    add_untracked_blocks(readme, src, ["run.sh"])
+    content = readme.read_text()
+    assert "```bash markpact:file path=run.sh" in content
+
+
+def test_add_untracked_blocks_skips_already_tracked(tmp_path):
+    """add_untracked_blocks skips files that already have blocks."""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "app.py").write_text("new content\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text(
+        "# Project\n\n"
+        "```python markpact:file path=app.py\nold content\n```\n"
+    )
+
+    added = add_untracked_blocks(readme, src, ["app.py"])
+    assert added == 0
+    # Original content should be unchanged
+    assert "old content" in readme.read_text()
+
+
+def test_add_untracked_blocks_skips_missing_files(tmp_path):
+    """add_untracked_blocks skips files that don't exist in source."""
+    src = tmp_path / "src"
+    src.mkdir()
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n")
+
+    added = add_untracked_blocks(readme, src, ["nonexistent.py"])
+    assert added == 0
+
+
+def test_add_untracked_blocks_dry_run(tmp_path):
+    """add_untracked_blocks dry_run doesn't modify the file."""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "app.py").write_text("print('hello')\n")
+
+    readme = tmp_path / "README.md"
+    original = "# Project\n"
+    readme.write_text(original)
+
+    added = add_untracked_blocks(readme, src, ["app.py"], dry_run=True)
+    assert added == 1
+    assert readme.read_text() == original  # File unchanged
+
+
+def test_add_untracked_blocks_creates_backup(tmp_path):
+    """add_untracked_blocks creates a backup before writing."""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "app.py").write_text("print('hello')\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n")
+
+    add_untracked_blocks(readme, src, ["app.py"])
+
+    bak_dir = tmp_path / BACKUP_DIR_NAME
+    assert bak_dir.exists()
+    backups = list(bak_dir.glob(f"{BACKUP_PREFIX}*"))
+    assert len(backups) >= 1
+
+
+def test_add_untracked_blocks_empty_paths(tmp_path):
+    """add_untracked_blocks returns 0 for empty paths list."""
+    src = tmp_path / "src"
+    src.mkdir()
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n")
+
+    added = add_untracked_blocks(readme, src, [])
+    assert added == 0
+
+
+# ─── CLI --add flag ──────────────────────────────────────────────────────────
+
+def test_sync_cli_add_all_untracked(tmp_path):
+    """markpact sync --add adds all untracked files."""
+    from markpact.cli import handle_sync_cli
+
+    src = tmp_path / "sandbox"
+    src.mkdir()
+    (src / "app.py").write_text("print('hello')\n")
+    (src / "config.yaml").write_text("key: value\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n")
+
+    rc = handle_sync_cli([str(readme), "--source", str(src), "--add", "-q"])
+    assert rc == 0
+
+    content = readme.read_text()
+    assert "markpact:file path=app.py" in content
+    assert "markpact:file path=config.yaml" in content
+
+
+def test_sync_cli_add_specific_files(tmp_path):
+    """markpact sync --add file1 file2 adds only specified files."""
+    from markpact.cli import handle_sync_cli
+
+    src = tmp_path / "sandbox"
+    src.mkdir()
+    (src / "app.py").write_text("print('hello')\n")
+    (src / "config.yaml").write_text("key: value\n")
+    (src / "secret.env").write_text("KEY=val\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n")
+
+    rc = handle_sync_cli([
+        str(readme), "--source", str(src),
+        "--add", "app.py", "config.yaml", "-q",
+    ])
+    assert rc == 0
+
+    content = readme.read_text()
+    assert "markpact:file path=app.py" in content
+    assert "markpact:file path=config.yaml" in content
+    assert "secret.env" not in content
+
+
+def test_sync_cli_add_dry_run(tmp_path):
+    """markpact sync --add --dry-run doesn't modify README."""
+    from markpact.cli import handle_sync_cli
+
+    src = tmp_path / "sandbox"
+    src.mkdir()
+    (src / "app.py").write_text("print('hello')\n")
+
+    readme = tmp_path / "README.md"
+    original = "# Project\n"
+    readme.write_text(original)
+
+    rc = handle_sync_cli([
+        str(readme), "--source", str(src),
+        "--add", "--dry-run", "-q",
+    ])
+    assert rc == 0
+    assert readme.read_text() == original
+
+
+def test_sync_cli_add_then_sync(tmp_path):
+    """After --add, subsequent sync should see the new blocks."""
+    from markpact.cli import handle_sync_cli
+
+    src = tmp_path / "sandbox"
+    src.mkdir()
+    (src / "app.py").write_text("version 1\n")
+
+    readme = tmp_path / "README.md"
+    readme.write_text("# Project\n")
+
+    # Add the file
+    rc = handle_sync_cli([str(readme), "--source", str(src), "--add", "-q"])
+    assert rc == 0
+    assert "version 1" in readme.read_text()
+
+    # Modify source
+    (src / "app.py").write_text("version 2\n")
+
+    # Sync should update the block
+    rc = handle_sync_cli([str(readme), "--source", str(src), "-q"])
+    assert rc == 0
+    assert "version 2" in readme.read_text()

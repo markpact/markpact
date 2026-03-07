@@ -1,16 +1,18 @@
 """Markpact – Executable Markdown Runtime"""
 
-__version__ = "0.1.29"
+__version__ = "0.1.30"
 
 from .converter import convert_markdown_to_markpact, ConversionResult
 from .packer import pack_directory, PackResult, print_pack_report
-from .parser import Block, parse_blocks
+from .parser import Block, parse_blocks, parse_blocks_recursive
 from .runner import run_cmd, ensure_venv
 from .sandbox import Sandbox, find_free_port
 from .syncer import (
-    sync_readme, SyncResult, print_sync_report, list_tracked_paths, find_untracked_files,
+    sync_readme, sync_readme_recursive, SyncResult, print_sync_report,
+    list_tracked_paths, find_untracked_files, add_untracked_blocks,
     create_backup, list_backups, restore_backup,
 )
+from .template import resolve_template, has_template_placeholders
 
 # Optional LLM generator (requires litellm)
 try:
@@ -25,6 +27,7 @@ except ImportError:
 __all__ = [
     "Block",
     "parse_blocks",
+    "parse_blocks_recursive",
     "run_cmd",
     "ensure_venv",
     "Sandbox",
@@ -35,13 +38,17 @@ __all__ = [
     "PackResult",
     "print_pack_report",
     "sync_readme",
+    "sync_readme_recursive",
     "SyncResult",
     "print_sync_report",
     "list_tracked_paths",
     "find_untracked_files",
+    "add_untracked_blocks",
     "create_backup",
     "list_backups",
     "restore_backup",
+    "resolve_template",
+    "has_template_placeholders",
     "generate_contract",
     "GeneratorConfig",
     "EXAMPLE_PROMPTS",

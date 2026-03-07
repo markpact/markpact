@@ -1,0 +1,4 @@
+app:
+  name: sync-demo
+  port: 8000
+  debug: false

@@ -278,13 +278,74 @@ def _content_sha256(body: str) -> str:
     return hashlib.sha256(body.encode("utf-8")).hexdigest()[:12]
 
 
-def _update_header_hash(prefix: str, rel_path: str, new_hash: str) -> str:
-    """Update or append sha256= in block header prefix.
+_SHA_RE = re.compile(r'\s+sha256=\S+')
 
-    The prefix includes everything up to and including `path=`.
-    We reconstruct: prefix + rel_path + [existing meta] sha256=<hash>
-    """
-    return prefix + rel_path
+
+def _build_header_suffix(rest_of_header: str, new_body: str, hash_blocks: bool) -> str:
+    """Build the rest-of-header portion, optionally with sha256."""
+    if not hash_blocks:
+        return rest_of_header
+    cleaned = _SHA_RE.sub('', rest_of_header)
+    sha = _content_sha256(new_body)
+    return cleaned + f" sha256={sha}"
+
+
+def _read_source_file(src: Path, rel_path: str) -> tuple[str | None, str | None]:
+    """Read source file content. Returns (body, None) or (None, error_msg)."""
+    file_path = src / rel_path
+    if not file_path.exists():
+        return None, "not_found"
+    try:
+        return file_path.read_text(encoding="utf-8").rstrip("\n"), None
+    except Exception as e:
+        return None, str(e)
+
+
+def _process_block(m: re.Match, *, src: Path, excludes: set, result: SyncResult,
+                   hash_blocks: bool, dry_run: bool, verbose: bool) -> str:
+    """Process a single markpact:file block match. CC≤8."""
+    prefix, rel_path, rest_header = m.group(1), m.group(2), m.group(3)
+    sep, old_body, suffix = m.group(4), m.group(5), m.group(6)
+    detail = {"path": rel_path, "status": "unchanged"}
+
+    if rel_path in excludes:
+        detail["status"] = "excluded"
+        result.excluded += 1
+        if verbose:
+            print(f"  [skip] {rel_path} (excluded)")
+        result.details.append(detail)
+        return m.group(0)
+
+    new_body, err = _read_source_file(src, rel_path)
+    if err:
+        detail["status"] = "missing" if err == "not_found" else "error"
+        if err != "not_found":
+            detail["error"] = err
+        result.missing += 1
+        if verbose:
+            tag = "[miss]" if err == "not_found" else "[err] "
+            msg = f"(not found in {src.name}/)" if err == "not_found" else err
+            print(f"  {tag} {rel_path} {msg}")
+        result.details.append(detail)
+        return m.group(0)
+
+    new_header_suffix = _build_header_suffix(rest_header, new_body, hash_blocks)
+
+    if old_body == new_body and new_header_suffix == rest_header:
+        result.unchanged += 1
+        result.details.append(detail)
+        return m.group(0)
+
+    detail["status"] = "updated"
+    if old_body != new_body:
+        detail["content_changed"] = True
+    if new_header_suffix != rest_header:
+        detail["hash_updated"] = True
+    result.updated += 1
+    if verbose:
+        print(f"  {'[dry] ' if dry_run else '[sync]'} {rel_path}")
+    result.details.append(detail)
+    return prefix + rel_path + new_header_suffix + sep + new_body + suffix
 
 
 def sync_readme(
@@ -320,7 +381,6 @@ def sync_readme(
             readme_path=readme, source_dir=src,
             success=False, message=f"README not found: {readme}",
         )
-
     if not src.exists():
         return SyncResult(
             readme_path=readme, source_dir=src,
@@ -329,81 +389,13 @@ def sync_readme(
 
     text = readme.read_text(encoding="utf-8")
     excludes = exclude_sync or set()
-
-    result = SyncResult(
-        readme_path=readme,
-        source_dir=src,
-        dry_run=dry_run,
-    )
-
-    _SHA_RE = re.compile(r'\s+sha256=\S+')
-
-    def _build_header_suffix(rest_of_header: str, new_body: str) -> str:
-        """Build the rest-of-header portion, optionally with sha256."""
-        if not hash_blocks:
-            return rest_of_header
-        # Strip existing sha256= from header
-        cleaned = _SHA_RE.sub('', rest_of_header)
-        sha = _content_sha256(new_body)
-        return cleaned + f" sha256={sha}"
+    result = SyncResult(readme_path=readme, source_dir=src, dry_run=dry_run)
 
     def _replacer(m: re.Match) -> str:
-        prefix = m.group(1)         # ```[lang ]markpact:file path=
-        rel_path = m.group(2)       # e.g. scripts/doctor.sh
-        rest_header = m.group(3)    # rest of header line (e.g. " template=true sha256=abc")
-        sep = m.group(4)            # \n
-        old_body = m.group(5)       # current content
-        suffix = m.group(6)         # \n```
-
-        detail = {"path": rel_path, "status": "unchanged"}
-
-        if rel_path in excludes:
-            detail["status"] = "excluded"
-            result.excluded += 1
-            if verbose:
-                print(f"  [skip] {rel_path} (excluded)")
-            result.details.append(detail)
-            return m.group(0)
-
-        file_path = src / rel_path
-        if not file_path.exists():
-            detail["status"] = "missing"
-            result.missing += 1
-            if verbose:
-                print(f"  [miss] {rel_path} (not found in {src.name}/)")
-            result.details.append(detail)
-            return m.group(0)
-
-        try:
-            new_body = file_path.read_text(encoding="utf-8").rstrip("\n")
-        except Exception as e:
-            detail["status"] = "error"
-            detail["error"] = str(e)
-            result.missing += 1
-            if verbose:
-                print(f"  [err]  {rel_path}: {e}")
-            result.details.append(detail)
-            return m.group(0)
-
-        new_header_suffix = _build_header_suffix(rest_header, new_body)
-
-        if old_body == new_body and new_header_suffix == rest_header:
-            result.unchanged += 1
-            result.details.append(detail)
-            return m.group(0)
-
-        detail["status"] = "updated"
-        if old_body != new_body:
-            detail["content_changed"] = True
-        if new_header_suffix != rest_header:
-            detail["hash_updated"] = True
-        result.updated += 1
-        if verbose:
-            label = "[dry] " if dry_run else "[sync]"
-            print(f"  {label} {rel_path}")
-
-        result.details.append(detail)
-        return prefix + rel_path + new_header_suffix + sep + new_body + suffix
+        return _process_block(
+            m, src=src, excludes=excludes, result=result,
+            hash_blocks=hash_blocks, dry_run=dry_run, verbose=verbose,
+        )
 
     new_text = _BLOCK_COMBINED_RE.sub(_replacer, text)
 
@@ -474,6 +466,112 @@ def sync_readme_recursive(
 
     _sync_one(readme, 0)
     return results
+
+
+_LANG_MAP = {
+    ".py": "python", ".js": "javascript", ".ts": "typescript",
+    ".sh": "bash", ".bash": "bash", ".zsh": "bash",
+    ".yml": "yaml", ".yaml": "yaml", ".toml": "toml",
+    ".json": "json", ".html": "html", ".css": "css",
+    ".sql": "sql", ".rs": "rust", ".go": "go",
+    ".rb": "ruby", ".java": "java", ".cpp": "cpp", ".c": "c",
+    ".md": "markdown", ".xml": "xml", ".ini": "ini",
+    ".conf": "ini", ".cfg": "ini", ".env": "bash",
+    ".dockerfile": "dockerfile", ".tf": "hcl",
+    ".container": "ini", ".network": "ini", ".service": "ini",
+}
+
+
+def _detect_lang(rel_path: str) -> str:
+    """Detect language identifier from file extension or name."""
+    p = Path(rel_path)
+    name = p.name.lower()
+    if name == "dockerfile":
+        return "dockerfile"
+    if name == "makefile":
+        return "makefile"
+    if name.startswith(".env"):
+        return "bash"
+    ext = p.suffix.lower()
+    return _LANG_MAP.get(ext, "")
+
+
+def _build_block(rel_path: str, content: str) -> str:
+    """Build a markpact:file code block string."""
+    lang = _detect_lang(rel_path)
+    return f"```{lang} markpact:file path={rel_path}\n{content}\n```"
+
+
+def _collect_untracked_blocks(
+    src: Path, paths: list[str], tracked: set[str], *, dry_run: bool, verbose: bool,
+) -> list[str]:
+    """Read source files and build new block strings. Returns list of block strings."""
+    blocks: list[str] = []
+    for rel_path in sorted(paths):
+        if rel_path in tracked:
+            if verbose:
+                print(f"  [skip] {rel_path} (already tracked)")
+            continue
+
+        body, err = _read_source_file(src, rel_path)
+        if err:
+            if verbose:
+                msg = "(not found)" if err == "not_found" else err
+                print(f"  [skip] {rel_path} {msg}")
+            continue
+
+        blocks.append(_build_block(rel_path, body))
+        if verbose:
+            print(f"  {'[dry] ' if dry_run else '[add] '} {rel_path}")
+    return blocks
+
+
+def _write_new_blocks(readme: Path, text: str, new_blocks: list[str], *, verbose: bool) -> None:
+    """Append new blocks to README with backup."""
+    create_backup(readme, verbose=verbose)
+    appended = "\n".join(f"\n{b}" for b in new_blocks)
+    readme.write_text(text.rstrip("\n") + "\n" + appended + "\n", encoding="utf-8")
+
+
+def add_untracked_blocks(
+    readme_path: str | Path,
+    source_dir: str | Path,
+    paths: list[str],
+    *,
+    dry_run: bool = False,
+    verbose: bool = False,
+    section_heading: str = "",
+) -> int:
+    """Append new markpact:file blocks for untracked files to README.
+
+    Args:
+        readme_path: Path to README.md
+        source_dir: Path to source directory
+        paths: List of relative paths to add
+        dry_run: If True, don't write changes
+        verbose: Print progress
+        section_heading: Optional markdown heading to insert before new blocks
+
+    Returns:
+        Number of blocks added
+    """
+    readme = Path(readme_path).resolve()
+    src = Path(source_dir).resolve()
+
+    if not readme.exists() or not src.exists():
+        return 0
+
+    text = readme.read_text(encoding="utf-8")
+    tracked = set(list_tracked_paths(text))
+    new_blocks = _collect_untracked_blocks(src, paths, tracked, dry_run=dry_run, verbose=verbose)
+
+    if not new_blocks:
+        return 0
+
+    if not dry_run:
+        _write_new_blocks(readme, text, new_blocks, verbose=verbose)
+
+    return len(new_blocks)
 
 
 def print_sync_report(result: SyncResult) -> None:

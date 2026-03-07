@@ -1,34 +1,48 @@
-# markpact | 26f 8145L | python:26
+# markpact | 40f 9981L | python:41
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
-M[26]:
-  demos/demo_live_markpact.py,765
-  src/markpact/__init__.py,44
+M[40]:
+  examples/demo_live_markpact.py,765
+  src/markpact/publish/helpers.py,178
+  src/markpact/publish/llm_config.py,82
+  src/markpact/publish/models.py,25
+  src/markpact/publish/version.py,49
+  src/markpact/__init__.py,50
   src/markpact/auto_fix.py,293
-  src/markpact/cli.py,588
+  src/markpact/cli/__init__.py,149
+  src/markpact/cli/config_cmd.py,59
+  src/markpact/cli/convert_cmd.py,99
+  src/markpact/cli/helpers.py,55
+  src/markpact/cli/pack_cmd.py,51
+  src/markpact/cli/publish_cmd.py,68
+  src/markpact/cli/run_cmd.py,78
+  src/markpact/cli/sync_cmd.py,227
   src/markpact/config.py,154
   src/markpact/converter.py,237
   src/markpact/docker_runner.py,306
   src/markpact/generator.py,258
   src/markpact/notebook_converter.py,559
   src/markpact/packer.py,344
-  src/markpact/parser.py,47
+  src/markpact/parser.py,114
   src/markpact/publisher.py,935
   src/markpact/runner.py,30
   src/markpact/sandbox.py,46
-  src/markpact/syncer.py,313
+  src/markpact/syncer.py,478
+  src/markpact/template.py,125
   src/markpact/tester.py,237
   tests/__init__.py,0
   tests/test_cli.py,118
   tests/test_converter.py,85
   tests/test_examples.py,18
   tests/test_generator.py,99
+  tests/test_include.py,141
   tests/test_notebook_converter.py,197
   tests/test_parser.py,81
   tests/test_runner.py,73
   tests/test_sandbox.py,34
-  tests/test_syncer.py,340
+  tests/test_syncer.py,538
+  tests/test_template.py,140
 D:
-  demos/demo_live_markpact.py:
+  examples/demo_live_markpact.py:
     i: argparse,hashlib,os,sys,time,dataclasses.{dataclass,field},markpact.{Block,parse_blocks},pathlib.Path
     e: _PL_MAP,BOLD,DIM,RED,GREEN,YELLOW,BLUE,CYAN
     StepRecord: 
@@ -41,6 +55,36 @@ D:
     wait(text)
     wait_done(ok_flag=True)
     info(text)
+  src/markpact/publish/helpers.py:
+    i: os,re,sys,models.PublishConfig,pathlib.Path
+    e: infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme
+    _slugify(name:str)->str
+    _first_heading(markdown:str)->str
+    _first_paragraph(markdown:str)->str
+    _format_subprocess_failure(result)->str
+    _check_file_type(path:str)->dict[str, bool]
+    _analyze_blocks_for_types(blocks:list[object])->dict[str, bool]
+    _is_web_service(run_command:Any)->bool
+    _detect_registry(flags:dict[str;bool];run_command:Any)->str
+  src/markpact/publish/llm_config.py:
+    i: os,re,models.PublishConfig,typing.Optional
+    e: generate_publish_config_with_llm
+    _setup_llm_for_publish()->tuple
+    _set_provider_api_key_for_publish(cfg)->None
+    _call_llm_for_publish_config(litellm;cfg;markdown:str)->Optional[str]
+    _extract_publish_block_from_response(content:str)->tuple[Optional[str], Optional[str]]
+    generate_publish_config_with_llm(markdown:str;verbose:bool=False)->Optional[PublishConfig]
+  src/markpact/publish/models.py:
+    i: dataclasses.dataclass
+    e: PublishConfig,PublishResult
+    PublishConfig: __post_init__(0)  # Configuration for publishing
+    PublishResult:   # Result of a publish operation
+  src/markpact/publish/version.py:
+    i: re,pathlib.Path,typing.Optional
+    e: bump_version,extract_version_from_readme,update_version_in_readme
+    bump_version(version:str;bump_type:str='patch')->str
+    extract_version_from_readme(readme_path:Path)->Optional[str]
+    update_version_in_readme(readme_path:Path;new_version:str)->bool
   src/markpact/auto_fix.py:
     i: os,re,subprocess,pathlib.Path,sandbox.{Sandbox,find_free_port},typing.Optional
     e: detect_error_type,fix_port_in_readme,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,run_with_auto_fix_llm
@@ -52,17 +96,60 @@ D:
     run_with_auto_fix(cmd:str;sandbox:Sandbox;readme_path:Optional[Path]=None;verbose:bool=True;max_retries:int=3)->int
     add_missing_dependency(readme_path:Path;module_name:str)->bool
     extract_module_name(error_output:str)->Optional[str]
-  src/markpact/cli.py:
-    i: argparse,re,sys,__version__,converter.{convert_markdown_to_markpact,print_conversion_report},packer.{pack_directory,print_pack_report},parser.parse_blocks,pathlib.Path
-    e: handle_pack_cli,handle_sync_cli,handle_config_cli,main
-    handle_pack_cli(argv:list[str])->int
-    handle_sync_cli(argv:list[str])->int
+  src/markpact/cli/__init__.py:
+    i: argparse,sys,__version__,config_cmd.handle_config_cli,pack_cmd.handle_pack_cli,parser.parse_blocks,pathlib.Path,sandbox.Sandbox,sync_cmd.handle_sync_cli
+    e: _SUBCOMMANDS,main
+    main(argv:Any=None)->int
+    _dispatch_subcommand(cmd:str;argv:list[str])->int
+    _parse_main_args(args_list:list[str])->argparse.Namespace
+    _handle_generation_phase(args;verbose:bool)->Path | int
+    _process_readme(args;readme:Path;verbose:bool)->int
+  src/markpact/cli/config_cmd.py:
+    i: argparse,sys
+    e: handle_config_cli
     handle_config_cli(argv:list[str])->int
+  src/markpact/cli/convert_cmd.py:
+    i: re,sys,converter.{convert_markdown_to_markpact,print_conversion_report},pathlib.Path
     _handle_list_examples(verbose:bool)->int
     _handle_list_notebook_formats(verbose:bool)->int
     _handle_from_notebook(args;verbose:bool)->tuple[int, Path | None]
     _handle_llm_generation(args;verbose:bool)->tuple[int, Path | None]
     _handle_markdown_conversion(args;original_text:str;verbose:bool)->tuple[str, bool]
+  src/markpact/cli/helpers.py:
+    i: sys,sandbox.Sandbox
+    _resolve_file_body(block;verbose:bool)->str
+    _parse_blocks_to_state(blocks;sandbox:Sandbox;args;verbose:bool)->dict
+  src/markpact/cli/pack_cmd.py:
+    i: argparse,sys,packer.{pack_directory,print_pack_report},pathlib.Path
+    e: handle_pack_cli
+    handle_pack_cli(argv:list[str])->int
+  src/markpact/cli/publish_cmd.py:
+    i: sys,pathlib.Path,sandbox.Sandbox
+    _resolve_publish_config(args;text_to_parse;readme;blocks;run_command;verbose)
+    _determine_bump_type(args)
+    _print_publish_dry_run(config;bump_type)
+    _execute_publish_result(result;readme;bump_type;verbose)
+    _handle_publish_mode(args;config;sandbox:Sandbox;readme:Path;text_to_parse:str;blocks;...+1)->int
+  src/markpact/cli/run_cmd.py:
+    i: sys,pathlib.Path,runner.{install_deps,run_cmd},sandbox.Sandbox
+    _handle_docker_mode(args;sandbox:Sandbox;deps:list[str];run_command:Any;verbose:bool)->int
+    _print_dry_run_tests(test_blocks:list)->None
+    _split_test_blocks(test_blocks:list)->tuple[list, list]
+    _run_http_tests(run_command:Any;http_tests:list;sandbox:Sandbox;port:int;verbose:bool;test_only:bool)->int | None
+    _run_shell_tests(shell_tests:list;sandbox:Sandbox;verbose:bool)->None
+    _handle_test_mode(args;sandbox:Sandbox;run_command:Any;test_blocks:list;deps:list[str];verbose:bool)->int
+    _handle_normal_run(args;sandbox:Sandbox;run_command:Any;deps:list[str];readme:Path;verbose:bool)->int
+  src/markpact/cli/sync_cmd.py:
+    i: argparse,sys,pathlib.Path,syncer
+    e: handle_sync_cli
+    _build_sync_parser()->argparse.ArgumentParser
+    _resolve_paths(args)->tuple[Path, Path] | None
+    _handle_backups_mode(readme_path:Path)->int
+    _handle_rollback_mode(args;readme_path:Path;verbose:bool)->int
+    _handle_list_mode(text:str;source_dir:Path)->int
+    _handle_missing_mode(text:str;source_dir:Path)->int
+    _handle_add_mode(args;readme_path:Path;source_dir:Path;verbose:bool)->int
+    _execute_recursive_sync(args;readme_path:Path;source_dir:Path;exclude_sync:set;dry_run:bool;verbose:bool)->int
   src/markpact/config.py:
     i: os,pathlib.Path,typing.Optional
     e: DEFAULT_ENV_PATH,DEFAULTS,PROVIDER_PRESETS,get_env_path,ensure_config_dir,load_env,save_env,init_env
@@ -136,10 +223,11 @@ D:
     _collect_files(src:Path;output_path:Path;exclude_patterns:set[str];include_patterns:Optional[list[str]];verbose:bool)->list[Path]
     _generate_readme_content(files_to_pack:list[Path];src:Path;project_title:str;desc:str;run_command:Optional[str];dry_run:bool)->tuple[list[str], list[dict]]
   src/markpact/parser.py:
-    i: re,dataclasses.dataclass,typing.Optional
-    e: CODEBLOCK_NEW_RE,CODEBLOCK_OLD_RE,Block,parse_blocks
+    i: re,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
+    e: CODEBLOCK_NEW_RE,CODEBLOCK_OLD_RE,Block,parse_blocks,_INCLUDE_COMMENT_RE,parse_blocks_recursive
     Block: get_path(0),get_meta_value(1)
     parse_blocks(text:str)->list[Block]
+    parse_blocks_recursive(text:str)->list[Block]
   src/markpact/publisher.py:
     i: json,os,re,subprocess,sys,dataclasses.dataclass,pathlib.Path,sandbox.Sandbox,typing.Optional
     e: PublishConfig,PublishResult,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme,generate_publish_config_with_llm,bump_version,extract_version_from_readme
@@ -165,7 +253,7 @@ D:
     Sandbox: __init__(1),venv_bin(0),venv_pip(0),venv_python(0),has_venv(0)  # Manages sandbox directory for markpac...
     find_free_port(start_port:int=8000;max_attempts:int=100)->int
   src/markpact/syncer.py:
-    i: difflib,fnmatch,re,shutil,datetime,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
+    i: difflib,fnmatch,hashlib,re,shutil,datetime,dataclasses.{dataclass,field},pathlib.Path,typing.Optional
     e: BACKUP_DIR_NAME,BACKUP_PREFIX,MAX_BACKUPS,create_backup,list_backups,restore_backup,_BLOCK_NEW_RE,_BLOCK_OLD_RE
     SyncResult: summary(0)  # Result of a sync operation.
     _backup_dir(readme_path:Path)->Path
@@ -176,6 +264,14 @@ D:
     list_tracked_paths(text:str)->list[str]
     find_untracked_files(text:str;source_dir:Path)->list[str]
     diff_block(rel_path:str;old_body:str;new_body:str)->str
+  src/markpact/template.py:
+    i: os,re,sys,pathlib.Path,typing.Optional
+    e: _ASK_RE,_ENV_RE,_VAR_RE,load_secrets,resolve_template,has_template_placeholders
+    _find_secrets_file(project_dir:Any=None)->Path | None
+    load_secrets(project_dir:Any=None)->dict[str, str]
+    _prompt_value(label:str;default:Any=None)->str
+    resolve_template(body:str)->tuple[str, list[str]]
+    has_template_placeholders(body:str)->bool
   src/markpact/tester.py:
     i: json,os,re,subprocess,sys,time,dataclasses.dataclass,pathlib.Path,typing.Optional,urllib.request.urlopen
     e: TestResult,TestSuite,wait_for_service,http_request,run_http_test,run_tests_from_block,run_service_with_tests,run_shell_tests
@@ -224,6 +320,11 @@ D:
     test_system_prompt_contains_format()
     test_example_prompts_dict()
     test_generate_contract_integration()
+  tests/test_include.py:
+    i: pytest,markpact.parser.{Block,parse_blocks,parse_blocks_recursive},pathlib.Path
+    e: TestParseBlocksRecursive,TestBlockSourceFile
+    TestParseBlocksRecursive: test_no_includes(0),test_single_include(1),test_nested_includes(1),test_circular_include_detected(1),test_missing_include_skipped(1)  # Test recursive include resolution.
+    TestBlockSourceFile: test_default_none(0),test_explicit_source(0)  # Test that source_file is set on blocks.
   tests/test_notebook_converter.py:
     i: json,pytest,markpact.notebook_converter,pathlib.Path
     e: test_detect_format_jupyter,test_detect_format_rmarkdown,test_detect_format_quarto,test_detect_format_unknown,test_get_supported_formats,test_parse_jupyter,test_extract_dependencies,test_suggest_run_command_fastapi
@@ -275,3 +376,10 @@ D:
     test_find_untracked_excludes_dirs(tmp_path)
     test_find_untracked_nonexistent_dir()
     test_sync_updates_old_format(tmp_path)
+  tests/test_template.py:
+    i: os,pytest,markpact.template.{_find_secrets_file,has_template_placeholders,load_secrets,resolve_template},pathlib.Path,unittest.mock.patch
+    e: TestHasTemplatePlaceholders,TestResolveTemplate,TestLoadSecrets,TestFindSecretsFile
+    TestHasTemplatePlaceholders: test_ask_placeholder(0),test_ask_with_default(0),test_env_placeholder(0),test_env_with_default(0),test_no_placeholders(0)
+    TestResolveTemplate: test_ask_from_secrets(0),test_ask_from_env(0),test_ask_with_default_no_input(0),test_ask_unresolved_warning(0),test_env_resolved(0)
+    TestLoadSecrets: test_load_from_project(1),test_skip_comments_and_empty(1),test_strip_quotes(1),test_no_secrets_file(1)
+    TestFindSecretsFile: test_project_local(1),test_none_when_missing(1)

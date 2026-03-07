@@ -146,6 +146,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved `clean` target removes all build artifacts
 - Default LLM model: `ollama/qwen2.5-coder:14b`
 
+## [0.1.30] - 2026-03-07
+
+### Docs
+- Update examples/DEMOS.md
+- Update examples/README.md
+- Update examples/sync-workflow/README.md
+- Update project/README.md
+- Update project/context.md
+
+### Test
+- Update tests/test_auto_fix.py
+- Update tests/test_cli_subcommands.py
+- Update tests/test_publish.py
+- Update tests/test_syncer.py
+
+### Other
+- Update examples/demo_live_markpact.py
+- Update examples/sync-workflow/src/app.py
+- Update examples/sync-workflow/src/config.yaml
+- Update examples/sync-workflow/src/run.sh
+- Update project/analysis.toon
+- Update project/calls.mmd
+- Update project/calls.png
+- Update project/compact_flow.mmd
+- Update project/compact_flow.png
+- Update project/dashboard.html
+- ... and 7 more files
+
 ## [0.1.29] - 2026-03-07
 
 ### Test

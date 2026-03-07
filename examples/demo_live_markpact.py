@@ -697,8 +697,118 @@ def _print_summary(session: LiveSession, blocks: list, readme_path: Path):
 
 
 
-def run_live(prompt_key: str, prompt: str, model: str = None):
-    """Main pipeline: prompt -> generate -> parse -> validate -> PDF."""
+# ── PDF page helpers (one per pipeline step) ─────────────────────────────────
+
+def _pdf_generate(pdf, session, config, readme, prompt_key, prompt, dur, readme_path):
+    """PDF page for Step 1: contract generation."""
+    readme_lines = readme.split("\n")
+    right = [
+        f"Prompt: {prompt_key}",
+        f"  {prompt[:60]}...",
+        "",
+        f"Model: {config.model}",
+        f"Czas: {dur:.0f}ms",
+        f"Rozmiar: {len(readme)} znakow",
+        f"Linie: {len(readme_lines)}",
+    ]
+    gen_checks = [
+        ("LLM odpowiedzial", session.steps[-1].status, f"{dur:.0f}ms"),
+        ("README.md zapisany", "pass", str(readme_path)),
+    ]
+    pdf.add_step_page("1. Generowanie kontraktu",
+                     f"LLM: {config.model}",
+                     readme_lines[:50], right, gen_checks)
+
+
+def _pdf_parse(pdf, readme, blocks):
+    """PDF page for Step 2: block parsing."""
+    right_lines = [f"Znaleziono {len(blocks)} blokow:", ""]
+    parse_checks = []
+    for b in blocks:
+        k = b.kind
+        if k == "file":
+            k = f"file={b.get_meta_value('path') or b.get_path() or '?'}"
+        right_lines.append(f"  markpact:{k}  ({len(b.body)} chars)")
+        parse_checks.append((f"markpact:{k}", "pass", f"lang={b.lang}, {len(b.body)} chars"))
+    pdf.add_step_page("2. Parsowanie blokow",
+                     f"parse_blocks() -> {len(blocks)} blokow",
+                     readme.split("\n")[:50], right_lines, parse_checks, "all")
+
+
+def _pdf_validate(pdf, readme, blocks, all_required_ok):
+    """PDF page for Step 3: block validation."""
+    val_checks = []
+    for rk in ["deps", "file", "run"]:
+        if rk in [b.kind for b in blocks]:
+            val_checks.append((f"markpact:{rk} obecny", "pass", "wymagany"))
+        else:
+            val_checks.append((f"markpact:{rk} obecny", "fail" if not all_required_ok else "skip", "wymagany, brak!"))
+    for ok_kind in ["test", "target"]:
+        if ok_kind in [b.kind for b in blocks]:
+            val_checks.append((f"markpact:{ok_kind} obecny", "pass", "opcjonalny"))
+    right_lines = [
+        "Wymagane bloki:",
+        "  markpact:deps  -- zaleznosci",
+        "  markpact:file  -- kod zrodlowy",
+        "  markpact:run   -- komenda uruchomienia",
+        "",
+        "Opcjonalne:",
+        "  markpact:test  -- testy HTTP",
+        "  markpact:target -- platforma docelowa",
+        "",
+        f"Wynik: {'PASS' if all_required_ok else 'FAIL'}",
+    ]
+    pdf.add_step_page("3. Walidacja blokow",
+                     "Sprawdzenie wymaganych blokow markpact:*",
+                     readme.split("\n")[:50], right_lines, val_checks)
+
+
+def _pdf_analyze(pdf, readme, blocks, analysis_checks):
+    """PDF page for Step 4: content analysis."""
+    right_lines = ["Analiza blokow:"]
+    deps_blocks = [b for b in blocks if b.kind == "deps"]
+    if deps_blocks:
+        deps = deps_blocks[0].body.strip().split("\n")
+        deps = [d.strip() for d in deps if d.strip()]
+        right_lines += [f"  Deps: {len(deps)} pakietow", f"    {', '.join(deps[:6])}"]
+    for fb in [b for b in blocks if b.kind == "file"]:
+        fp = fb.get_meta_value("path") or fb.get_path() or "?"
+        right_lines.append(f"  File: {fp} ({fb.body.count(chr(10))+1} linii)")
+    run_blocks = [b for b in blocks if b.kind == "run"]
+    if run_blocks:
+        right_lines.append(f"  Run: {run_blocks[0].body.strip().split(chr(10))[0][:50]}")
+    test_blocks = [b for b in blocks if b.kind == "test"]
+    if test_blocks:
+        test_lines = [l for l in test_blocks[0].body.strip().split("\n") if l.strip() and not l.strip().startswith("#")]
+        right_lines.append(f"  Test: {len(test_lines)} assercji HTTP")
+    pdf.add_step_page("4. Analiza zawartosci",
+                     "Szczegolowa analiza kazdego bloku",
+                     readme.split("\n")[:50], right_lines, analysis_checks)
+
+
+def _pdf_sha(pdf, readme, blocks, sha_checks):
+    """PDF page for Step 5: SHA-256 integrity."""
+    right_lines = [
+        "Integralnosc danych:",
+        f"  README.md: {hashlib.sha256(readme.encode()).hexdigest()[:32]}",
+        "",
+    ]
+    for b in blocks:
+        k = b.kind
+        if k == "file":
+            k = f"file={b.get_meta_value('path') or b.get_path() or '?'}"
+        bsha = hashlib.sha256(b.body.encode()).hexdigest()[:16]
+        right_lines.append(f"  markpact:{k}: {bsha}")
+    right_lines += ["", "Kazdy blok ma unikatowy hash.", "Zmiana = nowy hash = wykryta."]
+    pdf.add_step_page("5. Integralnosc SHA-256",
+                     "Hash kazdego bloku markpact:*",
+                     readme.split("\n")[:50], right_lines, sha_checks)
+
+
+# ── Pipeline orchestrator ─────────────────────────────────────────────────────
+
+def _setup_session(prompt_key, prompt, model):
+    """Initialize session, config, and PDF."""
     session = LiveSession()
     session.prompt = prompt
     session.prompt_key = prompt_key
@@ -711,164 +821,19 @@ def run_live(prompt_key: str, prompt: str, model: str = None):
     session.model = config.model
 
     pdf = LivePDF() if HAS_FPDF else None
+    return session, config, pdf
 
-    # Step 0: Title
-    hdr("markpact -- Live Contract Generation")
-    step(f"{CYAN}>>>{NC}", f"Prompt:  {BOLD}{prompt_key}{NC}")
-    step(f"{CYAN}>>>{NC}", f"Model:   {BOLD}{config.model}{NC}")
-    step(f"{CYAN}>>>{NC}", f"API:     {config.api_base or 'default'}")
-    print()
 
-    if pdf:
-        pdf.add_title_page(session)
-
-    # Step 1: Generate contract
-    readme, dur = _step_generate_contract(session, config, pdf, prompt)
-    readme_path = session.output_dir / "README.md"
-    readme_path.write_text(readme, encoding="utf-8")
-    ok(f"README.md zapisany", str(readme_path))
-    print()
-
-    # PDF step page
-    if pdf:
-        readme_lines = readme.split("\n")
-        right = [
-            f"Prompt: {prompt_key}",
-            f"  {prompt[:60]}...",
-            "",
-            f"Model: {config.model}",
-            f"Czas: {dur:.0f}ms",
-            f"Rozmiar: {len(readme)} znakow",
-            f"Linie: {len(readme_lines)}",
-        ]
-        gen_checks = [
-            ("LLM odpowiedzial", session.steps[-1].status, f"{dur:.0f}ms"),
-            ("README.md zapisany", "pass", str(readme_path)),
-        ]
-        pdf.add_step_page("1. Generowanie kontraktu",
-                         f"LLM: {config.model}",
-                         readme_lines[:50], right, gen_checks)
-
-    # Step 2: Parse blocks
-    blocks, dur_parse, _ = _step_parse_blocks(session, readme)
-
-    # PDF
-    if pdf:
-        right_lines = [
-            f"Znaleziono {len(blocks)} blokow:",
-            "",
-        ]
-        parse_checks = []
-        for b in blocks:
-            k = b.kind
-            if k == "file":
-                k = f"file={b.get_meta_value('path') or b.get_path() or '?'}"
-            right_lines.append(f"  markpact:{k}  ({len(b.body)} chars)")
-            parse_checks.append((f"markpact:{k}", "pass", f"lang={b.lang}, {len(b.body)} chars"))
-        pdf.add_step_page("2. Parsowanie blokow",
-                         f"parse_blocks() -> {len(blocks)} blokow",
-                         readme.split("\n")[:50], right_lines, parse_checks, "all")
-
-    # Step 3: Validate blocks
-    all_required_ok = _step_validate_blocks(session, blocks)
-
-    # PDF
-    if pdf:
-        val_checks = []
-        for rk in ["deps", "file", "run"]:
-            if rk in [b.kind for b in blocks]:
-                val_checks.append((f"markpact:{rk} obecny", "pass", "wymagany"))
-            else:
-                val_checks.append((f"markpact:{rk} obecny", "fail" if not all_required_ok else "skip", "wymagany, brak!"))
-        for ok_kind in ["test", "target"]:
-            if ok_kind in [b.kind for b in blocks]:
-                val_checks.append((f"markpact:{ok_kind} obecny", "pass", "opcjonalny"))
-        right_lines = [
-            "Wymagane bloki:",
-            "  markpact:deps  -- zaleznosci",
-            "  markpact:file  -- kod zrodlowy",
-            "  markpact:run   -- komenda uruchomienia",
-            "",
-            "Opcjonalne:",
-            "  markpact:test  -- testy HTTP",
-            "  markpact:target -- platforma docelowa",
-            "",
-            f"Wynik: {'PASS' if all_required_ok else 'FAIL'}",
-        ]
-        pdf.add_step_page("3. Walidacja blokow",
-                         "Sprawdzenie wymaganych blokow markpact:*",
-                         readme.split("\n")[:50], right_lines, val_checks)
-
-    # Step 4: Analyze blocks
-    analysis_checks = _step_analyze_blocks(session, blocks)
-
-    # PDF
-    if pdf:
-        right_lines = ["Analiza blokow:"]
-        deps_blocks = [b for b in blocks if b.kind == "deps"]
-        if deps_blocks:
-            deps = deps_blocks[0].body.strip().split("\n")
-            deps = [d.strip() for d in deps if d.strip()]
-            right_lines += [f"  Deps: {len(deps)} pakietow", f"    {', '.join(deps[:6])}"]
-        for fb in [b for b in blocks if b.kind == "file"]:
-            fp = fb.get_meta_value("path") or fb.get_path() or "?"
-            right_lines.append(f"  File: {fp} ({fb.body.count(chr(10))+1} linii)")
-        run_blocks = [b for b in blocks if b.kind == "run"]
-        if run_blocks:
-            right_lines.append(f"  Run: {run_blocks[0].body.strip().split(chr(10))[0][:50]}")
-        test_blocks = [b for b in blocks if b.kind == "test"]
-        if test_blocks:
-            test_lines = [l for l in test_blocks[0].body.strip().split("\n") if l.strip() and not l.strip().startswith("#")]
-            right_lines.append(f"  Test: {len(test_lines)} assercji HTTP")
-        pdf.add_step_page("4. Analiza zawartosci",
-                         "Szczegolowa analiza kazdego bloku",
-                         readme.split("\n")[:50], right_lines, analysis_checks)
-
-    # Step 5: SHA integrity
-    sha_checks = _step_sha_integrity(session, readme, blocks)
-
-    # PDF
-    if pdf:
-        right_lines = [
-            "Integralnosc danych:",
-            f"  README.md: {hashlib.sha256(readme.encode()).hexdigest()[:32]}",
-            "",
-        ]
-        for b in blocks:
-            k = b.kind
-            if k == "file":
-                k = f"file={b.get_meta_value('path') or b.get_path() or '?'}"
-            bsha = hashlib.sha256(b.body.encode()).hexdigest()[:16]
-            right_lines.append(f"  markpact:{k}: {bsha}")
-        right_lines += ["", "Kazdy blok ma unikatowy hash.", "Zmiana = nowy hash = wykryta."]
-        pdf.add_step_page("5. Integralnosc SHA-256",
-                         "Hash kazdego bloku markpact:*",
-                         readme.split("\n")[:50], right_lines, sha_checks)
-
-    # Summary
-    hdr("PODSUMOWANIE")
-
-    elapsed = session.elapsed()
-    passed = sum(1 for s in session.steps if s.status == "pass")
-    failed = sum(1 for s in session.steps if s.status == "fail")
-    total_steps = len(session.steps)
-
-    print(f"  {BOLD}Prompt:{NC}      {prompt_key}")
-    print(f"  {BOLD}Model:{NC}       {config.model}")
-    print(f"  {BOLD}Czas:{NC}        {elapsed:.1f}s")
-    print(f"  {BOLD}Bloki:{NC}       {len(blocks)} markpact:*")
-    print(f"  {BOLD}Walidacja:{NC}   {GREEN}{passed}{NC} passed / {RED}{failed}{NC} failed / {total_steps} total")
-    print()
+def _finalize(session, pdf, blocks, readme_path, prompt_key):
+    """Print summary, save PDF, print closing message."""
+    _print_summary(session, blocks, readme_path)
 
     if pdf:
         pdf.add_summary_page(session)
-
-        # Finalize page numbers
         total_pages = pdf.page_no()
         for i in range(1, total_pages + 1):
             pdf.page = i
             pdf._page_num(total_pages)
-
         pdf_path = session.output_dir / f"markpact_live_{prompt_key.replace('-', '_')}.pdf"
         pdf.output(str(pdf_path))
         ok(f"{BOLD}PDF zapisany: {pdf_path}{NC}", f"{pdf_path.stat().st_size // 1024} KB, {total_pages} stron")
@@ -882,6 +847,56 @@ def run_live(prompt_key: str, prompt: str, model: str = None):
     print(f"  {BOLD}{GREEN}  Kontrakt gotowy! {len(blocks)} blokow z 1 promptu.{NC}")
     print(f"  {BOLD}{GREEN}{'=' * 60}{NC}")
     print()
+
+
+def run_live(prompt_key: str, prompt: str, model: str = None):
+    """Main pipeline: prompt -> generate -> parse -> validate -> PDF.
+
+    Refactored from CC=51 monolith into pipeline + extracted PDF helpers.
+    CC now ~8.
+    """
+    session, config, pdf = _setup_session(prompt_key, prompt, model)
+
+    # Title
+    hdr("markpact -- Live Contract Generation")
+    step(f"{CYAN}>>>{NC}", f"Prompt:  {BOLD}{prompt_key}{NC}")
+    step(f"{CYAN}>>>{NC}", f"Model:   {BOLD}{config.model}{NC}")
+    step(f"{CYAN}>>>{NC}", f"API:     {config.api_base or 'default'}")
+    print()
+    if pdf:
+        pdf.add_title_page(session)
+
+    # Step 1: Generate contract
+    readme, dur = _step_generate_contract(session, config, pdf, prompt)
+    readme_path = session.output_dir / "README.md"
+    readme_path.write_text(readme, encoding="utf-8")
+    ok(f"README.md zapisany", str(readme_path))
+    print()
+    if pdf:
+        _pdf_generate(pdf, session, config, readme, prompt_key, prompt, dur, readme_path)
+
+    # Step 2: Parse blocks
+    blocks, dur_parse, _ = _step_parse_blocks(session, readme)
+    if pdf:
+        _pdf_parse(pdf, readme, blocks)
+
+    # Step 3: Validate blocks
+    all_required_ok = _step_validate_blocks(session, blocks)
+    if pdf:
+        _pdf_validate(pdf, readme, blocks, all_required_ok)
+
+    # Step 4: Analyze blocks
+    analysis_checks = _step_analyze_blocks(session, blocks)
+    if pdf:
+        _pdf_analyze(pdf, readme, blocks, analysis_checks)
+
+    # Step 5: SHA integrity
+    sha_checks = _step_sha_integrity(session, readme, blocks)
+    if pdf:
+        _pdf_sha(pdf, readme, blocks, sha_checks)
+
+    # Finalize
+    _finalize(session, pdf, blocks, readme_path, prompt_key)
 
 
 def _fallback_readme(prompt):

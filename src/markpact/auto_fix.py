@@ -1,4 +1,9 @@
-"""Auto-fix runtime errors in markpact projects"""
+"""Auto-fix runtime errors in markpact projects.
+
+When fixop is installed (pip install markpact[ops]), error classification
+and port detection are delegated to fixop for richer diagnostics.
+Otherwise, a local fallback is used.
+"""
 
 import os
 import re
@@ -8,9 +13,43 @@ from typing import Optional
 
 from .sandbox import Sandbox, find_free_port
 
+# Try to use fixop for richer error classification and port handling
+try:
+    from fixop.classify import classify_error as _fixop_classify
+    from fixop.ports import is_port_free, find_free_port_near
+    _HAS_FIXOP = True
+except ImportError:
+    _HAS_FIXOP = False
 
-def detect_error_type(error_output: str) -> Optional[str]:
-    """Detect the type of error from output."""
+    def is_port_free(port: int, host: str = "0.0.0.0") -> bool:
+        """Fallback: check if port is free."""
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
+                s.bind((host, port))
+                return True
+            except OSError:
+                return False
+
+    def find_free_port_near(start: int, span: int = 50) -> int | None:
+        """Fallback: find free port near start."""
+        for p in range(start, start + span):
+            if is_port_free(p):
+                return p
+        return None
+
+
+def detect_error_type(error_output: str, exit_code: int = 1, cmd: str = "") -> Optional[str]:
+    """Detect the type of error from output.
+
+    Delegates to fixop.classify_error when available for richer diagnostics.
+    """
+    if _HAS_FIXOP:
+        issue = _fixop_classify(exit_code, error_output, cmd)
+        cat = issue.category.value if hasattr(issue.category, 'value') else str(issue.category)
+        _MAP = {"port": "port_in_use", "dependency": "missing_module", "syntax": "syntax_error", "import": "import_error"}
+        return _MAP.get(cat)
+
     if "address already in use" in error_output.lower():
         return "port_in_use"
     if "modulenotfounderror" in error_output.lower():

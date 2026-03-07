@@ -34,6 +34,7 @@ markpact examples/<nazwa>/README.md
 | [pypi-publish](pypi-publish/) | Publish | Publikacja paczki Python do PyPI | `--publish`, `--bump` |
 | [npm-publish](npm-publish/) | Publish | Publikacja paczki Node.js do npm | `--publish`, `--registry` |
 | [docker-publish](docker-publish/) | Publish | Budowanie i publikacja obrazu Docker | `--publish`, Docker |
+| [sync-workflow](sync-workflow/) | Sync | Sync source files ↔ README blocks | `sync`, `--add`, `--check` |
 
 ## Struktura przykładu
 

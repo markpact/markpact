@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "markpact"
-version = "0.1.29"
+version = "0.1.30"
 description = "Executable Markdown Runtime – run and manage entire projects directly from a single README.md file using specialized markpact code blocks and isolated Docker sandboxes."
 readme = "README.md"
 license = "Apache-2.0"
@@ -22,6 +22,9 @@ dependencies = []
 [project.optional-dependencies]
 llm = [
     "litellm>=1.0",
+]
+ops = [
+    "fixop>=0.1",
 ]
 dev = [
     "pytest>=7.0",
