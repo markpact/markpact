@@ -3,7 +3,7 @@ project:
   name: markpact
   repo: /home/tom/github/wronai/markpact
   language: python
-  analyzed_at: '2026-03-07T19:30:50Z'
+  analyzed_at: '2026-03-07T19:37:15Z'
   tool: code2llm
   stats:
     files: 30
@@ -38,12 +38,12 @@ health:
     limit: 15
     severity: warning
   - type: cc_exceeded
-    target: _parse_blocks_to_state
+    target: _process_block
     value: 15
     limit: 15
     severity: warning
   - type: cc_exceeded
-    target: _process_block
+    target: _parse_blocks_to_state
     value: 15
     limit: 15
     severity: warning
@@ -73,12 +73,12 @@ health:
     limit: 10
     severity: warning
   - type: high_fan_out
-    target: parse_blocks_recursive
+    target: _collect_files
     value: 13
     limit: 10
     severity: warning
   - type: high_fan_out
-    target: _collect_files
+    target: parse_blocks_recursive
     value: 13
     limit: 10
     severity: warning
@@ -696,15 +696,15 @@ hotspots:
   fan_out: 14
   note: "Parse publish block content into config.\n\nArgs:\n    block_body: The body\
     \ of the "
+- name: _collect_files
+  fan_out: 13
+  note: Collect files to pack, applying exclude/include filters.
 - name: parse_blocks_recursive
   fan_out: 13
   note: 'Parse blocks with recursive include resolution.
 
 
     Resolves ``<!-- markpact:includ'
-- name: _collect_files
-  fan_out: 13
-  note: Collect files to pack, applying exclude/include filters.
 - name: handle_sync_cli
   fan_out: 13
   note: 'Handle sync subcommand — thin orchestrator dispatching to steps.
@@ -723,14 +723,14 @@ refactoring:
     impact: medium
     effort: low
     module: auto_fix.py
-  - action: Split _parse_blocks_to_state (CC=15 → target CC<10)
-    impact: medium
-    effort: low
-    module: helpers.py
   - action: Split _process_block (CC=15 → target CC<10)
     impact: medium
     effort: low
     module: syncer.py
+  - action: Split _parse_blocks_to_state (CC=15 → target CC<10)
+    impact: medium
+    effort: low
+    module: helpers.py
   - action: Split _parse_pypirc_section (CC=15 → target CC<10)
     impact: medium
     effort: low

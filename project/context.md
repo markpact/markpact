@@ -182,13 +182,13 @@ Args:
 > Remove sandbox directory
 - **Calls**: self.path.exists, shutil.rmtree
 
-### src.markpact.parser.Block.get_meta_value
-> Extract a key=value pair from the meta string.
-- **Calls**: re.search, re.escape
-
 ### src.markpact.packer.PackResult.summary
 > Return human-readable summary.
 - **Calls**: None.join, lines.append
+
+### src.markpact.parser.Block.get_meta_value
+> Extract a key=value pair from the meta string.
+- **Calls**: re.search, re.escape
 
 ### src.markpact.syncer.SyncResult.summary
 > Return human-readable summary.
@@ -343,6 +343,23 @@ run_with_auto_fix [src.markpact.auto_fix]
 
 Key functions that process and transform data:
 
+### src.markpact.parser.parse_blocks
+> Parse all markpact:* codeblocks from markdown text.
+
+Supports both formats:
+- New: ```python markpac
+- **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
+
+### src.markpact.parser.parse_blocks_recursive
+> Parse blocks with recursive include resolution.
+
+Resolves ``<!-- markpact:include path=sub/README.md
+- **Output to**: src.markpact.parser.parse_blocks, _INCLUDE_COMMENT_RE.finditer, set, Path.cwd, None.resolve
+
+### src.markpact.auto_fix._run_subprocess
+> Run subprocess with proper error handling.
+- **Output to**: subprocess.run
+
 ### src.markpact.notebook_converter.detect_format
 > Detect notebook format from file extension.
 - **Output to**: path.suffix.lower, format_map.get
@@ -405,36 +422,19 @@ Args:
 ### src.markpact.notebook_converter.get_supported_formats
 > Get dictionary of supported notebook formats.
 
-### src.markpact.parser.parse_blocks
-> Parse all markpact:* codeblocks from markdown text.
+### src.markpact.syncer._process_block
+> Process a single markpact:file block match. CC≤8.
+- **Output to**: src.markpact.syncer._read_source_file, src.markpact.syncer._build_header_suffix, result.details.append, m.group, m.group
 
-Supports both formats:
-- New: ```python markpac
-- **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
-
-### src.markpact.parser.parse_blocks_recursive
-> Parse blocks with recursive include resolution.
-
-Resolves ``<!-- markpact:include path=sub/README.md
-- **Output to**: src.markpact.parser.parse_blocks, _INCLUDE_COMMENT_RE.finditer, set, Path.cwd, None.resolve
-
-### src.markpact.auto_fix._run_subprocess
-> Run subprocess with proper error handling.
-- **Output to**: subprocess.run
+### src.markpact.cli.helpers._parse_blocks_to_state
+> Parse blocks and extract state. Returns state dict with error key if failed.
+- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
 
 ### src.markpact.converter.convert_markdown_to_markpact
 > Convert regular Markdown to markpact format.
 
 Analyzes code blocks and converts them to markpact:* f
 - **Output to**: ConversionResult, re.search, re.compile, pattern.sub, result.changes.append
-
-### src.markpact.cli.helpers._parse_blocks_to_state
-> Parse blocks and extract state. Returns state dict with error key if failed.
-- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
-
-### src.markpact.syncer._process_block
-> Process a single markpact:file block match. CC≤8.
-- **Output to**: src.markpact.syncer._read_source_file, src.markpact.syncer._build_header_suffix, result.details.append, m.group, m.group
 
 ### src.markpact.cli._parse_main_args
 > Build and parse the main argument parser.

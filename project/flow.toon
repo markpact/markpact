@@ -59,8 +59,8 @@ TRANSFORMS (fan-out ≥10):
   _pdf_analyze(pdf, readme, blocks, analysis_checks) → AnalysisResult fan=14   fan=14
   _finalize(session, pdf, blocks, readme_path, prompt_key) fan=14   fan=14
   parse_publish_block(block_body:str, meta:str) → PublishConfig fan=14   fan=14
-  parse_blocks_recursive(text:str) → list[Block]          fan=13   fan=13
   _collect_files(src:Path, output_path:Path, exclude_patterns:set[str], include_patterns:Optional[list[str]], verbose:bool) → list[Path] fan=13   fan=13
+  parse_blocks_recursive(text:str) → list[Block]          fan=13   fan=13
   handle_sync_cli(argv:list[str]) → int                   fan=13   fan=13
 
 CONTRACTS:
@@ -212,8 +212,8 @@ DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]
   bool                 consumed:90  produced:17   !! HUB-TYPE → split interface
   Path                 consumed:75  produced:11   !! HUB-TYPE → split interface
   int                  consumed:18  produced:26   !! HUB-TYPE → split interface
-  list[str]            consumed:17  produced:9    !! HUB-TYPE → split interface
   Sandbox              consumed:26  produced:0    !! HUB-TYPE → split interface
+  list[str]            consumed:17  produced:9    !! HUB-TYPE → split interface
   PublishConfig        consumed:16  produced:4    !! HUB-TYPE → split interface
   str | None           consumed:11  produced:4    !! HUB-TYPE → split interface
   Notebook             consumed:8   produced:6  
@@ -224,9 +224,9 @@ DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]
   str | Path           consumed:7   produced:0    input-heavy (read-only flow)
   LiveSession          consumed:7   produced:0    input-heavy (read-only flow)
   list[Path]           consumed:5   produced:2  
-  PublishResult        consumed:0   produced:5    output-heavy
   dict[str, bool]      consumed:2   produced:3  
   GeneratorConfig      consumed:3   produced:2  
+  PublishResult        consumed:0   produced:5    output-heavy
   subprocess.CompletedProcess consumed:1   produced:3    narrow scope
 
   HUB TYPES (consumed ≥10):
@@ -238,9 +238,9 @@ DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]
       - (analyze consumers to suggest sub-interfaces)
     int → 18 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
-    list[str] → 17 consumers → split into:
-      - (analyze consumers to suggest sub-interfaces)
     Sandbox → 26 consumers → split into:
+      - (analyze consumers to suggest sub-interfaces)
+    list[str] → 17 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
     PublishConfig → 16 consumers → split into:
       - (analyze consumers to suggest sub-interfaces)
@@ -250,9 +250,9 @@ DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]
       - (analyze consumers to suggest sub-interfaces)
 
 SIDE_EFFECTS:
-  IO:        get_pyproject_version, get_bumpversion_version, sync_bumpversion, ensure_config_dir, load_env, save_env, Sandbox.__init__, Sandbox.write_file, Sandbox.write_requirements, load_secrets
-  Mutation:  show_config, list_providers, _parse_rmd_code_chunks, _parse_quarto_code_chunks, extract_dependencies, _generate_header, _extract_and_format_deps, _process_notebook_cells, _generate_file_blocks, parse_blocks
-  Pure:      get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset, find_free_port, Sandbox.has_venv, Sandbox.clean
+  IO:        get_pyproject_version, get_bumpversion_version, sync_bumpversion, load_secrets, _prompt_value, resolve_template, ensure_config_dir, load_env, save_env, Sandbox.__init__
+  Mutation:  show_config, list_providers, PackResult.summary, parse_blocks, _parse_rmd_code_chunks, _parse_quarto_code_chunks, extract_dependencies, _generate_header, _extract_and_format_deps, _process_notebook_cells
+  Pure:      _find_secrets_file, has_template_placeholders, get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset, find_free_port
 
   PIPELINE PURITY:
     Src             █░░░ 44% pure
