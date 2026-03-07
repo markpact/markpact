@@ -3,15 +3,15 @@ project:
   name: markpact
   repo: /home/tom/github/wronai/markpact
   language: python
-  analyzed_at: '2026-03-07T19:37:15Z'
+  analyzed_at: '2026-03-07T21:35:13Z'
   tool: code2llm
   stats:
     files: 30
-    lines: 9637
-    functions: 231
+    lines: 9688
+    functions: 235
     classes: 11
 health:
-  cc_avg: 4.8
+  cc_avg: 4.7
   critical_count: 25
   critical_limit: 10
   duplicates: 0
@@ -38,12 +38,12 @@ health:
     limit: 15
     severity: warning
   - type: cc_exceeded
-    target: _process_block
+    target: _parse_blocks_to_state
     value: 15
     limit: 15
     severity: warning
   - type: cc_exceeded
-    target: _parse_blocks_to_state
+    target: _process_block
     value: 15
     limit: 15
     severity: warning
@@ -73,12 +73,12 @@ health:
     limit: 10
     severity: warning
   - type: high_fan_out
-    target: _collect_files
+    target: parse_blocks_recursive
     value: 13
     limit: 10
     severity: warning
   - type: high_fan_out
-    target: parse_blocks_recursive
+    target: _collect_files
     value: 13
     limit: 10
     severity: warning
@@ -567,6 +567,34 @@ modules:
   - name: has_template_placeholders
     type: function
     cc: 2
+- path: scripts/sync_version.py
+  lines: 106
+  classes: 0
+  methods: 7
+  cc_max: 5
+  inbound_deps: 0
+  exports:
+  - name: get_pyproject_version
+    type: function
+    cc: 2
+  - name: get_bumpversion_version
+    type: function
+    cc: 2
+  - name: set_pyproject_version
+    type: function
+    cc: 1
+  - name: set_bumpversion_version
+    type: function
+    cc: 1
+  - name: tag_exists
+    type: function
+    cc: 2
+  - name: get_next_version
+    type: function
+    cc: 1
+  - name: sync_versions
+    type: function
+    cc: 5
 - path: src/markpact/publish/version.py
   lines: 72
   classes: 0
@@ -622,22 +650,6 @@ modules:
   - name: find_free_port
     type: function
     cc: 3
-- path: scripts/sync_version.py
-  lines: 55
-  classes: 0
-  methods: 3
-  cc_max: 2
-  inbound_deps: 0
-  exports:
-  - name: get_pyproject_version
-    type: function
-    cc: 2
-  - name: get_bumpversion_version
-    type: function
-    cc: 2
-  - name: sync_bumpversion
-    type: function
-    cc: 2
 - path: src/markpact/publish/models.py
   lines: 32
   classes: 2
@@ -696,15 +708,15 @@ hotspots:
   fan_out: 14
   note: "Parse publish block content into config.\n\nArgs:\n    block_body: The body\
     \ of the "
-- name: _collect_files
-  fan_out: 13
-  note: Collect files to pack, applying exclude/include filters.
 - name: parse_blocks_recursive
   fan_out: 13
   note: 'Parse blocks with recursive include resolution.
 
 
     Resolves ``<!-- markpact:includ'
+- name: _collect_files
+  fan_out: 13
+  note: Collect files to pack, applying exclude/include filters.
 - name: handle_sync_cli
   fan_out: 13
   note: 'Handle sync subcommand — thin orchestrator dispatching to steps.
@@ -723,14 +735,14 @@ refactoring:
     impact: medium
     effort: low
     module: auto_fix.py
-  - action: Split _process_block (CC=15 → target CC<10)
-    impact: medium
-    effort: low
-    module: syncer.py
   - action: Split _parse_blocks_to_state (CC=15 → target CC<10)
     impact: medium
     effort: low
     module: helpers.py
+  - action: Split _process_block (CC=15 → target CC<10)
+    impact: medium
+    effort: low
+    module: syncer.py
   - action: Split _parse_pypirc_section (CC=15 → target CC<10)
     impact: medium
     effort: low
@@ -759,7 +771,7 @@ evolution:
   lines: 8119
   note: Automated analysis
 - date: '2026-03-07'
-  cc_avg: 4.8
+  cc_avg: 4.7
   critical: 25
-  lines: 9637
+  lines: 9688
   note: Automated analysis

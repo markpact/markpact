@@ -146,6 +146,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved `clean` target removes all build artifacts
 - Default LLM model: `ollama/qwen2.5-coder:14b`
 
+## [0.1.36] - 2026-03-07
+
+### Docs
+- Update project/README.md
+- Update project/context.md
+
+### Other
+- Update project/analysis.toon
+- Update project/calls.mmd
+- Update project/calls.png
+- Update project/dashboard.html
+- Update project/evolution.toon
+- Update project/flow.mmd
+- Update project/flow.png
+- Update project/flow.toon
+- Update project/map.toon
+- Update project/project.toon
+- ... and 1 more files
+
 ## [0.1.35] - 2026-03-07
 
 ### Other

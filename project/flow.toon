@@ -1,4 +1,4 @@
-# markpact/flow | 261 func | 5 pipelines | 9 hub-types | 2026-03-07
+# markpact/flow | 265 func | 5 pipelines | 9 hub-types | 2026-03-07
 
 PIPELINES[5] (IO:1, Refactor:2, Unknown:2):
   Src [Refactor]: list[str] | None → str
@@ -59,8 +59,8 @@ TRANSFORMS (fan-out ≥10):
   _pdf_analyze(pdf, readme, blocks, analysis_checks) → AnalysisResult fan=14   fan=14
   _finalize(session, pdf, blocks, readme_path, prompt_key) fan=14   fan=14
   parse_publish_block(block_body:str, meta:str) → PublishConfig fan=14   fan=14
-  _collect_files(src:Path, output_path:Path, exclude_patterns:set[str], include_patterns:Optional[list[str]], verbose:bool) → list[Path] fan=13   fan=13
   parse_blocks_recursive(text:str) → list[Block]          fan=13   fan=13
+  _collect_files(src:Path, output_path:Path, exclude_patterns:set[str], include_patterns:Optional[list[str]], verbose:bool) → list[Path] fan=13   fan=13
   handle_sync_cli(argv:list[str]) → int                   fan=13   fan=13
 
 CONTRACTS:
@@ -207,7 +207,7 @@ CONTRACTS:
       SIDE-EFFECT: IO(read_text, write_text, write_text)
 
 
-DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]:
+DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 265 functions]:
   str                  consumed:127 produced:44   !! HUB-TYPE → split interface
   bool                 consumed:90  produced:17   !! HUB-TYPE → split interface
   Path                 consumed:75  produced:11   !! HUB-TYPE → split interface
@@ -221,13 +221,13 @@ DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]
   dict[str, str]       consumed:1   produced:10   output-heavy
   dict                 consumed:5   produced:5  
   Path | None          consumed:6   produced:2  
-  str | Path           consumed:7   produced:0    input-heavy (read-only flow)
   LiveSession          consumed:7   produced:0    input-heavy (read-only flow)
+  str | Path           consumed:7   produced:0    input-heavy (read-only flow)
   list[Path]           consumed:5   produced:2  
-  dict[str, bool]      consumed:2   produced:3  
   GeneratorConfig      consumed:3   produced:2  
+  dict[str, bool]      consumed:2   produced:3  
   PublishResult        consumed:0   produced:5    output-heavy
-  subprocess.CompletedProcess consumed:1   produced:3    narrow scope
+  AnalysisResult       consumed:0   produced:4    narrow scope
 
   HUB TYPES (consumed ≥10):
     str → 127 consumers → split into:
@@ -250,8 +250,8 @@ DATA_TYPES (by cross-function usage) [241 annotated, 0 inferred / 261 functions]
       - (analyze consumers to suggest sub-interfaces)
 
 SIDE_EFFECTS:
-  IO:        get_pyproject_version, get_bumpversion_version, sync_bumpversion, load_secrets, _prompt_value, resolve_template, ensure_config_dir, load_env, save_env, Sandbox.__init__
-  Mutation:  show_config, list_providers, PackResult.summary, parse_blocks, _parse_rmd_code_chunks, _parse_quarto_code_chunks, extract_dependencies, _generate_header, _extract_and_format_deps, _process_notebook_cells
+  IO:        load_secrets, _prompt_value, resolve_template, ensure_config_dir, load_env, save_env, Sandbox.__init__, Sandbox.write_file, Sandbox.write_requirements, get_pyproject_version
+  Mutation:  show_config, list_providers, _parse_rmd_code_chunks, _parse_quarto_code_chunks, extract_dependencies, _generate_header, _extract_and_format_deps, _process_notebook_cells, _generate_file_blocks, parse_blocks
   Pure:      _find_secrets_file, has_template_placeholders, get_env_path, init_env, set_config, set_model, set_api_key, set_api_base, apply_preset, find_free_port
 
   PIPELINE PURITY:

@@ -1,9 +1,9 @@
-# markpact | 51f 10664L | python:51
+# markpact | 51f 10715L | python:51
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
 M[51]:
   examples/demo_live_markpact.py,777
   examples/sync-workflow/src/app.py,5
-  scripts/sync_version.py,47
+  scripts/sync_version.py,87
   src/markpact/__init__.py,51
   src/markpact/auto_fix.py,325
   src/markpact/cli/__init__.py,149
@@ -71,11 +71,15 @@ D:
     e: root
     root()
   scripts/sync_version.py:
-    i: re,sys,argparse,pathlib.Path
-    e: get_pyproject_version,get_bumpversion_version,sync_bumpversion
+    i: re,sys,argparse,subprocess,packaging.version,pathlib.Path
+    e: get_pyproject_version,get_bumpversion_version,set_pyproject_version,set_bumpversion_version,tag_exists,get_next_version,sync_versions
     get_pyproject_version()
     get_bumpversion_version()
-    sync_bumpversion()
+    set_pyproject_version(new_ver)
+    set_bumpversion_version(new_ver)
+    tag_exists(tag)
+    get_next_version(current)
+    sync_versions()
   src/markpact/auto_fix.py:
     i: os,re,subprocess,fixop.classify._fixop_classify,fixop.ports.{find_free_port_near,is_port_free},pathlib.Path,sandbox.{Sandbox,find_free_port},typing.Optional
     e: detect_error_type,fix_port_in_readme,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,run_with_auto_fix_llm

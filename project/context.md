@@ -4,7 +4,7 @@
 
 - **Project**: /home/tom/github/wronai/markpact
 - **Analysis Mode**: static
-- **Total Functions**: 261
+- **Total Functions**: 265
 - **Total Classes**: 13
 - **Modules**: 35
 - **Entry Points**: 27
@@ -65,6 +65,10 @@
 - **Classes**: 2
 - **File**: `converter.py`
 
+### scripts.sync_version
+- **Functions**: 7
+- **File**: `sync_version.py`
+
 ### src.markpact.cli.run_cmd
 - **Functions**: 7
 - **File**: `run_cmd.py`
@@ -94,11 +98,6 @@
 - **Functions**: 5
 - **File**: `llm_config.py`
 
-### src.markpact.parser
-- **Functions**: 4
-- **Classes**: 1
-- **File**: `parser.py`
-
 ## Key Entry Points
 
 Main execution flows into the system:
@@ -113,6 +112,10 @@ Main execution flows into the system:
 ### src.markpact.publish.helpers.ensure_publish_block_in_readme
 > Insert a markpact:publish block into README if none exists.
 - **Calls**: readme_path.read_text, re.search, lines.append, None.join, re.search, readme_path.write_text, lines.append, lines.append
+
+### scripts.sync_version.sync_versions
+> Sync both version files to the MAX version, ensuring next version tag doesn't exist.
+- **Calls**: scripts.sync_version.get_pyproject_version, scripts.sync_version.get_bumpversion_version, max, scripts.sync_version.tag_exists, scripts.sync_version.get_next_version, scripts.sync_version.set_pyproject_version, print, scripts.sync_version.set_bumpversion_version
 
 ### src.markpact.docker_runner.stream_docker_logs
 > Stream logs from Docker container.
@@ -129,10 +132,6 @@ Main execution flows into the system:
 ### src.markpact.generator.GeneratorConfig.from_env
 > Load config from environment variables
 - **Calls**: cls, os.environ.get, os.environ.get, os.environ.get, float, int, os.environ.get, os.environ.get
-
-### scripts.sync_version.sync_bumpversion
-> Sync .bumpversion.toml with pyproject.toml.
-- **Calls**: scripts.sync_version.get_pyproject_version, scripts.sync_version.get_bumpversion_version, Path, bumpversion.read_text, re.sub, bumpversion.write_text, print
 
 ### src.markpact.docker_runner.run_docker_with_logs
 > Start Docker container and return process for log monitoring.
@@ -182,13 +181,13 @@ Args:
 > Remove sandbox directory
 - **Calls**: self.path.exists, shutil.rmtree
 
-### src.markpact.packer.PackResult.summary
-> Return human-readable summary.
-- **Calls**: None.join, lines.append
-
 ### src.markpact.parser.Block.get_meta_value
 > Extract a key=value pair from the meta string.
 - **Calls**: re.search, re.escape
+
+### src.markpact.packer.PackResult.summary
+> Return human-readable summary.
+- **Calls**: None.join, lines.append
 
 ### src.markpact.syncer.SyncResult.summary
 > Return human-readable summary.
@@ -236,12 +235,19 @@ _save_outputs [examples.demo_live_markpact]
 ensure_publish_block_in_readme [src.markpact.publish.helpers]
 ```
 
-### Flow 4: stream_docker_logs
+### Flow 4: sync_versions
+```
+sync_versions [scripts.sync_version]
+  └─> get_pyproject_version
+  └─> get_bumpversion_version
+```
+
+### Flow 5: stream_docker_logs
 ```
 stream_docker_logs [src.markpact.docker_runner]
 ```
 
-### Flow 5: run_docker_with_tests
+### Flow 6: run_docker_with_tests
 ```
 run_docker_with_tests [src.markpact.docker_runner]
   └─> _build_docker_image
@@ -250,21 +256,14 @@ run_docker_with_tests [src.markpact.docker_runner]
       └─ →> find_free_port
 ```
 
-### Flow 6: extract_version_from_readme
+### Flow 7: extract_version_from_readme
 ```
 extract_version_from_readme [src.markpact.publish.version]
 ```
 
-### Flow 7: from_env
+### Flow 8: from_env
 ```
 from_env [src.markpact.generator.GeneratorConfig]
-```
-
-### Flow 8: sync_bumpversion
-```
-sync_bumpversion [scripts.sync_version]
-  └─> get_pyproject_version
-  └─> get_bumpversion_version
 ```
 
 ### Flow 9: run_docker_with_logs
@@ -343,23 +342,6 @@ run_with_auto_fix [src.markpact.auto_fix]
 
 Key functions that process and transform data:
 
-### src.markpact.parser.parse_blocks
-> Parse all markpact:* codeblocks from markdown text.
-
-Supports both formats:
-- New: ```python markpac
-- **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
-
-### src.markpact.parser.parse_blocks_recursive
-> Parse blocks with recursive include resolution.
-
-Resolves ``<!-- markpact:include path=sub/README.md
-- **Output to**: src.markpact.parser.parse_blocks, _INCLUDE_COMMENT_RE.finditer, set, Path.cwd, None.resolve
-
-### src.markpact.auto_fix._run_subprocess
-> Run subprocess with proper error handling.
-- **Output to**: subprocess.run
-
 ### src.markpact.notebook_converter.detect_format
 > Detect notebook format from file extension.
 - **Output to**: path.suffix.lower, format_map.get
@@ -422,19 +404,36 @@ Args:
 ### src.markpact.notebook_converter.get_supported_formats
 > Get dictionary of supported notebook formats.
 
-### src.markpact.syncer._process_block
-> Process a single markpact:file block match. CC≤8.
-- **Output to**: src.markpact.syncer._read_source_file, src.markpact.syncer._build_header_suffix, result.details.append, m.group, m.group
+### src.markpact.parser.parse_blocks
+> Parse all markpact:* codeblocks from markdown text.
 
-### src.markpact.cli.helpers._parse_blocks_to_state
-> Parse blocks and extract state. Returns state dict with error key if failed.
-- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
+Supports both formats:
+- New: ```python markpac
+- **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
+
+### src.markpact.parser.parse_blocks_recursive
+> Parse blocks with recursive include resolution.
+
+Resolves ``<!-- markpact:include path=sub/README.md
+- **Output to**: src.markpact.parser.parse_blocks, _INCLUDE_COMMENT_RE.finditer, set, Path.cwd, None.resolve
+
+### src.markpact.auto_fix._run_subprocess
+> Run subprocess with proper error handling.
+- **Output to**: subprocess.run
 
 ### src.markpact.converter.convert_markdown_to_markpact
 > Convert regular Markdown to markpact format.
 
 Analyzes code blocks and converts them to markpact:* f
 - **Output to**: ConversionResult, re.search, re.compile, pattern.sub, result.changes.append
+
+### src.markpact.cli.helpers._parse_blocks_to_state
+> Parse blocks and extract state. Returns state dict with error key if failed.
+- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
+
+### src.markpact.syncer._process_block
+> Process a single markpact:file block match. CC≤8.
+- **Output to**: src.markpact.syncer._read_source_file, src.markpact.syncer._build_header_suffix, result.details.append, m.group, m.group
 
 ### src.markpact.cli._parse_main_args
 > Build and parse the main argument parser.
@@ -491,6 +490,7 @@ Functions exposed as public API (no underscore prefix):
 - `src.markpact.syncer.add_untracked_blocks` - 12 calls
 - `src.markpact.publish.helpers.ensure_publish_block_in_readme` - 12 calls
 - `src.markpact.publish.docker_pub.publish_docker` - 12 calls
+- `scripts.sync_version.sync_versions` - 11 calls
 - `src.markpact.docker_runner.generate_dockerfile` - 11 calls
 - `src.markpact.publish.helpers.infer_publish_config` - 11 calls
 - `src.markpact.template.load_secrets` - 10 calls
@@ -502,7 +502,6 @@ Functions exposed as public API (no underscore prefix):
 - `src.markpact.docker_runner.stream_docker_logs` - 9 calls
 - `src.markpact.docker_runner.run_docker_with_tests` - 9 calls
 - `src.markpact.notebook_converter.convert_notebook` - 9 calls
-- `src.markpact.converter.suggest_filename` - 9 calls
 
 ## System Interactions
 
@@ -521,6 +520,11 @@ graph TD
     ensure_publish_block --> search
     ensure_publish_block --> append
     ensure_publish_block --> join
+    sync_versions --> get_pyproject_versio
+    sync_versions --> get_bumpversion_vers
+    sync_versions --> max
+    sync_versions --> tag_exists
+    sync_versions --> get_next_version
     stream_docker_logs --> time
     stream_docker_logs --> readline
     stream_docker_logs --> print
@@ -535,11 +539,6 @@ graph TD
     extract_version_from --> search
     extract_version_from --> group
     from_env --> cls
-    from_env --> get
-    from_env --> float
-    sync_bumpversion --> get_pyproject_versio
-    sync_bumpversion --> get_bumpversion_vers
-    sync_bumpversion --> Path
 ```
 
 ## Reverse Engineering Guidelines

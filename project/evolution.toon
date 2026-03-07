@@ -1,4 +1,4 @@
-# code2llm/evolution | 261 func | 32f | 2026-03-07
+# code2llm/evolution | 265 func | 32f | 2026-03-07
 
 NEXT[8] (ranked by impact):
   [1] !! SPLIT           examples/demo_live_markpact.py
@@ -40,11 +40,11 @@ RISKS[3]:
   ⚠ Splitting src/markpact/notebook_converter.py may break 25 import paths
 
 METRICS-TARGET:
-  CC̄:          4.8 → ≤3.4
+  CC̄:          4.7 → ≤3.3
   max-CC:      20 → ≤10
   god-modules: 4 → 0
   high-CC(≥15): 6 → ≤3
   hub-types:   0 → ≤0
 
 HISTORY:
-  prev CC̄=4.8 → now CC̄=4.8
+  prev CC̄=4.7 → now CC̄=4.7

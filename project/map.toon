@@ -1,9 +1,9 @@
-# markpact | 35f 7337L | python:35
+# markpact | 35f 7388L | python:35
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
 M[35]:
   examples/demo_live_markpact.py,969
   examples/sync-workflow/src/app.py,7
-  scripts/sync_version.py,55
+  scripts/sync_version.py,106
   src/markpact/__init__.py,56
   src/markpact/auto_fix.py,427
   src/markpact/cli/__init__.py,205
@@ -85,6 +85,10 @@ D:
     _handle_missing_module_error(error_output;sandbox;readme_path;verbose)
     _try_llm_fix(error_type;error_output;readme_path;verbose)
     run_with_auto_fix_llm(cmd;sandbox;readme_path;verbose;max_retries;use_llm)
+  src/markpact/cli/helpers.py:
+    e: _resolve_file_body,_parse_blocks_to_state
+    _resolve_file_body(block;verbose)
+    _parse_blocks_to_state(blocks;sandbox;args;verbose)
   src/markpact/syncer.py:
     e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,_content_sha256,_build_header_suffix,_read_source_file,_process_block,sync_readme,sync_readme_recursive,_detect_lang,_build_block,_collect_untracked_blocks,_write_new_blocks,add_untracked_blocks,print_sync_report
     SyncResult: summary(0)  # Result of a sync operation...
@@ -108,10 +112,6 @@ D:
     _write_new_blocks(readme;text;new_blocks)
     add_untracked_blocks(readme_path;source_dir;paths)
     print_sync_report(result)
-  src/markpact/cli/helpers.py:
-    e: _resolve_file_body,_parse_blocks_to_state
-    _resolve_file_body(block;verbose)
-    _parse_blocks_to_state(blocks;sandbox;args;verbose)
   src/markpact/publish/pypi.py:
     e: get_license_classifier,_extract_readme_description,_build_description,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi
     get_license_classifier(license_name)
@@ -170,20 +170,6 @@ D:
   src/markpact/cli/config_cmd.py:
     e: handle_config_cli
     handle_config_cli(argv)
-  src/markpact/packer.py:
-    e: PackResult,_should_include,_get_language,_detect_file_indicators,_detect_framework_from_content,_build_run_command,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
-    PackResult: summary(0)  # Result of packing a directory...
-    _should_include(path;exclude_patterns)
-    _get_language(path)
-    _detect_file_indicators(files)
-    _detect_framework_from_content(files)
-    _build_run_command(indicators;has_fastapi;has_flask)
-    _detect_run_command(files)
-    _collect_files(src;output_path;exclude_patterns;include_patterns;verbose)
-    _generate_readme_content(files_to_pack;src;project_title;desc;run_command;dry_run)
-    _write_output(output_path;lines;files_to_pack;dry_run;verbose)
-    pack_directory(source_dir;output)
-    print_pack_report(result)
   src/markpact/notebook_converter.py:
     e: NotebookCell,Notebook,detect_format,parse_jupyter,_parse_rmd_yaml_front_matter,_parse_rmd_code_chunks,_extract_description_from_cells,parse_rmarkdown,_parse_quarto_yaml_front_matter,_parse_quarto_code_chunks,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,_generate_header,_extract_and_format_deps,_should_skip_first_markdown_cell,_extract_markdown_section,_extract_file_hint,_process_notebook_cells,_merge_code_files,_generate_file_blocks,notebook_to_markpact,convert_notebook,get_supported_formats
     NotebookCell:  # Represents a cell in a notebook...
@@ -213,6 +199,20 @@ D:
     notebook_to_markpact(notebook;output_path;verbose)
     convert_notebook(input_path;output_path;verbose)
     get_supported_formats()
+  src/markpact/packer.py:
+    e: PackResult,_should_include,_get_language,_detect_file_indicators,_detect_framework_from_content,_build_run_command,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
+    PackResult: summary(0)  # Result of packing a directory...
+    _should_include(path;exclude_patterns)
+    _get_language(path)
+    _detect_file_indicators(files)
+    _detect_framework_from_content(files)
+    _build_run_command(indicators;has_fastapi;has_flask)
+    _detect_run_command(files)
+    _collect_files(src;output_path;exclude_patterns;include_patterns;verbose)
+    _generate_readme_content(files_to_pack;src;project_title;desc;run_command;dry_run)
+    _write_output(output_path;lines;files_to_pack;dry_run;verbose)
+    pack_directory(source_dir;output)
+    print_pack_report(result)
   src/markpact/converter.py:
     e: ConvertedBlock,ConversionResult,_detect_deps,_detect_run,_detect_file,detect_block_type,suggest_filename,convert_markdown_to_markpact,_print_conversion_header,_print_block_changes,_print_conversion_summary,print_conversion_report
     ConvertedBlock:  # A converted markpact block...
@@ -332,6 +332,15 @@ D:
     _build_npm_description(config;sandbox)
     generate_package_json(config;sandbox)
     publish_npm(config;sandbox;registry;verbose)
+  scripts/sync_version.py:
+    e: get_pyproject_version,get_bumpversion_version,set_pyproject_version,set_bumpversion_version,tag_exists,get_next_version,sync_versions
+    get_pyproject_version()
+    get_bumpversion_version()
+    set_pyproject_version(new_ver)
+    set_bumpversion_version(new_ver)
+    tag_exists(tag)
+    get_next_version(current)
+    sync_versions()
   src/markpact/publish/version.py:
     e: bump_version,extract_version_from_readme,update_version_in_readme
     bump_version(version;bump_type)
@@ -349,11 +358,6 @@ D:
   src/markpact/publish/github.py:
     e: publish_github_packages
     publish_github_packages(config;sandbox;package_type;verbose)
-  scripts/sync_version.py:
-    e: get_pyproject_version,get_bumpversion_version,sync_bumpversion
-    get_pyproject_version()
-    get_bumpversion_version()
-    sync_bumpversion()
   src/markpact/publish/models.py:
     e: PublishConfig,PublishResult
     PublishConfig: __post_init__(0)  # Configuration for publishing...

@@ -1,10 +1,10 @@
-# code2llm | 33f 6361L | py:33 | 2026-03-07
-# CC̄=4.8 | critical:25/261 | dups:0 | cycles:1
+# code2llm | 33f 6412L | py:33 | 2026-03-07
+# CC̄=4.7 | critical:25/265 | dups:0 | cycles:1
 
 HEALTH[6]:
   🟡 CC    run_with_auto_fix_llm CC=18 (limit:15)
-  🟡 CC    _process_block CC=15 (limit:15)
   🟡 CC    _parse_blocks_to_state CC=15 (limit:15)
+  🟡 CC    _process_block CC=15 (limit:15)
   🟡 CC    _step_analyze_blocks CC=20 (limit:15)
   🟡 CC    _pdf_analyze CC=20 (limit:15)
   🟡 CC    _parse_pypirc_section CC=15 (limit:15)
@@ -51,15 +51,15 @@ LAYERS:
   │ publisher                   27L  0C    0m  CC=0.0    ←0
   │
   scripts/                        CC̄=2.0    ←in:0  →out:0
-  │ sync_version                55L  0C    3m  CC=2      ←0
+  │ sync_version               106L  0C    7m  CC=5      ←0
   │
 
 DUPLICATES[0]: none
 
-FUNCTIONS (CC≥10, 25 of 231):
+FUNCTIONS (CC≥10, 25 of 235):
    18.0  run_with_auto_fix_llm                      29n   3exit  loops+cond+ret  !! split
-   15.0  _process_block                             24n   5exit  cond+ret  !! split
    15.0  _parse_blocks_to_state                     19n   3exit  loops+cond+ret  !! split
+   15.0  _process_block                             24n   5exit  cond+ret  !! split
    15.0  _parse_pypirc_section                       7n   2exit  cond+ret  !! split
    14.0  _process_readme                            27n   8exit  cond+ret
    14.0  handle_sync_cli                            26n   9exit  cond+ret
@@ -67,24 +67,24 @@ FUNCTIONS (CC≥10, 25 of 231):
    12.0  _execute_single_sync                       17n   4exit  cond+ret
    12.0  _handle_markdown_conversion                17n   4exit  cond+ret
    12.0  handle_config_cli                          30n   9exit  cond+ret
-   11.0  pack_directory                             15n   4exit  cond+ret
    11.0  parse_jupyter                              11n   2exit  loops+cond+ret
    11.0  extract_dependencies                       13n   2exit  loops+cond+ret
    11.0  suggest_run_command                        26n   6exit  loops+cond+ret
    11.0  _process_notebook_cells                    20n   2exit  loops+cond+ret
-   11.0  find_untracked_files                       15n   3exit  loops+cond+ret
+   11.0  pack_directory                             15n   4exit  cond+ret
    11.0  _print_conversion_summary                   9n   1exit  loops+cond
+   11.0  find_untracked_files                       15n   3exit  loops+cond+ret
    11.0  _execute_recursive_sync                    15n   4exit  loops+cond+ret
    11.0  _handle_llm_generation                      8n   3exit  cond+ret
    11.0  parse_publish_block                        16n   2exit  loops+cond+ret
    10.0  _collect_files                             16n   2exit  loops+cond+ret
-   10.0  print_sync_report                          16n   2exit  loops+cond+ret
    10.0  suggest_filename                           22n   7exit  cond+ret
+   10.0  print_sync_report                          16n   2exit  loops+cond+ret
    10.0  _resolve_publish_config                    12n   3exit  cond+ret
    10.0  _copy_readme                               16n   1exit  cond
 
   summary:
-    critical(≥10): 25 | high(5-10): 73 | medium(2-5): 103 | low(<2): 30
+    critical(≥10): 25 | high(5-10): 74 | medium(2-5): 103 | low(<2): 33
     11% CC≥10  42% CC≥5
 
 HOTSPOTS:
@@ -95,8 +95,8 @@ HOTSPOTS:
   #5  sync_readme_recursive                fan=14   "calls 14 functions"
   #6  _handle_llm_generation               fan=14   "calls 14 functions"
   #7  parse_publish_block                  fan=14   "calls 14 functions"
-  #8  _collect_files                       fan=13   "calls 13 functions"
-  #9  parse_blocks_recursive               fan=13   "calls 13 functions"
+  #8  parse_blocks_recursive               fan=13   "calls 13 functions"
+  #9  _collect_files                       fan=13   "calls 13 functions"
   #10 handle_sync_cli                      fan=13   "calls 13 functions"
 
 CLASSES:
@@ -162,6 +162,10 @@ D:
     _handle_missing_module_error(error_output,sandbox,readme_path,verbose)
     _try_llm_fix(error_type,error_output,readme_path,verbose)
     run_with_auto_fix_llm(cmd,sandbox,readme_path,verbose,max_retries,use_llm)
+  src/markpact/cli/helpers.py:
+    e: _resolve_file_body,_parse_blocks_to_state
+    _resolve_file_body(block,verbose)
+    _parse_blocks_to_state(blocks,sandbox,args,verbose)
   src/markpact/syncer.py:
     e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,_content_sha256,_build_header_suffix,_read_source_file,_process_block,sync_readme,sync_readme_recursive,_detect_lang,_build_block,_collect_untracked_blocks,_write_new_blocks,add_untracked_blocks,print_sync_report
     SyncResult  # Result of a sync operation....
@@ -186,10 +190,6 @@ D:
     _write_new_blocks(readme,text,new_blocks)
     add_untracked_blocks(readme_path,source_dir,paths)
     print_sync_report(result)
-  src/markpact/cli/helpers.py:
-    e: _resolve_file_body,_parse_blocks_to_state
-    _resolve_file_body(block,verbose)
-    _parse_blocks_to_state(blocks,sandbox,args,verbose)
   src/markpact/publish/pypi.py:
     e: get_license_classifier,_extract_readme_description,_build_description,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi
     get_license_classifier(license_name)
@@ -249,21 +249,6 @@ D:
   src/markpact/cli/config_cmd.py:
     e: handle_config_cli
     handle_config_cli(argv)
-  src/markpact/packer.py:
-    e: PackResult,_should_include,_get_language,_detect_file_indicators,_detect_framework_from_content,_build_run_command,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
-    PackResult  # Result of packing a directory....
-      summary(0)  CC=3.0
-    _should_include(path,exclude_patterns)
-    _get_language(path)
-    _detect_file_indicators(files)
-    _detect_framework_from_content(files)
-    _build_run_command(indicators,has_fastapi,has_flask)
-    _detect_run_command(files)
-    _collect_files(src,output_path,exclude_patterns,include_patterns,verbose)
-    _generate_readme_content(files_to_pack,src,project_title,desc,run_command,dry_run)
-    _write_output(output_path,lines,files_to_pack,dry_run,verbose)
-    pack_directory(source_dir,output)
-    print_pack_report(result)
   src/markpact/notebook_converter.py:
     e: NotebookCell,Notebook,detect_format,parse_jupyter,_parse_rmd_yaml_front_matter,_parse_rmd_code_chunks,_extract_description_from_cells,parse_rmarkdown,_parse_quarto_yaml_front_matter,_parse_quarto_code_chunks,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,_generate_header,_extract_and_format_deps,_should_skip_first_markdown_cell,_extract_markdown_section,_extract_file_hint,_process_notebook_cells,_merge_code_files,_generate_file_blocks,notebook_to_markpact,convert_notebook,get_supported_formats
     NotebookCell  # Represents a cell in a notebook....
@@ -293,6 +278,21 @@ D:
     notebook_to_markpact(notebook,output_path,verbose)
     convert_notebook(input_path,output_path,verbose)
     get_supported_formats()
+  src/markpact/packer.py:
+    e: PackResult,_should_include,_get_language,_detect_file_indicators,_detect_framework_from_content,_build_run_command,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
+    PackResult  # Result of packing a directory....
+      summary(0)  CC=3.0
+    _should_include(path,exclude_patterns)
+    _get_language(path)
+    _detect_file_indicators(files)
+    _detect_framework_from_content(files)
+    _build_run_command(indicators,has_fastapi,has_flask)
+    _detect_run_command(files)
+    _collect_files(src,output_path,exclude_patterns,include_patterns,verbose)
+    _generate_readme_content(files_to_pack,src,project_title,desc,run_command,dry_run)
+    _write_output(output_path,lines,files_to_pack,dry_run,verbose)
+    pack_directory(source_dir,output)
+    print_pack_report(result)
   src/markpact/converter.py:
     e: ConvertedBlock,ConversionResult,_detect_deps,_detect_run,_detect_file,detect_block_type,suggest_filename,convert_markdown_to_markpact,_print_conversion_header,_print_block_changes,_print_conversion_summary,print_conversion_report
     ConvertedBlock  # A converted markpact block....
@@ -413,6 +413,15 @@ D:
     _build_npm_description(config,sandbox)
     generate_package_json(config,sandbox)
     publish_npm(config,sandbox,registry,verbose)
+  scripts/sync_version.py:
+    e: get_pyproject_version,get_bumpversion_version,set_pyproject_version,set_bumpversion_version,tag_exists,get_next_version,sync_versions
+    get_pyproject_version()
+    get_bumpversion_version()
+    set_pyproject_version(new_ver)
+    set_bumpversion_version(new_ver)
+    tag_exists(tag)
+    get_next_version(current)
+    sync_versions()
   src/markpact/publish/version.py:
     e: bump_version,extract_version_from_readme,update_version_in_readme
     bump_version(version,bump_type)
@@ -431,11 +440,6 @@ D:
   src/markpact/publish/github.py:
     e: publish_github_packages
     publish_github_packages(config,sandbox,package_type,verbose)
-  scripts/sync_version.py:
-    e: get_pyproject_version,get_bumpversion_version,sync_bumpversion
-    get_pyproject_version()
-    get_bumpversion_version()
-    sync_bumpversion()
   src/markpact/publish/models.py:
     e: PublishConfig,PublishResult
     PublishConfig  # Configuration for publishing...
