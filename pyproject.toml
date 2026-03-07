@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "markpact"
-version = "0.1.30"
+version = "0.1.31"
 description = "Executable Markdown Runtime – run and manage entire projects directly from a single README.md file using specialized markpact code blocks and isolated Docker sandboxes."
 readme = "README.md"
 license = "Apache-2.0"
@@ -45,7 +45,8 @@ Repository = "https://github.com/wronai/markpact"
 Issues = "https://github.com/wronai/markpact/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/markpact"]
+packages = ["markpact"]
+sources = ["src"]
 
 [tool.ruff]
 line-length = 120

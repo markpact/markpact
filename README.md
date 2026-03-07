@@ -21,7 +21,7 @@ Markpact to narzędzie, które zamienia plik README.md w **wykonywalny kontrakt 
 |---------|------|
 | **Executable README** | Uruchom cały projekt z jednego pliku README.md |
 | **LLM Generation** | Wygeneruj projekt z opisu tekstowego: `markpact -p "REST API"` |
-| **Live Demo** | Interaktywne demo z generowaniem PDF: `python demos/demo_live.py` |
+| **Live Demo** | Interaktywne demo z generowaniem PDF: `python examples/demo_live_markpact.py` |
 | **PDF Generation** | Automatyczne tworzenie PDF dokumentacji (7 stron) |
 | **Multi-language** | Python, Node.js, Go, Rust, PHP, TypeScript, React |
 | **Publishing** | Publikuj do PyPI, npm, Docker Hub jedną komendą |
@@ -68,13 +68,13 @@ Spróbuj interaktywnego demo, które generuje kompletny projekt z promptu i twor
 cd /home/tom/github/wronai/markpact
 
 # Uruchom demo z własnym promptem
-python demos/demo_live.py --prompt "Build a chat API with WebSocket"
+python examples/demo_live_markpact.py --prompt "Build a chat API with WebSocket"
 
 # Lub użyj gotowego przykładu
-python demos/demo_live.py --example todo-api
+python examples/demo_live_markpact.py --example todo-api
 
 # Lista dostępnych przykładów
-python demos/demo_live.py --list
+python examples/demo_live_markpact.py --list
 ```
 
 **Co robi demo:**
@@ -170,7 +170,7 @@ markpact --from-notebook notebook.ipynb --convert-only
 ## 📚 Dokumentacja
 
 - [Pełna dokumentacja](docs/README.md)
-- [Demo Live Guide](demos/README.md) ⭐ **NEW** - Interaktywne demo z PDF
+- [Demo Live Guide](examples/README.md) ⭐ **NEW** - Interaktywne demo z PDF
 - [Generowanie z LLM](docs/generator.md) ⭐ **NEW**
 - [Kontrakt markpact:*](docs/contract.md)
 - [CI/CD Integration](docs/ci-cd.md)
@@ -180,7 +180,7 @@ markpact --from-notebook notebook.ipynb --convert-only
 
 | Przykład | Opis | Uruchomienie |
 |----------|------|--------------|
-| [Demo Live](demos/demo_live.py) | **Interaktywne generowanie z LLM + PDF** | `python demos/demo_live.py --prompt "Chat API"` |
+| [Demo Live](examples/demo_live_markpact.py) | **Interaktywne generowanie z LLM + PDF** | `python examples/demo_live_markpact.py --prompt "Chat API"` |
 | [FastAPI Todo](examples/fastapi-todo/) | REST API z bazą danych | `markpact examples/fastapi-todo/README.md` |
 | [Flask Blog](examples/flask-blog/) | Aplikacja webowa z szablonami | `markpact examples/flask-blog/README.md` |
 | [CLI Tool](examples/cli-tool/) | Narzędzie linii poleceń | `markpact examples/cli-tool/README.md` |
@@ -374,6 +374,9 @@ pip install markpact
 
 # Z LLM i PDF generation (dla demo)
 pip install markpact[llm] fpdf2
+
+# Z integracją fixop (auto-fix, diagnostyka portów)
+pip install markpact[ops]
 ```
 
 Użycie:
@@ -384,7 +387,7 @@ markpact README.md --dry-run          # podgląd bez wykonywania
 markpact README.md -s ./my-sandbox    # własny katalog sandbox
 
 # Demo live z LLM
-python demos/demo_live.py --prompt "Twój prompt"
+python examples/demo_live_markpact.py --prompt "Twój prompt"
 ```
 
 ### Opcja B: Instalacja lokalna (dev)
@@ -550,6 +553,48 @@ def root():
 ```bash markpact:run
 uvicorn app.main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8088}
 ```
+
+## 🏗️ Architektura modułów
+
+Markpact jest podzielony na małe, niezależne moduły:
+
+```
+src/markpact/
+├── cli/                    # CLI dispatch + subcommands
+│   ├── __init__.py         # main() — thin dispatch (CC≤5)
+│   ├── sync_cmd.py         # markpact sync
+│   ├── pack_cmd.py         # markpact pack
+│   ├── config_cmd.py       # markpact config
+│   ├── publish_cmd.py      # --publish mode
+│   ├── run_cmd.py          # normal run, Docker, test
+│   ├── convert_cmd.py      # notebook/markdown conversion
+│   └── helpers.py          # shared CLI utilities
+├── publish/                # Multi-registry publisher
+│   ├── models.py           # PublishConfig, PublishResult
+│   ├── helpers.py          # inference, interactive config
+│   ├── version.py          # semver bump, extract, update
+│   ├── llm_config.py       # LLM-based config generation
+│   ├── pypi.py             # PyPI publisher
+│   ├── npm.py              # npm publisher
+│   ├── docker_pub.py       # Docker publisher
+│   ├── github.py           # GitHub Packages publisher
+│   └── main.py             # parse_publish_block, dispatch
+├── auto_fix.py             # Runtime error auto-fix (fixop integration)
+├── parser.py               # markpact:* block parser
+├── syncer.py               # README ↔ source sync
+├── packer.py               # Directory → README packer
+├── sandbox.py              # Isolated sandbox management
+├── runner.py               # Command execution
+└── generator.py            # LLM contract generation
+```
+
+### Opcjonalne zależności
+
+| Extra | Pakiet | Opis |
+|-------|--------|------|
+| `[llm]` | litellm | Generowanie kontraktów przez LLM |
+| `[ops]` | fixop | Diagnostyka portów, klasyfikacja błędów |
+| `[dev]` | pytest, ruff, build, twine | Narzędzia deweloperskie |
 
 ## License
 
