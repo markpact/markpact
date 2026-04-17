@@ -38,5 +38,5 @@ def install_deps(deps: list[str], sandbox: Sandbox, verbose: bool = True) -> Non
     ensure_venv(sandbox, verbose)
     sandbox.write_requirements(deps)
 
-    pip = ".venv/bin/pip" if sandbox.venv_pip.exists() else "pip"
+    pip = ".venv/bin/pip"
     run_cmd(f"{pip} install -r requirements.txt", sandbox, verbose)

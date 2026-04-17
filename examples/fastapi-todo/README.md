@@ -25,6 +25,7 @@ fastapi
 uvicorn
 sqlalchemy
 pydantic
+flask
 ```
 
 ```python markpact:file path=app/database.py
@@ -131,5 +132,5 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
 ```
 
 ```bash markpact:run
-uvicorn app.main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8001} --reload
+uvicorn app.main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8006} --reload
 ```

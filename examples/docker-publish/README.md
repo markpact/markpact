@@ -104,7 +104,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 ```bash markpact:run
-uvicorn app.main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8000}
+uvicorn app.main:app --host 0.0.0.0 --port ${MARKPACT_PORT:-8001}
 ```
 
 ```text markpact:test http

@@ -53,7 +53,7 @@ markpact examples/static-frontend/README.md
 ```
 
 ```bash markpact:run
-python3 -m http.server ${MARKPACT_PORT:-8088} --directory public
+python3 -m http.server ${MARKPACT_PORT:-8001} --directory public
 ```
 
 ```text markpact:test http

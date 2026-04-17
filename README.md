@@ -596,6 +596,16 @@ src/markpact/
 | `[ops]` | fixop | Diagnostyka portów, klasyfikacja błędów |
 | `[dev]` | pytest, ruff, build, twine | Narzędzia deweloperskie |
 
+## Test Performance
+
+- **Markpact tests**: ~6s for 255 tests (fast)
+- **Test suite**: Uses pytest with coverage reporting
+
+### Recent Fixes
+
+- **v0.1.36**: Fixed pip fallback bug in `runner.py` - now always uses `.venv/bin/pip` after venv creation to avoid PEP 668 errors on externally-managed Python environments
+- **v0.1.30**: Major refactoring - cli.py → cli/ package, publisher.py → publish/ package, syncer.py refactoring for better maintainability
+
 ## License
 
 Apache License 2.0 - see [LICENSE](LICENSE) for details.
