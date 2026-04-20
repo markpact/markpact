@@ -383,6 +383,96 @@ class PluginExecutor(Executor):
         return plugin.execute(step, context)
 
 
+class PythonExecutor(Executor):
+    """Execute Python code blocks."""
+    
+    @property
+    def name(self) -> str:
+        return "python"
+    
+    def execute(self, step: Step, context: Dict[str, Any]) -> str:
+        """Execute Python code from step params."""
+        code = step.params.get("code") or step.command
+        
+        if not code:
+            raise ExecutionError("No Python code provided")
+        
+        # Create execution environment with context
+        exec_globals = {
+            "__name__": "__markpact__",
+            "context": context,
+            "config": context.get("config"),
+            "variables": context.get("variables"),
+        }
+        
+        # Capture output
+        import io
+        import sys
+        
+        old_stdout = sys.stdout
+        sys.stdout = captured_output = io.StringIO()
+        
+        try:
+            exec(code, exec_globals)
+            output = captured_output.getvalue()
+            
+            # Check for variable exports
+            if "__export_vars__" in exec_globals:
+                for name, value in exec_globals["__export_vars__"].items():
+                    context["variables"][name] = value
+            
+            return output or "Python code executed successfully"
+            
+        except Exception as e:
+            raise ExecutionError(f"Python execution failed: {e}")
+        finally:
+            sys.stdout = old_stdout
+
+
+class BashExecutor(Executor):
+    """Execute Bash/shell scripts."""
+    
+    @property
+    def name(self) -> str:
+        return "bash"
+    
+    def execute(self, step: Step, context: Dict[str, Any]) -> str:
+        """Execute bash script from step params."""
+        script = step.params.get("script") or step.command
+        
+        if not script:
+            raise ExecutionError("No bash script provided")
+        
+        # Write script to temp file and execute
+        import tempfile
+        import os
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+            f.write("#!/bin/bash\n")
+            f.write("set -e\n")  # Exit on error
+            f.write(script)
+            script_path = f.name
+        
+        try:
+            result = subprocess.run(
+                ["bash", script_path],
+                capture_output=True,
+                text=True,
+                timeout=step.timeout,
+                cwd=step.params.get("cwd")
+            )
+            
+            if result.returncode != 0:
+                raise ExecutionError(f"Bash script failed: {result.stderr}")
+            
+            return result.stdout
+            
+        except subprocess.TimeoutExpired:
+            raise ExecutionError(f"Bash script timed out after {step.timeout}s")
+        finally:
+            os.unlink(script_path)
+
+
 class ExecutorRegistry:
     """Registry of available executors."""
     

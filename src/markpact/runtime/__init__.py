@@ -51,7 +51,7 @@ from .exceptions import (
 # Backward compatibility - Runtime is now RuntimeV2
 Runtime = RuntimeV2
 
-__version__ = "0.1.37"
+__version__ = "0.1.38"
 __all__ = [
     # Main runtime
     "Runtime",
