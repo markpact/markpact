@@ -44,15 +44,15 @@ def test_cli_dry_run():
     """Test --dry-run flag"""
     with tempfile.TemporaryDirectory() as tmpdir:
         readme = Path(tmpdir) / "README.md"
-        readme.write_text('''```markpact:deps python
+        readme.write_text('''```text markpact:deps python
 requests
 ```
 
-```markpact:file python path=app.py
+```python markpact:file path=app.py
 print("hello")
 ```
 
-```markpact:run python
+```bash markpact:run
 python app.py
 ```
 ''')
@@ -143,7 +143,7 @@ def test_cli_quiet_mode():
     """Test --quiet flag"""
     with tempfile.TemporaryDirectory() as tmpdir:
         readme = Path(tmpdir) / "README.md"
-        readme.write_text('''```markpact:file python path=test.py
+        readme.write_text('''```python markpact:file path=test.py
 print("test")
 ```
 ''')

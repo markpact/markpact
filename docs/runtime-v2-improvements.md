@@ -146,7 +146,7 @@ except:
 
 **After:** Automatic rollback on failure
 ```markdown
-```markpact:steps yaml
+```yaml markpact:steps
 extra_steps:
   - id: docker_up
     action: docker
@@ -154,7 +154,7 @@ extra_steps:
     rollback_cmd: "docker compose down"  # Per-step rollback
 ```
 
-```markpact:rollback yaml
+```yaml markpact:rollback
 steps:
   - id: cleanup
     action: shell
@@ -246,7 +246,7 @@ python -m markpact.runtime.cli migration.md --list-steps
 
 ## Configuration
 
-```markpact:config yaml
+```yaml markpact:config
 name: "c2004 rpi5 deploy"
 version: "1.0.22"
 target:
@@ -256,7 +256,7 @@ target:
 
 ## Deployment Steps
 
-```markpact:steps yaml
+```yaml markpact:steps
 extra_steps:
   - id: install_docker
     action: ssh_cmd
@@ -290,7 +290,7 @@ extra_steps:
 
 ## Rollback Plan
 
-```markpact:rollback yaml
+```yaml markpact:rollback
 steps:
   - id: docker_down
     action: ssh_cmd

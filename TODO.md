@@ -64,7 +64,7 @@ R,S=Path(sys.argv[1] if len(sys.argv)>1 else"README.md"),Path(os.environ.get("MA
 S.mkdir(parents=True,exist_ok=True)
 def x(c):subprocess.check_call(c,shell=True,cwd=S,env={**os.environ,**({"PATH":f"{S/'.venv/bin'}:{os.environ.get('PATH','')}"}if(S/".venv/bin").exists()else{})})
 d,r=[],None
-for m in re.finditer(r"^```markpact:(\w+)(?:\s+([^\n]+))?\n(.*?)\n^```",R.read_text(),re.DOTALL|re.MULTILINE):
+for m in re.finditer(r"^```(?P<lang>\w+)\s+markpact:(?P<kind>\w+)(?:\s+(?P<meta>[^\n]+))?\n(?P<body>.*?)\n^```",R.read_text(),re.DOTALL|re.MULTILINE):
  k,t,b=m.groups();t,b=(t or"").strip(),b.strip()
  if k=="file":f=S/re.search(r"path=(\S+)",t)[1];f.parent.mkdir(parents=True,exist_ok=True);f.write_text(b)
  elif k=="deps"and"python"in t:d+=[l.strip()for l in b.splitlines()if l.strip()]

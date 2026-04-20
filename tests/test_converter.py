@@ -91,7 +91,7 @@ uvicorn app:app
 
 
 def test_convert_already_markpact():
-    md = '''```markpact:deps python
+    md = '''```text markpact:deps python
 fastapi
 ```'''
     result = convert_markdown_to_markpact(md)

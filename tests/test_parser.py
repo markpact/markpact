@@ -4,7 +4,7 @@ from markpact.parser import parse_blocks, Block
 
 
 def test_parse_file_block():
-    md = '''```markpact:file python path=app/main.py
+    md = '''```python markpact:file path=app/main.py
 print("hello")
 ```'''
     blocks = parse_blocks(md)
@@ -27,7 +27,7 @@ print("hello")
 
 
 def test_parse_deps_block():
-    md = '''```markpact:deps python
+    md = '''```text markpact:deps python
 fastapi
 uvicorn
 ```'''
@@ -52,7 +52,7 @@ uvicorn
 
 
 def test_parse_run_block():
-    md = '''```markpact:run python
+    md = '''```bash markpact:run
 python main.py
 ```'''
     blocks = parse_blocks(md)
@@ -76,15 +76,15 @@ python main.py
 def test_parse_multiple_blocks():
     md = '''# Test
 
-```markpact:deps python
+```text markpact:deps python
 requests
 ```
 
-```markpact:file python path=main.py
+```python markpact:file path=main.py
 import requests
 ```
 
-```markpact:run python
+```bash markpact:run
 python main.py
 ```'''
     blocks = parse_blocks(md)
@@ -93,7 +93,7 @@ python main.py
 
 
 def test_empty_meta():
-    md = '''```markpact:run
+    md = '''```bash markpact:run
 echo hello
 ```'''
     blocks = parse_blocks(md)

@@ -7,7 +7,7 @@
 Wbudowany runtime parsujący README i wykonujący pozostałe bloki.
 
 ```markdown
-```markpact:bootstrap python
+```python markpact:bootstrap
 #!/usr/bin/env python3
 # kod bootstrapu...
 \```

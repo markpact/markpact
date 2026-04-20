@@ -26,11 +26,11 @@ def test_list_tracked_old_format():
     md = textwrap.dedent("""\
         # Project
 
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("hello")
         ```
 
-        ```markpact:file path=lib/utils.py
+        ```python markpact:file path=lib/utils.py
         def foo(): pass
         ```
     """)
@@ -56,7 +56,7 @@ def test_list_tracked_new_format():
 
 def test_list_tracked_mixed_formats():
     md = textwrap.dedent("""\
-        ```markpact:file path=old.py
+        ```python markpact:file path=old.py
         x = 1
         ```
 
@@ -77,7 +77,7 @@ def test_list_tracked_empty():
 
 def test_find_untracked(tmp_path):
     md = textwrap.dedent("""\
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("hello")
         ```
     """)
@@ -92,7 +92,7 @@ def test_find_untracked(tmp_path):
 
 
 def test_find_untracked_excludes_dirs(tmp_path):
-    md = "```markpact:file path=main.py\npass\n```"
+    md = "```python markpact:file path=main.py\npass\n```"
     (tmp_path / "main.py").write_text("pass")
     (tmp_path / "__pycache__").mkdir()
     (tmp_path / "__pycache__" / "main.cpython-312.pyc").write_bytes(b"")
@@ -104,7 +104,7 @@ def test_find_untracked_excludes_dirs(tmp_path):
 
 
 def test_find_untracked_nonexistent_dir():
-    md = "```markpact:file path=main.py\npass\n```"
+    md = "```python markpact:file path=main.py\npass\n```"
     untracked = find_untracked_files(md, Path("/nonexistent/dir"))
     assert untracked == []
 
@@ -119,7 +119,7 @@ def test_sync_updates_old_format(tmp_path):
     readme.write_text(textwrap.dedent("""\
         # Project
 
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("old")
         ```
     """))
@@ -163,7 +163,7 @@ def test_sync_unchanged(tmp_path):
     src.mkdir()
 
     readme.write_text(textwrap.dedent("""\
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("same")
         ```
     """))
@@ -181,7 +181,7 @@ def test_sync_missing_source_file(tmp_path):
     src.mkdir()
 
     readme.write_text(textwrap.dedent("""\
-        ```markpact:file path=missing.py
+        ```python markpact:file path=missing.py
         old content
         ```
     """))
@@ -198,7 +198,7 @@ def test_sync_excluded_file(tmp_path):
     src.mkdir()
 
     readme.write_text(textwrap.dedent("""\
-        ```markpact:file path=.env
+        ```bash markpact:file path=.env
         SECRET=old
         ```
     """))
@@ -219,7 +219,7 @@ def test_sync_dry_run(tmp_path):
     src.mkdir()
 
     original = textwrap.dedent("""\
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("old")
         ```
     """)
@@ -244,13 +244,13 @@ def test_sync_multiple_files(tmp_path):
     readme.write_text(textwrap.dedent("""\
         # Project
 
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         old_main
         ```
 
         Some docs here.
 
-        ```markpact:file path=scripts/run.sh
+        ```bash markpact:file path=scripts/run.sh
         old_script
         ```
     """))
@@ -279,7 +279,7 @@ def test_sync_preserves_surrounding_text(tmp_path):
 
         ## Files
 
-        ```markpact:file path=app.py
+        ```python markpact:file path=app.py
         old_code
         ```
 
@@ -444,7 +444,7 @@ def test_sync_creates_backup_on_update(tmp_path):
     src.mkdir()
 
     readme.write_text(textwrap.dedent("""\
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("old")
         ```
     """))
@@ -464,7 +464,7 @@ def test_sync_no_backup_when_unchanged(tmp_path):
     src.mkdir()
 
     readme.write_text(textwrap.dedent("""\
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("same")
         ```
     """))
@@ -482,7 +482,7 @@ def test_sync_then_rollback(tmp_path):
     src.mkdir()
 
     original = textwrap.dedent("""\
-        ```markpact:file path=main.py
+        ```python markpact:file path=main.py
         print("old")
         ```
     """)

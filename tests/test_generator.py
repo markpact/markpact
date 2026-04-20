@@ -89,7 +89,7 @@ def test_generate_contract_integration():
         verbose=True,
     )
     
-    assert "```markpact:" in content
+    assert "```" in content and "markpact:" in content
     assert "flask" in content.lower()
 
 
@@ -99,11 +99,11 @@ def test_generate_contract_mock():
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = """# Hello World
 
-```markpact:deps python
+```text markpact:deps python
 flask
 ```
 
-```markpact:file python path=app.py
+```python markpact:file path=app.py
 from flask import Flask
 app = Flask(__name__)
 
@@ -112,7 +112,7 @@ def hello():
     return "Hello, World!"
 ```
 
-```markpact:run python
+```bash markpact:run
 flask run --port 5000
 ```
 """

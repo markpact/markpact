@@ -11,7 +11,7 @@
 
 ## AI Cost Tracking
 
-![PyPI](https://img.shields.io/badge/pypi-costs-blue) ![Version](https://img.shields.io/badge/version-0.1.39-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue) ![License](https://img.shields.io/badge/license-Apache--2.0-green)
+![PyPI](https://img.shields.io/badge/pypi-costs-blue) ![Version](https://img.shields.io/badge/version-0.1.40-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue) ![License](https://img.shields.io/badge/license-Apache--2.0-green)
 ![AI Cost](https://img.shields.io/badge/AI%20Cost-$6.45-orange) ![Human Time](https://img.shields.io/badge/Human%20Time-25.5h-blue) ![Model](https://img.shields.io/badge/Model-openrouter%2Fqwen%2Fqwen3--coder--next-lightgrey)
 
 - 🤖 **LLM usage:** $6.4500 (43 commits)
@@ -328,7 +328,7 @@ Konwerter analizuje code blocks i na podstawie heurystyk wykrywa:
   Jedna komenda uruchomieniowa wykonywana w sandboxie.
 
 ---
-```markpact:bootstrap python
+```python markpact:bootstrap
 #!/usr/bin/env python3
 """MARKPACT v0.1 – Executable Markdown Runtime"""
 import os, re, subprocess, sys
@@ -337,7 +337,7 @@ from pathlib import Path
 README = Path(sys.argv[1] if len(sys.argv) > 1 else "README.md")
 SANDBOX = Path(os.environ.get("MARKPACT_SANDBOX", "./sandbox"))
 SANDBOX.mkdir(parents=True, exist_ok=True)
-RE = re.compile(r"^```markpact:(?P<kind>\w+)(?:\s+(?P<meta>[^\n]+))?\n(?P<body>.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
+RE = re.compile(r"^```(?P<lang>\w+)\s+markpact:(?P<kind>\w+)(?:\s+(?P<meta>[^\n]+))?\n(?P<body>.*?)\n^```[ \t]*$", re.DOTALL | re.MULTILINE)
 
 def run(cmd):
     print(f"[markpact] RUN: {cmd}")
@@ -457,7 +457,7 @@ make install   # lub: pip install -e .
 ## 6.1 Konwencje i format metadanych
 
 - **Nagłówek codeblocka**
-  ` ```markpact:<kind> <lang> <meta>`
+  ` ```<lang> markpact:<kind> <meta>`
 
   Minimalnie wymagane jest `markpact:<kind>`.
   `lang` jest opcjonalny i pełni rolę informacyjną (bootstrap może go ignorować).
@@ -621,7 +621,7 @@ src/markpact/
 
 ## License
 
-Licensed under Apache-2.0.
+Apache License 2.0 - see [LICENSE](LICENSE) for details.
 ## Author
 
-Tom Sapletta
+Created by **Tom Sapletta** - [tom@sapletta.com](mailto:tom@sapletta.com)

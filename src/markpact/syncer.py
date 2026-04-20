@@ -133,7 +133,7 @@ _BLOCK_NEW_RE = re.compile(
     r"(```\w+\s+markpact:file\s+path=)(\S+)(\n)([\s\S]*?)(\n```)"
 )
 
-# Old format: ```markpact:file path=<path>\n<body>\n```
+# Legacy format (deprecated): ```markpact:file path=<path>\n<body>\n```
 _BLOCK_OLD_RE = re.compile(
     r"(```markpact:file\s+path=)(\S+)(\n)([\s\S]*?)(\n```)"
 )
