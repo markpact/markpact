@@ -1,3 +1,4 @@
+.env.example
 sandbox
 .idea
 # Byte-compiled / optimized / DLL files
