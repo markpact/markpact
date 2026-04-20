@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "markpact"
-version = "0.1.38"
+version = "0.1.39"
 description = "Executable Markdown Runtime – run and manage entire projects directly from a single README.md file using specialized markpact code blocks and isolated Docker sandboxes."
 readme = "README.md"
 license = "Apache-2.0"

@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .core import Runtime, RuntimeConfig
+from . import Runtime, RuntimeConfig, RuntimeV3, RuntimeConfigV3
 
 
 def main():
@@ -39,6 +39,12 @@ Examples:
     
     # Resume after failure
     %(prog)s migration.md  # Automatically skips completed steps
+    
+    # Plan mode (preview changes, v3)
+    %(prog)s migration.md --plan
+    
+    # Check current state (v3)
+    %(prog)s migration.md --check-state
         """
     )
     
@@ -127,6 +133,24 @@ Examples:
         help="Show current deployment state and exit"
     )
     
+    parser.add_argument(
+        "--plan",
+        action="store_true",
+        help="Preview changes without executing (v3: state reconciliation)"
+    )
+    
+    parser.add_argument(
+        "--check-state",
+        action="store_true",
+        help="Check current facts/state on target host (v3)"
+    )
+    
+    parser.add_argument(
+        "--use-v2",
+        action="store_true",
+        help="Use RuntimeV2 instead of v3 (backward compatibility)"
+    )
+    
     args = parser.parse_args()
     
     # Validate file exists
@@ -147,23 +171,42 @@ Examples:
             print(f"Failed step: {state_mgr.state.failed_step}")
         return 0
     
-    # Create config
-    config = RuntimeConfig(
-        dry_run=args.dry_run,
-        verbose=not args.quiet,
-        stop_on_error=not args.no_stop_on_error,
-        plugin_paths=[Path(p) for p in args.plugins],
-        ssh_key=args.ssh_key,
-        timeout_default=args.timeout,
-        retry_default=args.retry,
-        state_file=args.state_file,
-        reset_state=args.reset_state,
-    )
+    # Create config (v3 by default, v2 if requested)
+    if args.use_v2:
+        from . import RuntimeConfigV2, RuntimeV2
+        config = RuntimeConfigV2(
+            dry_run=args.dry_run,
+            verbose=not args.quiet,
+            stop_on_error=not args.no_stop_on_error,
+            plugin_paths=[Path(p) for p in args.plugins],
+            ssh_key=args.ssh_key,
+            timeout_default=args.timeout,
+            retry_default=args.retry,
+            state_file=args.state_file,
+            reset_state=args.reset_state,
+        )
+    else:
+        config = RuntimeConfigV3(
+            dry_run=args.dry_run,
+            verbose=not args.quiet,
+            stop_on_error=not args.no_stop_on_error,
+            plugin_paths=[Path(p) for p in args.plugins],
+            ssh_key=args.ssh_key,
+            timeout_default=args.timeout,
+            retry_default=args.retry,
+            state_file=args.state_file,
+            reset_state=args.reset_state,
+            plan_mode=args.plan,
+        )
     
     # Initialize runtime
     try:
-        from .core_v2 import RuntimeV2
-        runtime = RuntimeV2(str(file_path), config=config)
+        if args.use_v2:
+            from . import RuntimeV2
+            runtime = RuntimeV2(str(file_path), config=config)
+        else:
+            from . import RuntimeV3
+            runtime = RuntimeV3(str(file_path), config=config)
     except Exception as e:
         print(f"Error: Failed to initialize runtime: {e}", file=sys.stderr)
         return 1
@@ -183,10 +226,34 @@ Examples:
             print(f"      action: {step.action}, timeout: {step.timeout}s, retry: {step.retry}")
         return 0
     
-    # Execute
+    # Check state mode (v3)
+    if args.check_state:
+        if not hasattr(runtime, 'facts'):
+            print("Error: --check-state requires RuntimeV3", file=sys.stderr)
+            return 1
+        print(f"[CHECK STATE] Target: {runtime.config_data.target if runtime.config_data else 'unknown'}")
+        print(f"  Docker installed: {runtime.facts.check('docker_installed')}")
+        return 0
+    
+    # Execute or Plan
     try:
-        success = runtime.execute(step_filter=args.step_filter)
-        return 0 if success else 1
+        if args.plan and hasattr(runtime, 'plan'):
+            # v3: Plan mode
+            summary = runtime.plan(step_filter=args.step_filter)
+            print(f"\n[PLAN SUMMARY]")
+            print(f"  Total steps: {summary.total_steps}")
+            print(f"  Would execute: {summary.successful}")
+            print(f"  Would skip: {summary.skipped}")
+            print(f"  Would fail: {summary.failed}")
+            return 0
+        elif hasattr(runtime, 'reconcile'):
+            # v3: Reconcile mode
+            summary = runtime.reconcile(step_filter=args.step_filter)
+            return 0 if summary.failed == 0 else 1
+        else:
+            # v2: Execute mode
+            success = runtime.execute(step_filter=args.step_filter)
+            return 0 if success else 1
         
     except KeyboardInterrupt:
         print("\nInterrupted by user", file=sys.stderr)

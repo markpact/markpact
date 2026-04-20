@@ -362,6 +362,55 @@ class RuntimeV2:
                 self._process_steps(block)
             elif block.type == BlockType.ROLLBACK:
                 self._process_rollback(block)
+            elif block.type == BlockType.PYTHON:
+                self._process_python_block(block)
+            elif block.type == BlockType.BASH:
+                self._process_bash_block(block)
+            elif block.type == BlockType.RUN:
+                self._process_run_block(block)
+    
+    def _process_python_block(self, block: Block) -> None:
+        """Process Python code block as executable step."""
+        # Generate unique ID for this block
+        import hashlib
+        block_id = f"python_{hashlib.md5(block.content.encode()).hexdigest()[:8]}"
+        
+        self.steps.append(Step(
+            id=block_id,
+            action="python",
+            description=f"Python block (lines {block.line_start}-{block.line_end})",
+            params={"code": block.content},
+            risk="medium",
+            timeout=300
+        ))
+    
+    def _process_bash_block(self, block: Block) -> None:
+        """Process Bash code block as executable step."""
+        import hashlib
+        block_id = f"bash_{hashlib.md5(block.content.encode()).hexdigest()[:8]}"
+        
+        self.steps.append(Step(
+            id=block_id,
+            action="bash",
+            description=f"Bash block (lines {block.line_start}-{block.line_end})",
+            params={"script": block.content},
+            risk="medium",
+            timeout=300
+        ))
+    
+    def _process_run_block(self, block: Block) -> None:
+        """Process run block as bash executable step."""
+        import hashlib
+        block_id = f"run_{hashlib.md5(block.content.encode()).hexdigest()[:8]}"
+        
+        self.steps.append(Step(
+            id=block_id,
+            action="bash",
+            description=f"Run block (lines {block.line_start}-{block.line_end})",
+            params={"script": block.content},
+            risk="medium",
+            timeout=300
+        ))
     
     def _process_config(self, block: Block) -> None:
         """Process configuration block."""

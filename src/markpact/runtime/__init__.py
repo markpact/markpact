@@ -27,8 +27,10 @@ Plugin System:
     ```
 """
 
-# Runtime v2 with idempotency, SSH persistence, retry, rollback
-from .core_v2 import RuntimeV2, RuntimeConfig
+# Runtime v3: State Reconciliation Engine (Terraform-style for RPi/Edge)
+from .core_v3 import RuntimeV3, RuntimeConfigV3
+# Keep v2 for backward compatibility
+from .core_v2 import RuntimeV2, RuntimeConfig as RuntimeConfigV2
 from .models import (
     Step,
     StepResult,
@@ -48,15 +50,21 @@ from .exceptions import (
     ValidationError,
 )
 
-# Backward compatibility - Runtime is now RuntimeV2
-Runtime = RuntimeV2
+# Default: v3 with state reconciliation
+Runtime = RuntimeV3
+RuntimeConfig = RuntimeConfigV3
 
-__version__ = "0.1.38"
+__version__ = "0.1.39"
 __all__ = [
-    # Main runtime
+    # Main runtime (v3 default)
     "Runtime",
-    "RuntimeV2",
     "RuntimeConfig",
+    # v3 explicit
+    "RuntimeV3",
+    "RuntimeConfigV3",
+    # v2 backward compatibility
+    "RuntimeV2",
+    "RuntimeConfigV2",
     # Models
     "Step",
     "StepResult",

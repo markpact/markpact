@@ -20,6 +20,7 @@ class Step(BaseModel):
     # Idempotency conditions
     when: Optional[str] = Field(default=None, description="Condition to run: 'docker_not_running'")
     skip_if: Optional[str] = Field(default=None, description="Condition to skip: 'container_exists'")
+    check_cmd: Optional[str] = Field(default=None, description="v3: Check command for true idempotency")
     
     # Rollback support
     rollback_cmd: Optional[str] = Field(default=None, description="Command to rollback this step")
@@ -102,6 +103,7 @@ class DeploymentConfig(BaseModel):
 class DeployState(BaseModel):
     """Deployment state for idempotency tracking."""
     steps_done: List[str] = Field(default_factory=list, description="Completed step IDs")
+    step_hashes: Dict[str, str] = Field(default_factory=dict, description="v3: Step definition hashes")
     failed_step: Optional[str] = Field(default=None, description="Failed step ID")
     start_time: Optional[str] = Field(default=None, description="Deployment start timestamp")
     end_time: Optional[str] = Field(default=None, description="Deployment end timestamp")

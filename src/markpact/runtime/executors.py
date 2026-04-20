@@ -489,6 +489,8 @@ class ExecutorRegistry:
         self.register(DockerExecutor())
         self.register(HttpExecutor())
         self.register(PluginExecutor())
+        self.register(PythonExecutor())
+        self.register(BashExecutor())
     
     def register(self, executor: Executor) -> None:
         """Register an executor."""
