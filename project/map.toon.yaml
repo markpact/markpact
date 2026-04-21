@@ -1,0 +1,501 @@
+# markpact | 52f 11374L | shell:3,python:49 | 2026-04-21
+# stats: 417 func | 0 cls | 52 mod | CC̄=4.4 | critical:10 | cycles:0
+# alerts[5]: fan-out run_service_with_tests=23; fan-out main=22; CC main=24; CC _pdf_analyze=20; CC _step_analyze_blocks=20
+# hotspots[5]: run_service_with_tests fan=23; main fan=22; run_live fan=19; _step_analyze_blocks fan=18; parse_jupyter fan=17
+# evolution: baseline
+# Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
+M[52]:
+  examples/demo_live_markpact.py,969
+  examples/sync-workflow/src/app.py,7
+  examples/sync-workflow/src/run.sh,2
+  project.sh,18
+  scripts/sync_version.py,106
+  scripts/test_examples.sh,314
+  src/markpact/__init__.py,56
+  src/markpact/auto_fix.py,427
+  src/markpact/cli/__init__.py,205
+  src/markpact/cli/config_cmd.py,74
+  src/markpact/cli/convert_cmd.py,112
+  src/markpact/cli/helpers.py,66
+  src/markpact/cli/pack_cmd.py,62
+  src/markpact/cli/publish_cmd.py,95
+  src/markpact/cli/run_cmd.py,105
+  src/markpact/cli/sync_cmd.py,291
+  src/markpact/config.py,204
+  src/markpact/converter.py,320
+  src/markpact/docker_runner.py,417
+  src/markpact/generator.py,362
+  src/markpact/notebook_converter.py,710
+  src/markpact/packer.py,431
+  src/markpact/parser.py,154
+  src/markpact/publish/__init__.py,54
+  src/markpact/publish/docker_pub.py,108
+  src/markpact/publish/github.py,37
+  src/markpact/publish/helpers.py,226
+  src/markpact/publish/llm_config.py,107
+  src/markpact/publish/main.py,110
+  src/markpact/publish/models.py,32
+  src/markpact/publish/npm.py,100
+  src/markpact/publish/pypi.py,445
+  src/markpact/publish/version.py,72
+  src/markpact/publisher.py,27
+  src/markpact/runner.py,42
+  src/markpact/runtime/__init__.py,89
+  src/markpact/runtime/cli.py,267
+  src/markpact/runtime/core.py,296
+  src/markpact/runtime/core_v2.py,507
+  src/markpact/runtime/core_v3.py,651
+  src/markpact/runtime/exceptions.py,53
+  src/markpact/runtime/executors.py,505
+  src/markpact/runtime/models.py,143
+  src/markpact/runtime/parser.py,153
+  src/markpact/runtime/plugins.py,283
+  src/markpact/runtime/ssh_manager.py,114
+  src/markpact/runtime/state.py,176
+  src/markpact/runtime/steps.py,103
+  src/markpact/sandbox.py,59
+  src/markpact/syncer.py,612
+  src/markpact/template.py,184
+  src/markpact/tester.py,312
+D:
+  src/markpact/runtime/cli.py:
+    e: main
+    main()
+  examples/demo_live_markpact.py:
+    e: StepRecord,LiveSession,_ascii,hdr,step,ok,fail,wait,wait_done,info,show_menu,list_prompts,_step_generate_contract,_step_parse_blocks,_step_validate_blocks,_step_analyze_blocks,_step_sha_integrity,_save_outputs,_print_summary,_pdf_generate,_pdf_parse,_pdf_validate,_pdf_analyze,_pdf_sha,_setup_session,_finalize,run_live,_fallback_readme,main
+    StepRecord:
+    LiveSession: add_step(5),elapsed(0)
+    _ascii(text)
+    hdr(text)
+    step(icon;text)
+    ok(text;detail)
+    fail(text;detail)
+    wait(text)
+    wait_done(ok_flag)
+    info(text)
+    show_menu()
+    list_prompts()
+    _step_generate_contract(session;config;pdf;prompt)
+    _step_parse_blocks(session;readme)
+    _step_validate_blocks(session;blocks)
+    _step_analyze_blocks(session;blocks)
+    _step_sha_integrity(session;readme;blocks)
+    _save_outputs(session;pdf;readme;prompt_key)
+    _print_summary(session;blocks;readme_path)
+    _pdf_generate(pdf;session;config;readme;prompt_key;prompt;dur;readme_path)
+    _pdf_parse(pdf;readme;blocks)
+    _pdf_validate(pdf;readme;blocks;all_required_ok)
+    _pdf_analyze(pdf;readme;blocks;analysis_checks)
+    _pdf_sha(pdf;readme;blocks;sha_checks)
+    _setup_session(prompt_key;prompt;model)
+    _finalize(session;pdf;blocks;readme_path;prompt_key)
+    run_live(prompt_key;prompt;model)
+    _fallback_readme(prompt)
+    main()
+  src/markpact/auto_fix.py:
+    e: detect_error_type,fix_port_in_readme,_setup_env_with_venv_simple,_run_and_print,_handle_port_error_simple,run_with_auto_fix,add_missing_dependency,extract_module_name,fix_with_llm,_setup_env_with_venv,_run_subprocess,_handle_port_error,_handle_missing_module_error,_try_llm_fix,run_with_auto_fix_llm
+    detect_error_type(error_output;exit_code;cmd)
+    fix_port_in_readme(readme_path;new_port)
+    _setup_env_with_venv_simple(sandbox)
+    _run_and_print(cmd;sandbox;env;verbose)
+    _handle_port_error_simple(cmd;env;readme_path)
+    run_with_auto_fix(cmd;sandbox;readme_path;verbose;max_retries)
+    add_missing_dependency(readme_path;module_name)
+    extract_module_name(error_output)
+    fix_with_llm(readme_path;error_output;error_type;verbose)
+    _setup_env_with_venv(sandbox)
+    _run_subprocess(cmd;sandbox;env)
+    _handle_port_error(cmd;env;readme_path;verbose)
+    _handle_missing_module_error(error_output;sandbox;readme_path;verbose)
+    _try_llm_fix(error_type;error_output;readme_path;verbose)
+    run_with_auto_fix_llm(cmd;sandbox;readme_path;verbose;max_retries;use_llm)
+  src/markpact/runtime/core_v3.py:
+    e: RuntimeConfigV3,StepExecutionRecord,FactsGatherer,RuntimeV3
+    RuntimeConfigV3: __init__(10)  # Configuration for RuntimeV3...
+    StepExecutionRecord:  # Record of executed step for rollback stack...
+    FactsGatherer: __init__(1),clear_cache(0),check(1),_eval_condition(1),_check_docker_installed(0),_check_container_running(1),_check_file_exists(1),_check_dir_exists(1),_check_command_succeeds(1)  # Gathers current state facts from target host.
+
+This enables ...
+    RuntimeV3: __init__(2),parse(0),_process_blocks(1),_load_config(1),_load_steps(1),_load_rollback(1),plan(0),reconcile(1),_should_execute(1),_compute_step_hash(1),_execute_step_with_retry(1),_execute_step(1),_get_ssh_manager(2),_exec_remote(2),_rollback(1),_filter_steps(2),close(0),__enter__(0),__exit__(3)  # Markpact Runtime v3: State Reconciliation Engine
+
+Terraform-...
+  src/markpact/tester.py:
+    e: TestResult,TestSuite,wait_for_service,http_request,run_http_test,run_tests_from_block,run_service_with_tests,run_shell_tests
+    TestResult:  # Result of a single test...
+    TestSuite: print_summary(0)  # Collection of test results...
+    wait_for_service(url;timeout;interval)
+    http_request(method;url;data;headers;timeout)
+    run_http_test(test_spec;base_url)
+    run_tests_from_block(test_body;base_url)
+    run_service_with_tests(run_command;test_body;sandbox;port;verbose)
+    run_shell_tests(test_body;sandbox;verbose)
+  src/markpact/runtime/core_v2.py:
+    e: RuntimeConfig,RuntimeV2
+    RuntimeConfig:  # Configuration for the runtime...
+    RuntimeV2: __init__(2),_load_plugins(0),parse(0),execute(1),_should_run_step(1),_execute_step_with_retry(1),_execute_step_single(2),_rollback(1),_get_ssh_manager(2),_process_blocks(1),_process_python_block(1),_process_bash_block(1),_process_run_block(1),_process_config(1),_process_steps(1),_process_rollback(1),_print_summary(0),reset_state(0),close(0)  # Production-grade runtime for executing markpact deployments...
+  src/markpact/cli/helpers.py:
+    e: _resolve_file_body,_parse_blocks_to_state
+    _resolve_file_body(block;verbose)
+    _parse_blocks_to_state(blocks;sandbox;args;verbose)
+  src/markpact/publish/pypi.py:
+    e: get_license_classifier,_extract_readme_description,_build_description,generate_pyproject_toml,_normalize_package_name,_determine_base_path,_detect_build_backend,_ensure_build_backend,_copy_readme,_run_build_command,_print_build_output,_get_build_error_hint,_build_package,_setup_env_creds,_parse_pypirc_section,_check_pypi_credentials,_setup_upload_env,_build_upload_cmd,_get_upload_error_hint,_upload_to_pypi,publish_pypi
+    get_license_classifier(license_name)
+    _extract_readme_description(base_path)
+    _build_description(config;base_path)
+    generate_pyproject_toml(config;sandbox;base_path;verbose)
+    _normalize_package_name(config;verbose)
+    _determine_base_path(config;sandbox;verbose)
+    _detect_build_backend(pyproject_path)
+    _ensure_build_backend(build_backend;verbose)
+    _copy_readme(source_readme_path;base_path;config;verbose)
+    _run_build_command(base_path)
+    _print_build_output(build_result)
+    _get_build_error_hint(stdout;stderr)
+    _build_package(base_path;verbose)
+    _setup_env_creds(test)
+    _parse_pypirc_section(pypirc_path;test;verbose)
+    _check_pypi_credentials(test;verbose)
+    _setup_upload_env(test)
+    _build_upload_cmd(test;pypirc_path;verbose)
+    _get_upload_error_hint(payload;stdout;test;config)
+    _upload_to_pypi(base_path;test;config;pypirc_path;verbose)
+    publish_pypi(config;sandbox;test;verbose;source_readme_path)
+  src/markpact/syncer.py:
+    e: SyncResult,_backup_dir,create_backup,list_backups,restore_backup,_prune_backups,list_tracked_paths,find_untracked_files,diff_block,_content_sha256,_build_header_suffix,_read_source_file,_process_block,sync_readme,sync_readme_recursive,_detect_lang,_build_block,_collect_untracked_blocks,_write_new_blocks,add_untracked_blocks,print_sync_report
+    SyncResult: summary(0)  # Result of a sync operation...
+    _backup_dir(readme_path)
+    create_backup(readme_path)
+    list_backups(readme_path)
+    restore_backup(readme_path;backup_path)
+    _prune_backups(bak_dir)
+    list_tracked_paths(text)
+    find_untracked_files(text;source_dir)
+    diff_block(rel_path;old_body;new_body)
+    _content_sha256(body)
+    _build_header_suffix(rest_of_header;new_body;hash_blocks)
+    _read_source_file(src;rel_path)
+    _process_block(m)
+    sync_readme(readme_path;source_dir)
+    sync_readme_recursive(readme_path;source_dir)
+    _detect_lang(rel_path)
+    _build_block(rel_path;content)
+    _collect_untracked_blocks(src;paths;tracked)
+    _write_new_blocks(readme;text;new_blocks)
+    add_untracked_blocks(readme_path;source_dir;paths)
+    print_sync_report(result)
+  src/markpact/cli/__init__.py:
+    e: main,_dispatch_subcommand,_parse_main_args,_handle_generation_phase,_process_readme
+    main(argv)
+    _dispatch_subcommand(cmd;argv)
+    _parse_main_args(args_list)
+    _handle_generation_phase(args;verbose)
+    _process_readme(args;readme;verbose)
+  src/markpact/cli/sync_cmd.py:
+    e: _build_sync_parser,_resolve_paths,_handle_backups_mode,_handle_rollback_mode,_handle_list_mode,_handle_missing_mode,_handle_add_mode,_execute_recursive_sync,_show_diffs,_execute_single_sync,handle_sync_cli
+    _build_sync_parser()
+    _resolve_paths(args)
+    _handle_backups_mode(readme_path)
+    _handle_rollback_mode(args;readme_path;verbose)
+    _handle_list_mode(text;source_dir)
+    _handle_missing_mode(text;source_dir)
+    _handle_add_mode(args;readme_path;source_dir;verbose)
+    _execute_recursive_sync(args;readme_path;source_dir;exclude_sync;dry_run;verbose)
+    _show_diffs(result;text;readme_path;source_dir;dry_run)
+    _execute_single_sync(args;readme_path;source_dir;text;exclude_sync;dry_run;verbose)
+    handle_sync_cli(argv)
+  src/markpact/runtime/plugins.py:
+    e: Plugin,PluginLoader,BrowserReloadPlugin
+    Plugin(ABC): execute(2),initialize(1),shutdown(0)  # Base class for plugins.
+
+Plugins provide custom executors fo...
+    PluginLoader: __init__(0),load_from_path(1),load_from_module(1),_load_from_directory(1),_load_from_file(1),_extract_plugin_from_module(2),get(1),list(0),get_all(0),clear(0)  # Loads plugins from various sources...
+    BrowserReloadPlugin(Plugin): execute(2)  # Plugin to reload browser via CDP (Chrome DevTools Protocol)...
+  src/markpact/parser.py:
+    e: Block,parse_blocks,parse_blocks_recursive
+    Block: get_path(0),get_meta_value(1)
+    parse_blocks(text)
+    parse_blocks_recursive(text)
+  src/markpact/cli/config_cmd.py:
+    e: handle_config_cli
+    handle_config_cli(argv)
+  src/markpact/cli/convert_cmd.py:
+    e: _handle_list_examples,_handle_list_notebook_formats,_handle_from_notebook,_handle_llm_generation,_handle_markdown_conversion
+    _handle_list_examples(verbose)
+    _handle_list_notebook_formats(verbose)
+    _handle_from_notebook(args;verbose)
+    _handle_llm_generation(args;verbose)
+    _handle_markdown_conversion(args;original_text;verbose)
+  src/markpact/converter.py:
+    e: ConvertedBlock,ConversionResult,_detect_deps,_detect_run,_detect_file,detect_block_type,suggest_filename,convert_markdown_to_markpact,_print_conversion_header,_print_block_changes,_print_conversion_summary,print_conversion_report
+    ConvertedBlock:  # A converted markpact block...
+    ConversionResult:  # Result of converting a Markdown file...
+    _detect_deps(lang;body;body_lower)
+    _detect_run(lang;first_lines)
+    _detect_file(first_lines;lang)
+    detect_block_type(lang;body)
+    suggest_filename(lang;body;index)
+    convert_markdown_to_markpact(text;verbose)
+    _print_conversion_header()
+    _print_block_changes(changes)
+    _print_conversion_summary(blocks)
+    print_conversion_report(result)
+  src/markpact/packer.py:
+    e: PackResult,_should_include,_get_language,_detect_file_indicators,_detect_framework_from_content,_build_run_command,_detect_run_command,_collect_files,_generate_readme_content,_write_output,pack_directory,print_pack_report
+    PackResult: summary(0)  # Result of packing a directory...
+    _should_include(path;exclude_patterns)
+    _get_language(path)
+    _detect_file_indicators(files)
+    _detect_framework_from_content(files)
+    _build_run_command(indicators;has_fastapi;has_flask)
+    _detect_run_command(files)
+    _collect_files(src;output_path;exclude_patterns;include_patterns;verbose)
+    _generate_readme_content(files_to_pack;src;project_title;desc;run_command;dry_run)
+    _write_output(output_path;lines;files_to_pack;dry_run;verbose)
+    pack_directory(source_dir;output)
+    print_pack_report(result)
+  src/markpact/publish/main.py:
+    e: parse_publish_block,publish
+    parse_publish_block(block_body;meta)
+    publish(config;sandbox;bump;verbose;source_readme_path)
+  src/markpact/notebook_converter.py:
+    e: NotebookCell,Notebook,detect_format,parse_jupyter,_parse_rmd_yaml_front_matter,_parse_rmd_code_chunks,_extract_description_from_cells,parse_rmarkdown,_parse_quarto_yaml_front_matter,_parse_quarto_code_chunks,parse_quarto,parse_zeppelin,parse_databricks,parse_notebook,extract_dependencies,suggest_run_command,_generate_header,_extract_and_format_deps,_should_skip_first_markdown_cell,_extract_markdown_section,_extract_file_hint,_process_notebook_cells,_merge_code_files,_generate_file_blocks,notebook_to_markpact,convert_notebook,get_supported_formats
+    NotebookCell:  # Represents a cell in a notebook...
+    Notebook:  # Represents a parsed notebook...
+    detect_format(path)
+    parse_jupyter(path)
+    _parse_rmd_yaml_front_matter(content;default_title)
+    _parse_rmd_code_chunks(content)
+    _extract_description_from_cells(cells)
+    parse_rmarkdown(path)
+    _parse_quarto_yaml_front_matter(content;default_title)
+    _parse_quarto_code_chunks(content)
+    parse_quarto(path)
+    parse_zeppelin(path)
+    parse_databricks(path)
+    parse_notebook(path)
+    extract_dependencies(notebook)
+    suggest_run_command(notebook)
+    _generate_header(notebook;output_path)
+    _extract_and_format_deps(notebook)
+    _should_skip_first_markdown_cell(cell;notebook;skip_first_title)
+    _extract_markdown_section(cell)
+    _extract_file_hint(source)
+    _process_notebook_cells(notebook)
+    _merge_code_files(code_cells)
+    _generate_file_blocks(merged_files;notebook)
+    notebook_to_markpact(notebook;output_path;verbose)
+    convert_notebook(input_path;output_path;verbose)
+    get_supported_formats()
+  src/markpact/runtime/core.py:
+    e: RuntimeConfig,Runtime
+    RuntimeConfig:  # Configuration for the runtime...
+    Runtime: __init__(2),_load_plugins(0),parse(0),execute(1),_process_blocks(1),_process_config(1),_process_steps(1),_process_run_block(1),_execute_step(1),_print_summary(0),set_variable(2),get_variable(2)  # Main runtime for executing markpact markdown files.
+
+Support...
+  src/markpact/runtime/models.py:
+    e: Step,DeploymentConfig,DeployState,StepResult,ExecutionSummary
+    Step(BaseModel): validate_risk(1),positive_int(1),from_dict(1),to_dict(0)  # Pydantic-validated deployment step.
+
+Includes idempotency co...
+    DeploymentConfig(BaseModel):  # Deployment configuration with validation...
+    DeployState(BaseModel):  # Deployment state for idempotency tracking...
+    StepResult(BaseModel):  # Result of step execution with structured logging...
+    ExecutionSummary(BaseModel):  # Summary of full deployment execution...
+  src/markpact/cli/publish_cmd.py:
+    e: _resolve_publish_config,_determine_bump_type,_print_publish_dry_run,_execute_publish_result,_handle_publish_mode
+    _resolve_publish_config(args;text_to_parse;readme;blocks;run_command;verbose)
+    _determine_bump_type(args)
+    _print_publish_dry_run(config;bump_type)
+    _execute_publish_result(result;readme;bump_type;verbose)
+    _handle_publish_mode(args;config;sandbox;readme;text_to_parse;blocks;run_command;verbose)
+  src/markpact/publish/helpers.py:
+    e: _slugify,_first_heading,_first_paragraph,_format_subprocess_failure,_check_file_type,_analyze_blocks_for_types,_is_web_service,_detect_registry,_build_package_name,_get_default_author,infer_publish_config,prompt_publish_config,ensure_publish_block_in_readme
+    _slugify(name)
+    _first_heading(markdown)
+    _first_paragraph(markdown)
+    _format_subprocess_failure(result)
+    _check_file_type(path)
+    _analyze_blocks_for_types(blocks)
+    _is_web_service(run_command)
+    _detect_registry(flags;run_command)
+    _build_package_name(base_name;registry)
+    _get_default_author()
+    infer_publish_config(readme_path;markdown;blocks;run_command)
+    prompt_publish_config(config)
+    ensure_publish_block_in_readme(readme_path;config)
+  src/markpact/publish/docker_pub.py:
+    e: generate_dockerfile,publish_docker
+    generate_dockerfile(config;sandbox;base_image)
+    publish_docker(config;sandbox;registry;tag;verbose)
+  src/markpact/runtime/state.py:
+    e: StateManager,ConditionChecker
+    StateManager: __init__(1),_load(0),_save(0),is_step_done(1),mark_step_done(1),mark_failed(1),clear_failed(0),start_deployment(0),end_deployment(1),reset(0),set_variable(2),get_variable(2)  # Manages deployment state for idempotency.
+
+Persists state to...
+    ConditionChecker: __init__(1),check_when(1),check_skip_if(1),_is_docker_running(0),_is_container_running(1)  # Check step conditions (when/skip_if)...
+  src/markpact/docker_runner.py:
+    e: stop_existing_container,generate_dockerfile,is_port_free,_build_docker_image_simple,_find_docker_port,_run_docker_container_interactive,build_and_run_docker,check_docker_available,run_docker_with_logs,stream_docker_logs,_build_docker_image,_resolve_docker_port,_start_docker_container,_run_docker_tests,_stop_docker_container,run_docker_with_tests
+    stop_existing_container(container_name;verbose)
+    generate_dockerfile(sandbox_path;deps;run_command)
+    is_port_free(port)
+    _build_docker_image_simple(sandbox_path;image_name;verbose)
+    _find_docker_port(port;auto_find_port;verbose)
+    _run_docker_container_interactive(sandbox_path;image_name;container_name;current_port;verbose)
+    build_and_run_docker(sandbox_path;image_name;port;verbose;auto_find_port)
+    check_docker_available()
+    run_docker_with_logs(sandbox_path;image_name;port;follow_logs;verbose;auto_find_port)
+    stream_docker_logs(process;timeout)
+    _build_docker_image(sandbox_path;image_name;verbose)
+    _resolve_docker_port(port;auto_find_port;verbose)
+    _start_docker_container(sandbox_path;image_name;current_port;verbose)
+    _run_docker_tests(test_body;current_port;verbose)
+    _stop_docker_container(container_name;process;verbose)
+    run_docker_with_tests(sandbox_path;test_body;image_name;port;verbose;auto_find_port)
+  src/markpact/config.py:
+    e: get_env_path,ensure_config_dir,load_env,save_env,init_env,set_config,set_model,set_api_key,set_api_base,apply_preset,show_config,list_providers
+    get_env_path()
+    ensure_config_dir()
+    load_env()
+    save_env(config)
+    init_env(force)
+    set_config(key;value)
+    set_model(model)
+    set_api_key(api_key)
+    set_api_base(api_base)
+    apply_preset(provider;api_key)
+    show_config()
+    list_providers()
+  src/markpact/runtime/parser.py:
+    e: BlockType,Block,MarkpactParser
+    BlockType(Enum):  # Types of markpact blocks...
+    Block:  # A parsed markpact block...
+    MarkpactParser: __init__(0),parse(1),_parse_block_type(1),get_blocks_by_type(1),get_first_block(1)  # Parser for markpact markdown files.
+
+Extracts markpact block...
+  src/markpact/runtime/executors.py:
+    e: Executor,ShellExecutor,SSHCmdExecutor,RsyncExecutor,ScpExecutor,DockerExecutor,HttpExecutor,PluginExecutor,PythonExecutor,BashExecutor,ExecutorRegistry
+    Executor(ABC): execute(2),validate(1)  # Base class for action executors...
+    ShellExecutor(Executor): execute(2),_run_local(2),_run_ssh_persistent(4),_run_ssh_subprocess(4)  # Execute shell commands locally or via SSH with persistent se...
+    SSHCmdExecutor(ShellExecutor):  # Alias for shell executor with explicit SSH...
+    RsyncExecutor(Executor): execute(2)  # Execute rsync operations...
+    ScpExecutor(Executor): execute(2)  # Execute SCP copy operations...
+    DockerExecutor(Executor): execute(2),_compose_up(2),_compose_down(2),_wait_healthy(2),_run_local(3),_run_ssh(4)  # Execute Docker Compose operations...
+    HttpExecutor(Executor): execute(2)  # Execute HTTP health checks...
+    PluginExecutor(Executor): execute(2)  # Execute custom plugin actions...
+    PythonExecutor(Executor): execute(2)  # Execute Python code blocks...
+    BashExecutor(Executor): execute(2)  # Execute Bash/shell scripts...
+    ExecutorRegistry: __init__(0),_register_defaults(0),register(1),get(1),list(0)  # Registry of available executors...
+  src/markpact/publish/llm_config.py:
+    e: _setup_llm_for_publish,_set_provider_api_key_for_publish,_call_llm_for_publish_config,_extract_publish_block_from_response,generate_publish_config_with_llm
+    _setup_llm_for_publish()
+    _set_provider_api_key_for_publish(cfg)
+    _call_llm_for_publish_config(litellm;cfg;markdown)
+    _extract_publish_block_from_response(content)
+    generate_publish_config_with_llm(markdown;verbose)
+  src/markpact/generator.py:
+    e: GeneratorConfig,_fix_unclosed_blocks,_configure_litellm,_set_provider_api_key,_call_llm_with_config,_clean_llm_response,generate_contract,save_contract,get_example_prompt,list_example_prompts
+    GeneratorConfig: from_env(0),from_file(1)  # Configuration for LLM generator...
+    _fix_unclosed_blocks(content)
+    _configure_litellm(config;verbose)
+    _set_provider_api_key(model;api_key)
+    _call_llm_with_config(config;messages)
+    _clean_llm_response(content)
+    generate_contract(prompt;config;verbose)
+    save_contract(content;output_path;verbose)
+    get_example_prompt(name)
+    list_example_prompts()
+  src/markpact/cli/run_cmd.py:
+    e: _handle_docker_mode,_print_dry_run_tests,_split_test_blocks,_run_http_tests,_run_shell_tests,_handle_test_mode,_handle_normal_run
+    _handle_docker_mode(args;sandbox;deps;run_command;verbose)
+    _print_dry_run_tests(test_blocks)
+    _split_test_blocks(test_blocks)
+    _run_http_tests(run_command;http_tests;sandbox;port;verbose;test_only)
+    _run_shell_tests(shell_tests;sandbox;verbose)
+    _handle_test_mode(args;sandbox;run_command;test_blocks;deps;verbose)
+    _handle_normal_run(args;sandbox;run_command;deps;readme;verbose)
+  src/markpact/runtime/steps.py:
+    e: StepStatus,Step,StepResult
+    StepStatus(Enum):  # Status of step execution...
+    Step: from_dict(1),to_dict(0)  # A deployment step.
+
+Attributes:
+    id: Unique step identifi...
+    StepResult: __str__(0)  # Result of step execution...
+  src/markpact/template.py:
+    e: _find_secrets_file,load_secrets,_prompt_value,resolve_template,has_template_placeholders
+    _find_secrets_file(project_dir)
+    load_secrets(project_dir)
+    _prompt_value(label;default)
+    resolve_template(body)
+    has_template_placeholders(body)
+  src/markpact/cli/pack_cmd.py:
+    e: handle_pack_cli
+    handle_pack_cli(argv)
+  src/markpact/publish/npm.py:
+    e: _build_npm_description,generate_package_json,publish_npm
+    _build_npm_description(config;sandbox)
+    generate_package_json(config;sandbox)
+    publish_npm(config;sandbox;registry;verbose)
+  src/markpact/runtime/ssh_manager.py:
+    e: SSHSessionManager,get_ssh_manager
+    SSHSessionManager: __init__(3),connect(0),exec_command(2),close(0),session(0),__del__(0)  # Manages persistent SSH sessions for performance.
+
+Avoids rec...
+    get_ssh_manager(host;user;key_file)
+  scripts/sync_version.py:
+    e: get_pyproject_version,get_bumpversion_version,set_pyproject_version,set_bumpversion_version,tag_exists,get_next_version,sync_versions
+    get_pyproject_version()
+    get_bumpversion_version()
+    set_pyproject_version(new_ver)
+    set_bumpversion_version(new_ver)
+    tag_exists(tag)
+    get_next_version(current)
+    sync_versions()
+  src/markpact/publish/version.py:
+    e: bump_version,extract_version_from_readme,update_version_in_readme
+    bump_version(version;bump_type)
+    extract_version_from_readme(readme_path)
+    update_version_in_readme(readme_path;new_version)
+  src/markpact/sandbox.py:
+    e: Sandbox,find_free_port
+    Sandbox: __init__(1),has_venv(0),write_file(2),write_requirements(1),clean(0)  # Manages sandbox directory for markpact execution...
+    find_free_port(start_port;max_attempts)
+  src/markpact/runner.py:
+    e: run_cmd,ensure_venv,install_deps
+    run_cmd(cmd;sandbox;verbose)
+    ensure_venv(sandbox;verbose)
+    install_deps(deps;sandbox;verbose)
+  src/markpact/publish/github.py:
+    e: publish_github_packages
+    publish_github_packages(config;sandbox;package_type;verbose)
+  src/markpact/runtime/exceptions.py:
+    e: MarkpactError,ParseError,ExecutionError,PluginError,ValidationError,TimeoutError,ConnectionError,RollbackError
+    MarkpactError(Exception):  # Base exception for all markpact errors...
+    ParseError(MarkpactError): __init__(2)  # Error parsing markpact file...
+    ExecutionError(MarkpactError): __init__(2)  # Error executing a step...
+    PluginError(MarkpactError): __init__(2)  # Error with plugin loading or execution...
+    ValidationError(MarkpactError):  # Error validating configuration or steps...
+    TimeoutError(ExecutionError): __init__(2)  # Step execution timed out...
+    ConnectionError(ExecutionError):  # Error connecting to remote host...
+    RollbackError(MarkpactError): __init__(2)  # Error during rollback...
+  src/markpact/publish/models.py:
+    e: PublishConfig,PublishResult
+    PublishConfig: __post_init__(0)  # Configuration for publishing...
+    PublishResult:  # Result of a publish operation...
+  examples/sync-workflow/src/app.py:
+    e: root
+    root()
+  project.sh:
+  examples/sync-workflow/src/run.sh:
+  src/markpact/__init__.py:
+  src/markpact/publisher.py:
+  src/markpact/runtime/__init__.py:
+  src/markpact/publish/__init__.py:
+  scripts/test_examples.sh:
+    e: log,log_verbose,test_example,test_publish_example,test_converter_example,test_notebook_example
+    log()
+    log_verbose()
+    test_example()
+    test_publish_example()
+    test_converter_example()
+    test_notebook_example()

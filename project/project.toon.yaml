@@ -1,0 +1,58 @@
+# markpact | 417 func | 46f | 14367L | python | 2026-04-21
+
+HEALTH:
+  CC̄=4.4  critical=38 (limit:10)  dup=4  cycles=0
+
+ALERTS[20]:
+  !!! high_fan_out     run_service_with_tests = 23 (limit:10)
+  !!! high_fan_out     main = 22 (limit:10)
+  !!  cc_exceeded      main = 24 (limit:15)
+  !!  cc_exceeded      _step_analyze_blocks = 20 (limit:15)
+  !!  cc_exceeded      _pdf_analyze = 20 (limit:15)
+  !!  high_fan_out     run_live = 19 (limit:10)
+  !!  high_fan_out     _step_analyze_blocks = 18 (limit:10)
+  !!  high_fan_out     parse_jupyter = 17 (limit:10)
+  !!  high_fan_out     _process_readme = 16 (limit:10)
+  !!  high_fan_out     RuntimeV3.reconcile = 16 (limit:10)
+
+MODULES[52] (top by size):
+  M[examples/demo_live_markpact.py] 969L C:2 F:29 CC↑20 D:0 (python)
+  M[src/markpact/notebook_converter.py] 710L C:2 F:25 CC↑11 D:1 (python)
+  M[src/markpact/runtime/core_v3.py] 651L C:4 F:29 CC↑17 D:0 (python)
+  M[src/markpact/syncer.py] 612L C:1 F:21 CC↑15 D:1 (python)
+  M[src/markpact/runtime/core_v2.py] 507L C:2 F:19 CC↑16 D:0 (python)
+  M[src/markpact/runtime/executors.py] 505L C:11 F:23 CC↑8 D:0 (python)
+  M[src/markpact/publish/pypi.py] 445L C:0 F:21 CC↑15 D:3 (python)
+  M[src/markpact/packer.py] 431L C:1 F:12 CC↑11 D:1 (python)
+  M[src/markpact/auto_fix.py] 427L C:0 F:15 CC↑18 D:1 (python)
+  M[src/markpact/docker_runner.py] 417L C:0 F:16 CC↑8 D:1 (python)
+  M[src/markpact/generator.py] 362L C:1 F:11 CC↑8 D:3 (python)
+  M[src/markpact/converter.py] 320L C:2 F:10 CC↑11 D:1 (python)
+  M[scripts/test_examples.sh] 314L C:0 F:6 CC↑0 D:0 (shell)
+  M[src/markpact/tester.py] 312L C:2 F:7 CC↑16 D:2 (python)
+  M[src/markpact/runtime/core.py] 296L C:2 F:12 CC↑11 D:0 (python)
+  LANGS: python:49/shell:3
+
+HOTSPOTS[10]:
+  ★ run_service_with_tests fan=23  // Start a service, run tests, and return results.
+
+Returns:
+    Tuple of (exit_cod
+  ★ main fan=22  // Orchestrates 22 calls
+  ★ run_live fan=19  // Main pipeline: prompt -> generate -> parse -> validate -> PDF.
+
+Refactored from 
+  ★ _step_analyze_blocks fan=18  // Analysis pipeline, 18 stages
+  ★ parse_jupyter fan=17  // Parse Jupyter .ipynb notebook.
+
+REFACTOR[15]:
+  [1] H/H Split god module examples/demo_live_markpact.py (969L, 2 classes)
+  [2] H/H Split god module src/markpact/runtime/core_v3.py (651L, 4 classes)
+  [3] H/H Split god module src/markpact/runtime/core_v2.py (507L, 2 classes)
+  [4] H/H Split god module src/markpact/syncer.py (612L, 1 classes)
+  [5] H/H Split god module src/markpact/notebook_converter.py (710L, 2 classes)
+
+EVOLUTION:
+  2026-03-06 CC̄=5.2 crit=27 8119L // Automated analysis
+  2026-03-07 CC̄=4.7 crit=25 9688L // Automated analysis
+  2026-04-21 CC̄=4.4 crit=38 14367L // Automated analysis

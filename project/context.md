@@ -3,13 +3,20 @@
 ## Overview
 
 - **Project**: /home/tom/github/wronai/markpact
+- **Primary Language**: python
+- **Languages**: python: 49, shell: 3
 - **Analysis Mode**: static
-- **Total Functions**: 265
-- **Total Classes**: 13
-- **Modules**: 35
-- **Entry Points**: 27
+- **Total Functions**: 417
+- **Total Classes**: 59
+- **Modules**: 52
+- **Entry Points**: 170
 
 ## Architecture by Module
+
+### src.markpact.runtime.core_v3
+- **Functions**: 29
+- **Classes**: 4
+- **File**: `core_v3.py`
 
 ### examples.demo_live_markpact
 - **Functions**: 29
@@ -21,14 +28,29 @@
 - **Classes**: 2
 - **File**: `notebook_converter.py`
 
+### src.markpact.runtime.executors
+- **Functions**: 23
+- **Classes**: 11
+- **File**: `executors.py`
+
+### src.markpact.publish.pypi
+- **Functions**: 21
+- **File**: `pypi.py`
+
 ### src.markpact.syncer
 - **Functions**: 21
 - **Classes**: 1
 - **File**: `syncer.py`
 
-### src.markpact.publish.pypi
-- **Functions**: 21
-- **File**: `pypi.py`
+### src.markpact.runtime.core_v2
+- **Functions**: 19
+- **Classes**: 2
+- **File**: `core_v2.py`
+
+### src.markpact.runtime.state
+- **Functions**: 17
+- **Classes**: 2
+- **File**: `state.py`
 
 ### src.markpact.docker_runner
 - **Functions**: 16
@@ -37,6 +59,11 @@
 ### src.markpact.auto_fix
 - **Functions**: 15
 - **File**: `auto_fix.py`
+
+### src.markpact.runtime.plugins
+- **Functions**: 14
+- **Classes**: 3
+- **File**: `plugins.py`
 
 ### src.markpact.publish.helpers
 - **Functions**: 13
@@ -50,6 +77,11 @@
 - **Functions**: 12
 - **Classes**: 1
 - **File**: `packer.py`
+
+### src.markpact.runtime.core
+- **Functions**: 12
+- **Classes**: 2
+- **File**: `core.py`
 
 ### src.markpact.cli.sync_cmd
 - **Functions**: 11
@@ -65,155 +97,163 @@
 - **Classes**: 2
 - **File**: `converter.py`
 
-### scripts.sync_version
-- **Functions**: 7
-- **File**: `sync_version.py`
-
 ### src.markpact.cli.run_cmd
 - **Functions**: 7
 - **File**: `run_cmd.py`
 
-### src.markpact.sandbox
-- **Functions**: 6
-- **Classes**: 1
-- **File**: `sandbox.py`
-
-### src.markpact.template
-- **Functions**: 5
-- **File**: `template.py`
-
-### src.markpact.cli
-- **Functions**: 5
-- **File**: `__init__.py`
-
-### src.markpact.cli.publish_cmd
-- **Functions**: 5
-- **File**: `publish_cmd.py`
-
-### src.markpact.cli.convert_cmd
-- **Functions**: 5
-- **File**: `convert_cmd.py`
-
-### src.markpact.publish.llm_config
-- **Functions**: 5
-- **File**: `llm_config.py`
+### src.markpact.tester
+- **Functions**: 7
+- **Classes**: 2
+- **File**: `tester.py`
 
 ## Key Entry Points
 
 Main execution flows into the system:
 
+### src.markpact.runtime.cli.main
+- **Calls**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
+
+### src.markpact.runtime.parser.MarkpactParser.parse
+> Parse markdown content and extract markpact blocks.
+
+Args:
+    content: Markdown content as string
+    
+Returns:
+    List of parsed Block objects
+- **Calls**: self.MARKPACT_RE.finditer, set, self.MARKPACT_RE.finditer, self.CODE_BLOCK_RE.finditer, self.blocks.sort, match.group, match.group, self._parse_block_type
+
+### src.markpact.runtime.core_v2.RuntimeV2.execute
+> Execute all or filtered steps with idempotency, retry, rollback.
+- **Calls**: self.parse, self._process_blocks, self.state_manager.start_deployment, self.state_manager.end_deployment, self._print_summary, re.compile, print, print
+
+### src.markpact.runtime.core_v3.RuntimeV3.reconcile
+> Reconcile current state with desired state.
+
+This is the main v3 entry point - instead of just executing steps,
+it checks current state and only appli
+- **Calls**: time.time, self.parse, self._process_blocks, self._filter_steps, len, enumerate, ExecutionSummary, print
+
+### src.markpact.runtime.plugins.PluginLoader.load_from_path
+> Load plugins from a filesystem path.
+
+The path can be:
+- A directory containing plugin packages
+- A single plugin file
+
+Args:
+    path: Path to plugin
+- **Calls**: None.resolve, self._loaded_paths.add, path.is_dir, path.exists, print, path.iterdir, None.expanduser, path.is_file
+
+### src.markpact.runtime.executors.ExecutorRegistry._register_defaults
+> Register default built-in executors.
+- **Calls**: self.register, self.register, self.register, self.register, self.register, self.register, self.register, self.register
+
 ### examples.demo_live_markpact.main
 - **Calls**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument, parser.parse_args, examples.demo_live_markpact.run_live, examples.demo_live_markpact.list_prompts
+
+### src.markpact.runtime.core.Runtime._execute_step
+> Execute a single step.
+- **Calls**: time.time, self.executors.get, print, print, StepResult, print, StepResult, executor.execute
+
+### src.markpact.runtime.core_v3.FactsGatherer._eval_condition
+> Evaluate a single condition.
+- **Calls**: condition.startswith, condition.startswith, condition.startswith, condition.startswith, self._check_command_succeeds, self._check_docker_installed, self._check_container_running, self._check_file_exists
+
+### src.markpact.runtime.core_v2.RuntimeV2._execute_step_single
+> Execute a single step attempt.
+- **Calls**: time.time, self.executors.get, print, StepResult, StepResult, executor.execute, StepResult, print
+
+### src.markpact.runtime.executors.DockerExecutor._wait_healthy
+> Wait for containers to be healthy.
+- **Calls**: step.params.get, step.params.get, time.time, ExecutionError, time.sleep, time.time, self._run_ssh, self._run_local
+
+### src.markpact.runtime.executors.HttpExecutor.execute
+- **Calls**: step.params.get, step.params.get, range, ExecutionError, step.params.get, step.params.get, ExecutionError, urllib.request.Request
 
 ### examples.demo_live_markpact._save_outputs
 > Save README and PDF outputs.
 - **Calls**: readme_path.write_text, examples.demo_live_markpact.ok, print, str, pdf.page_no, range, pdf.output, examples.demo_live_markpact.ok
 
+### src.markpact.runtime.core_v3.RuntimeV3._rollback
+> Rollback executed steps in reverse order.
+- **Calls**: reversed, reversed, print, print, print, self._exec_remote, print, self._execute_step
+
+### src.markpact.runtime.ssh_manager.SSHSessionManager.exec_command
+> Execute command via SSH.
+
+Returns: (stdout, stderr, exit_code)
+- **Calls**: self._client.exec_command, None.strip, None.strip, stdout.channel.recv_exit_status, ssh_cmd.append, ssh_cmd.append, subprocess.run, ssh_cmd.extend
+
 ### src.markpact.publish.helpers.ensure_publish_block_in_readme
 > Insert a markpact:publish block into README if none exists.
 - **Calls**: readme_path.read_text, re.search, lines.append, None.join, re.search, readme_path.write_text, lines.append, lines.append
+
+### src.markpact.runtime.executors.DockerExecutor._compose_up
+- **Calls**: step.params.get, step.params.get, step.params.get, step.params.get, step.params.get, cmd_parts.append, None.join, cmd_parts.append
+
+### src.markpact.runtime.core_v3.RuntimeV3._execute_step_with_retry
+> Execute step with retry logic.
+- **Calls**: range, self._execute_step, time.sleep, self.state_manager.mark_step_failed, StepResult, self.results.append, print, print
+
+### src.markpact.runtime.models.Step.from_dict
+> Create Step from dictionary (YAML/TOML/JSON).
+- **Calls**: cls, data.items, data.get, data.get, data.get, data.get, data.get, data.get
+
+### src.markpact.runtime.core_v2.RuntimeV2._process_steps
+> Process steps block with Pydantic validation.
+- **Calls**: yaml.safe_load, isinstance, isinstance, ValidationError, self.steps.append, Step.from_dict, ValidationError, self.steps.append
+
+### src.markpact.runtime.core_v2.RuntimeV2._print_summary
+> Print execution summary.
+- **Calls**: len, sum, sum, sum, sum, print, print, len
+
+### src.markpact.runtime.executors.RsyncExecutor.execute
+- **Calls**: step.params.get, step.params.get, step.params.get, step.params.get, cmd.extend, ExecutionError, cmd.append, cmd.extend
+
+### src.markpact.runtime.executors.BashExecutor.execute
+> Execute bash script from step params.
+- **Calls**: step.params.get, ExecutionError, tempfile.NamedTemporaryFile, f.write, f.write, f.write, subprocess.run, os.unlink
 
 ### scripts.sync_version.sync_versions
 > Sync both version files to the MAX version, ensuring next version tag doesn't exist.
 - **Calls**: scripts.sync_version.get_pyproject_version, scripts.sync_version.get_bumpversion_version, max, scripts.sync_version.tag_exists, scripts.sync_version.get_next_version, scripts.sync_version.set_pyproject_version, print, scripts.sync_version.set_bumpversion_version
 
-### src.markpact.docker_runner.stream_docker_logs
-> Stream logs from Docker container.
-- **Calls**: time.time, process.stdout.readline, print, subprocess.run, process.poll, print, sys.stdout.flush, time.time
+### src.markpact.runtime.core.Runtime.execute
+> Execute all or filtered steps.
 
-### src.markpact.docker_runner.run_docker_with_tests
-> Build, run Docker container, execute tests, and return results.
-- **Calls**: src.markpact.docker_runner._build_docker_image, src.markpact.docker_runner._resolve_docker_port, src.markpact.docker_runner._start_docker_container, src.markpact.docker_runner._run_docker_tests, src.markpact.docker_runner._stop_docker_container, TestSuite, TestSuite, TestResult
-
-### src.markpact.publish.version.extract_version_from_readme
-> Extract version from README markpact:publish block.
-- **Calls**: readme_path.read_text, re.search, re.search, match.group, re.search, version_match.group, None.strip, version_match.group
-
-### src.markpact.generator.GeneratorConfig.from_env
-> Load config from environment variables
-- **Calls**: cls, os.environ.get, os.environ.get, os.environ.get, float, int, os.environ.get, os.environ.get
-
-### src.markpact.docker_runner.run_docker_with_logs
-> Start Docker container and return process for log monitoring.
-
+Args:
+    step_filter: Optional regex to filter steps by id
+    
 Returns:
-    Tuple of (Popen process, actual port used)
-- **Calls**: src.markpact.docker_runner.stop_existing_container, subprocess.Popen, src.markpact.sandbox.find_free_port, print, print, src.markpact.docker_runner.is_port_free, print
+    True if all steps succeeded
+- **Calls**: self.parse, self._process_blocks, self._print_summary, re.compile, print, self._execute_step, self.results.append, print
 
-### src.markpact.cli.main
-> Main entry point for markpact CLI. CC≤5.
-- **Calls**: src.markpact.cli._parse_main_args, src.markpact.cli._handle_generation_phase, isinstance, src.markpact.cli._process_readme, src.markpact.cli._dispatch_subcommand, src.markpact.cli.convert_cmd._handle_list_examples, src.markpact.cli.convert_cmd._handle_list_notebook_formats
-
-### src.markpact.auto_fix.run_with_auto_fix
-> Run command with automatic error detection and fixing.
+### src.markpact.runtime.plugins.PluginLoader.load_from_module
+> Load plugin from Python module.
 
 Args:
-    cmd: Command to run
-    sandbox: Sandbox instance
-    readme_path: Path to README.md
-- **Calls**: src.markpact.auto_fix._setup_env_with_venv_simple, range, src.markpact.auto_fix.detect_error_type, src.markpact.auto_fix._run_and_print, src.markpact.auto_fix._handle_port_error_simple
+    module_name: Full module path (e.g., "my_package.plugins.my_plugin")
+    
+Returns:
+    Loaded plugin or Non
+- **Calls**: importlib.import_module, hasattr, dir, issubclass, getattr, isinstance, print, plugin_class
 
-### src.markpact.generator.GeneratorConfig.from_file
-> Load config from JSON file
-- **Calls**: json.loads, cls, path.exists, cls.from_env, path.read_text
+### src.markpact.runtime.plugins.BrowserReloadPlugin.execute
+> Reload browser via CDP.
+- **Calls**: step.params.get, step.params.get, urllib.request.Request, urllib.request.urlopen, json.loads, response.read, page.get, urllib.request.Request
 
-### src.markpact.sandbox.Sandbox.__init__
-- **Calls**: None.resolve, self.path.mkdir, Path, os.environ.get
+### src.markpact.runtime.core.Runtime._process_config
+> Process configuration block.
+- **Calls**: yaml.safe_load, isinstance, ValidationError, isinstance, isinstance, self.plugins.load_from_path, self.plugins.load_from_path, Path
 
-### src.markpact.generator.save_contract
-> Save generated contract to file.
+### src.markpact.runtime.state.ConditionChecker.check_skip_if
+> Check if 'skip_if' condition is met (should skip step).
+- **Calls**: condition.split, self._is_docker_running, len, None.exists, None.is_dir, Path, self._is_container_running, Path
 
-Args:
-    content: Generated README content
-    output_path: Where to save the file
-    verbose: Print save location
-- **Calls**: output_path.parent.mkdir, output_path.write_text, print
-
-### src.markpact.sandbox.Sandbox.write_file
-> Write file to sandbox, creating directories as needed
-- **Calls**: full.parent.mkdir, full.write_text
-
-### src.markpact.sandbox.Sandbox.write_requirements
-> Write requirements.txt
-- **Calls**: req.write_text, None.join
-
-### src.markpact.sandbox.Sandbox.clean
-> Remove sandbox directory
-- **Calls**: self.path.exists, shutil.rmtree
-
-### src.markpact.parser.Block.get_meta_value
-> Extract a key=value pair from the meta string.
-- **Calls**: re.search, re.escape
-
-### src.markpact.packer.PackResult.summary
-> Return human-readable summary.
-- **Calls**: None.join, lines.append
-
-### src.markpact.syncer.SyncResult.summary
-> Return human-readable summary.
-- **Calls**: None.join, lines.append
-
-### examples.demo_live_markpact.LiveSession.add_step
-- **Calls**: self.steps.append, StepRecord
-
-### src.markpact.sandbox.Sandbox.has_venv
-- **Calls**: self.venv_python.exists
-
-### src.markpact.parser.Block.get_path
-> Extract path= from meta
-- **Calls**: re.search
-
-### examples.demo_live_markpact._ascii
-> Transliterate Polish chars to ASCII for PDF rendering.
-- **Calls**: text.translate
-
-### examples.demo_live_markpact.LiveSession.elapsed
-- **Calls**: time.time
-
-### examples.sync-workflow.src.app.root
-- **Calls**: app.get
-
-### src.markpact.publish.models.PublishConfig.__post_init__
+### src.markpact.runtime.core_v2.RuntimeV2.__init__
+> Initialize runtime.
+- **Calls**: Path, kwargs.items, MarkpactParser, ExecutorRegistry, PluginLoader, StateManager, self._load_plugins, RuntimeConfig
 
 ## Process Flows
 
@@ -221,126 +261,266 @@ Key execution flows identified:
 
 ### Flow 1: main
 ```
-main [examples.demo_live_markpact]
+main [src.markpact.runtime.cli]
 ```
 
-### Flow 2: _save_outputs
+### Flow 2: parse
 ```
-_save_outputs [examples.demo_live_markpact]
-  └─> ok
-```
-
-### Flow 3: ensure_publish_block_in_readme
-```
-ensure_publish_block_in_readme [src.markpact.publish.helpers]
+parse [src.markpact.runtime.parser.MarkpactParser]
 ```
 
-### Flow 4: sync_versions
+### Flow 3: execute
 ```
-sync_versions [scripts.sync_version]
-  └─> get_pyproject_version
-  └─> get_bumpversion_version
+execute [src.markpact.runtime.core_v2.RuntimeV2]
 ```
 
-### Flow 5: stream_docker_logs
+### Flow 4: reconcile
 ```
-stream_docker_logs [src.markpact.docker_runner]
-```
-
-### Flow 6: run_docker_with_tests
-```
-run_docker_with_tests [src.markpact.docker_runner]
-  └─> _build_docker_image
-  └─> _resolve_docker_port
-      └─> is_port_free
-      └─ →> find_free_port
+reconcile [src.markpact.runtime.core_v3.RuntimeV3]
 ```
 
-### Flow 7: extract_version_from_readme
+### Flow 5: load_from_path
 ```
-extract_version_from_readme [src.markpact.publish.version]
-```
-
-### Flow 8: from_env
-```
-from_env [src.markpact.generator.GeneratorConfig]
+load_from_path [src.markpact.runtime.plugins.PluginLoader]
 ```
 
-### Flow 9: run_docker_with_logs
+### Flow 6: _register_defaults
 ```
-run_docker_with_logs [src.markpact.docker_runner]
-  └─> stop_existing_container
-  └─ →> find_free_port
+_register_defaults [src.markpact.runtime.executors.ExecutorRegistry]
 ```
 
-### Flow 10: run_with_auto_fix
+### Flow 7: _execute_step
 ```
-run_with_auto_fix [src.markpact.auto_fix]
-  └─> _setup_env_with_venv_simple
-  └─> detect_error_type
+_execute_step [src.markpact.runtime.core.Runtime]
+```
+
+### Flow 8: _eval_condition
+```
+_eval_condition [src.markpact.runtime.core_v3.FactsGatherer]
+```
+
+### Flow 9: _execute_step_single
+```
+_execute_step_single [src.markpact.runtime.core_v2.RuntimeV2]
+```
+
+### Flow 10: _wait_healthy
+```
+_wait_healthy [src.markpact.runtime.executors.DockerExecutor]
 ```
 
 ## Key Classes
+
+### src.markpact.runtime.core_v3.RuntimeV3
+> Markpact Runtime v3: State Reconciliation Engine
+
+Terraform-style deployment with:
+- Step hashing fo
+- **Methods**: 19
+- **Key Methods**: src.markpact.runtime.core_v3.RuntimeV3.__init__, src.markpact.runtime.core_v3.RuntimeV3.parse, src.markpact.runtime.core_v3.RuntimeV3._process_blocks, src.markpact.runtime.core_v3.RuntimeV3._load_config, src.markpact.runtime.core_v3.RuntimeV3._load_steps, src.markpact.runtime.core_v3.RuntimeV3._load_rollback, src.markpact.runtime.core_v3.RuntimeV3.plan, src.markpact.runtime.core_v3.RuntimeV3.reconcile, src.markpact.runtime.core_v3.RuntimeV3._should_execute, src.markpact.runtime.core_v3.RuntimeV3._compute_step_hash
+
+### src.markpact.runtime.core_v2.RuntimeV2
+> Production-grade runtime for executing markpact deployments.
+
+Features:
+- Pydantic validation
+- Idem
+- **Methods**: 19
+- **Key Methods**: src.markpact.runtime.core_v2.RuntimeV2.__init__, src.markpact.runtime.core_v2.RuntimeV2._load_plugins, src.markpact.runtime.core_v2.RuntimeV2.parse, src.markpact.runtime.core_v2.RuntimeV2.execute, src.markpact.runtime.core_v2.RuntimeV2._should_run_step, src.markpact.runtime.core_v2.RuntimeV2._execute_step_with_retry, src.markpact.runtime.core_v2.RuntimeV2._execute_step_single, src.markpact.runtime.core_v2.RuntimeV2._rollback, src.markpact.runtime.core_v2.RuntimeV2._get_ssh_manager, src.markpact.runtime.core_v2.RuntimeV2._process_blocks
+
+### src.markpact.runtime.core.Runtime
+> Main runtime for executing markpact markdown files.
+
+Supports multiple execution backends via plugin
+- **Methods**: 12
+- **Key Methods**: src.markpact.runtime.core.Runtime.__init__, src.markpact.runtime.core.Runtime._load_plugins, src.markpact.runtime.core.Runtime.parse, src.markpact.runtime.core.Runtime.execute, src.markpact.runtime.core.Runtime._process_blocks, src.markpact.runtime.core.Runtime._process_config, src.markpact.runtime.core.Runtime._process_steps, src.markpact.runtime.core.Runtime._process_run_block, src.markpact.runtime.core.Runtime._execute_step, src.markpact.runtime.core.Runtime._print_summary
+
+### src.markpact.runtime.state.StateManager
+> Manages deployment state for idempotency.
+
+Persists state to JSON file for resume capability.
+- **Methods**: 12
+- **Key Methods**: src.markpact.runtime.state.StateManager.__init__, src.markpact.runtime.state.StateManager._load, src.markpact.runtime.state.StateManager._save, src.markpact.runtime.state.StateManager.is_step_done, src.markpact.runtime.state.StateManager.mark_step_done, src.markpact.runtime.state.StateManager.mark_failed, src.markpact.runtime.state.StateManager.clear_failed, src.markpact.runtime.state.StateManager.start_deployment, src.markpact.runtime.state.StateManager.end_deployment, src.markpact.runtime.state.StateManager.reset
+
+### src.markpact.runtime.plugins.PluginLoader
+> Loads plugins from various sources.
+- **Methods**: 10
+- **Key Methods**: src.markpact.runtime.plugins.PluginLoader.__init__, src.markpact.runtime.plugins.PluginLoader.load_from_path, src.markpact.runtime.plugins.PluginLoader.load_from_module, src.markpact.runtime.plugins.PluginLoader._load_from_directory, src.markpact.runtime.plugins.PluginLoader._load_from_file, src.markpact.runtime.plugins.PluginLoader._extract_plugin_from_module, src.markpact.runtime.plugins.PluginLoader.get, src.markpact.runtime.plugins.PluginLoader.list, src.markpact.runtime.plugins.PluginLoader.get_all, src.markpact.runtime.plugins.PluginLoader.clear
+
+### src.markpact.runtime.core_v3.FactsGatherer
+> Gathers current state facts from target host.
+
+This enables true idempotency by checking actual stat
+- **Methods**: 9
+- **Key Methods**: src.markpact.runtime.core_v3.FactsGatherer.__init__, src.markpact.runtime.core_v3.FactsGatherer.clear_cache, src.markpact.runtime.core_v3.FactsGatherer.check, src.markpact.runtime.core_v3.FactsGatherer._eval_condition, src.markpact.runtime.core_v3.FactsGatherer._check_docker_installed, src.markpact.runtime.core_v3.FactsGatherer._check_container_running, src.markpact.runtime.core_v3.FactsGatherer._check_file_exists, src.markpact.runtime.core_v3.FactsGatherer._check_dir_exists, src.markpact.runtime.core_v3.FactsGatherer._check_command_succeeds
 
 ### src.markpact.sandbox.Sandbox
 > Manages sandbox directory for markpact execution
 - **Methods**: 8
 - **Key Methods**: src.markpact.sandbox.Sandbox.__init__, src.markpact.sandbox.Sandbox.venv_bin, src.markpact.sandbox.Sandbox.venv_pip, src.markpact.sandbox.Sandbox.venv_python, src.markpact.sandbox.Sandbox.has_venv, src.markpact.sandbox.Sandbox.write_file, src.markpact.sandbox.Sandbox.write_requirements, src.markpact.sandbox.Sandbox.clean
 
+### src.markpact.runtime.executors.DockerExecutor
+> Execute Docker Compose operations.
+- **Methods**: 7
+- **Key Methods**: src.markpact.runtime.executors.DockerExecutor.name, src.markpact.runtime.executors.DockerExecutor.execute, src.markpact.runtime.executors.DockerExecutor._compose_up, src.markpact.runtime.executors.DockerExecutor._compose_down, src.markpact.runtime.executors.DockerExecutor._wait_healthy, src.markpact.runtime.executors.DockerExecutor._run_local, src.markpact.runtime.executors.DockerExecutor._run_ssh
+- **Inherits**: Executor
+
+### src.markpact.runtime.ssh_manager.SSHSessionManager
+> Manages persistent SSH sessions for performance.
+
+Avoids reconnecting for each step - reuses single 
+- **Methods**: 6
+- **Key Methods**: src.markpact.runtime.ssh_manager.SSHSessionManager.__init__, src.markpact.runtime.ssh_manager.SSHSessionManager.connect, src.markpact.runtime.ssh_manager.SSHSessionManager.exec_command, src.markpact.runtime.ssh_manager.SSHSessionManager.close, src.markpact.runtime.ssh_manager.SSHSessionManager.session, src.markpact.runtime.ssh_manager.SSHSessionManager.__del__
+
+### src.markpact.runtime.plugins.Plugin
+> Base class for plugins.
+
+Plugins provide custom executors for specific actions.
+- **Methods**: 5
+- **Key Methods**: src.markpact.runtime.plugins.Plugin.name, src.markpact.runtime.plugins.Plugin.version, src.markpact.runtime.plugins.Plugin.execute, src.markpact.runtime.plugins.Plugin.initialize, src.markpact.runtime.plugins.Plugin.shutdown
+- **Inherits**: ABC
+
+### src.markpact.runtime.parser.MarkpactParser
+> Parser for markpact markdown files.
+
+Extracts markpact blocks from markdown files:
+- ```markpact:con
+- **Methods**: 5
+- **Key Methods**: src.markpact.runtime.parser.MarkpactParser.__init__, src.markpact.runtime.parser.MarkpactParser.parse, src.markpact.runtime.parser.MarkpactParser._parse_block_type, src.markpact.runtime.parser.MarkpactParser.get_blocks_by_type, src.markpact.runtime.parser.MarkpactParser.get_first_block
+
+### src.markpact.runtime.executors.ShellExecutor
+> Execute shell commands locally or via SSH with persistent sessions.
+- **Methods**: 5
+- **Key Methods**: src.markpact.runtime.executors.ShellExecutor.name, src.markpact.runtime.executors.ShellExecutor.execute, src.markpact.runtime.executors.ShellExecutor._run_local, src.markpact.runtime.executors.ShellExecutor._run_ssh_persistent, src.markpact.runtime.executors.ShellExecutor._run_ssh_subprocess
+- **Inherits**: Executor
+
+### src.markpact.runtime.executors.ExecutorRegistry
+> Registry of available executors.
+- **Methods**: 5
+- **Key Methods**: src.markpact.runtime.executors.ExecutorRegistry.__init__, src.markpact.runtime.executors.ExecutorRegistry._register_defaults, src.markpact.runtime.executors.ExecutorRegistry.register, src.markpact.runtime.executors.ExecutorRegistry.get, src.markpact.runtime.executors.ExecutorRegistry.list
+
+### src.markpact.runtime.state.ConditionChecker
+> Check step conditions (when/skip_if).
+- **Methods**: 5
+- **Key Methods**: src.markpact.runtime.state.ConditionChecker.__init__, src.markpact.runtime.state.ConditionChecker.check_when, src.markpact.runtime.state.ConditionChecker.check_skip_if, src.markpact.runtime.state.ConditionChecker._is_docker_running, src.markpact.runtime.state.ConditionChecker._is_container_running
+
+### src.markpact.tester.TestSuite
+> Collection of test results
+- **Methods**: 4
+- **Key Methods**: src.markpact.tester.TestSuite.passed, src.markpact.tester.TestSuite.failed, src.markpact.tester.TestSuite.total, src.markpact.tester.TestSuite.print_summary
+
+### src.markpact.runtime.models.Step
+> Pydantic-validated deployment step.
+
+Includes idempotency conditions (when/skip_if), retry logic, ro
+- **Methods**: 4
+- **Key Methods**: src.markpact.runtime.models.Step.validate_risk, src.markpact.runtime.models.Step.positive_int, src.markpact.runtime.models.Step.from_dict, src.markpact.runtime.models.Step.to_dict
+- **Inherits**: BaseModel
+
+### src.markpact.runtime.plugins.BrowserReloadPlugin
+> Plugin to reload browser via CDP (Chrome DevTools Protocol).
+- **Methods**: 3
+- **Key Methods**: src.markpact.runtime.plugins.BrowserReloadPlugin.name, src.markpact.runtime.plugins.BrowserReloadPlugin.version, src.markpact.runtime.plugins.BrowserReloadPlugin.execute
+- **Inherits**: Plugin
+
+### src.markpact.runtime.executors.Executor
+> Base class for action executors.
+- **Methods**: 3
+- **Key Methods**: src.markpact.runtime.executors.Executor.name, src.markpact.runtime.executors.Executor.execute, src.markpact.runtime.executors.Executor.validate
+- **Inherits**: ABC
+
 ### src.markpact.parser.Block
 - **Methods**: 2
 - **Key Methods**: src.markpact.parser.Block.get_path, src.markpact.parser.Block.get_meta_value
 
-### examples.demo_live_markpact.LiveSession
+### src.markpact.runtime.executors.RsyncExecutor
+> Execute rsync operations.
 - **Methods**: 2
-- **Key Methods**: examples.demo_live_markpact.LiveSession.add_step, examples.demo_live_markpact.LiveSession.elapsed
-
-### src.markpact.generator.GeneratorConfig
-> Configuration for LLM generator
-- **Methods**: 2
-- **Key Methods**: src.markpact.generator.GeneratorConfig.from_env, src.markpact.generator.GeneratorConfig.from_file
-
-### src.markpact.packer.PackResult
-> Result of packing a directory.
-- **Methods**: 1
-- **Key Methods**: src.markpact.packer.PackResult.summary
-
-### src.markpact.syncer.SyncResult
-> Result of a sync operation.
-- **Methods**: 1
-- **Key Methods**: src.markpact.syncer.SyncResult.summary
-
-### src.markpact.publish.models.PublishConfig
-> Configuration for publishing
-- **Methods**: 1
-- **Key Methods**: src.markpact.publish.models.PublishConfig.__post_init__
-
-### src.markpact.notebook_converter.NotebookCell
-> Represents a cell in a notebook.
-- **Methods**: 0
-
-### src.markpact.notebook_converter.Notebook
-> Represents a parsed notebook.
-- **Methods**: 0
-
-### src.markpact.converter.ConvertedBlock
-> A converted markpact block.
-- **Methods**: 0
-
-### src.markpact.converter.ConversionResult
-> Result of converting a Markdown file.
-- **Methods**: 0
-
-### examples.demo_live_markpact.StepRecord
-- **Methods**: 0
-
-### src.markpact.publish.models.PublishResult
-> Result of a publish operation
-- **Methods**: 0
+- **Key Methods**: src.markpact.runtime.executors.RsyncExecutor.name, src.markpact.runtime.executors.RsyncExecutor.execute
+- **Inherits**: Executor
 
 ## Data Transformation Functions
 
 Key functions that process and transform data:
+
+### src.markpact.converter.convert_markdown_to_markpact
+> Convert regular Markdown to markpact format.
+
+Analyzes code blocks and converts them to markpact:* f
+- **Output to**: ConversionResult, re.search, re.compile, pattern.sub, result.changes.append
+
+### src.markpact.cli.helpers._parse_blocks_to_state
+> Parse blocks and extract state. Returns state dict with error key if failed.
+- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
+
+### src.markpact.cli._parse_main_args
+> Build and parse the main argument parser.
+- **Output to**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
+
+### src.markpact.cli._process_readme
+> Parse blocks, extract state, dispatch to mode handler.
+- **Output to**: Sandbox, readme.read_text, src.markpact.cli.convert_cmd._handle_markdown_conversion, getattr, src.markpact.cli.helpers._parse_blocks_to_state
+
+### src.markpact.cli.sync_cmd._build_sync_parser
+> Build the sync subcommand argument parser.
+- **Output to**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
+
+### src.markpact.auto_fix._run_subprocess
+> Run subprocess with proper error handling.
+- **Output to**: subprocess.run
+
+### src.markpact.cli.convert_cmd._handle_list_notebook_formats
+> Handle --list-notebook-formats flag.
+- **Output to**: print, None.items, print, print, src.markpact.notebook_converter.get_supported_formats
+
+### src.markpact.parser.parse_blocks
+> Parse all markpact:* codeblocks from markdown text.
+
+Supports both formats:
+- New: ```python markpac
+- **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
+
+### src.markpact.parser.parse_blocks_recursive
+> Parse blocks with recursive include resolution.
+
+Resolves ``<!-- markpact:include path=sub/README.md
+- **Output to**: src.markpact.parser.parse_blocks, _INCLUDE_COMMENT_RE.finditer, set, Path.cwd, None.resolve
+
+### src.markpact.publish.helpers._format_subprocess_failure
+- **Output to**: None.strip, None.strip
+
+### src.markpact.runtime.parser.MarkpactParser.parse
+> Parse markdown content and extract markpact blocks.
+
+Args:
+    content: Markdown content as string
+ 
+- **Output to**: self.MARKPACT_RE.finditer, set, self.MARKPACT_RE.finditer, self.CODE_BLOCK_RE.finditer, self.blocks.sort
+
+### src.markpact.runtime.parser.MarkpactParser._parse_block_type
+> Parse block type from kind string.
+- **Output to**: kind_map.get, kind.lower
+
+### src.markpact.publish.main.parse_publish_block
+> Parse publish block content into config.
+
+Args:
+    block_body: The body of the publish block
+    me
+- **Output to**: all_lines.extend, PublishConfig, all_lines.append, None.splitlines, line.strip
+
+### scripts.test_examples.test_converter_example
+
+### src.markpact.runtime.executors.Executor.validate
+> Validate step configuration.
+
+### src.markpact.runtime.executors.ShellExecutor._run_ssh_subprocess
+> Fallback SSH execution via subprocess.
+- **Output to**: context.get, ssh_cmd.extend, ssh_cmd.extend, subprocess.run, ExecutionError
+
+### src.markpact.publish.pypi._parse_pypirc_section
+> Parse ~/.pypirc and check for valid section. Returns True if valid creds found.
+- **Output to**: pypirc_path.exists, print, configparser.ConfigParser, cp.read, None.strip
 
 ### src.markpact.notebook_converter.detect_format
 > Detect notebook format from file extension.
@@ -374,83 +554,6 @@ Key functions that process and transform data:
 > Parse Quarto .qmd file (similar to R Markdown but multi-language).
 - **Output to**: path.read_text, src.markpact.notebook_converter._parse_quarto_yaml_front_matter, src.markpact.notebook_converter._parse_quarto_code_chunks, Notebook
 
-### src.markpact.notebook_converter.parse_zeppelin
-> Parse Zeppelin .zpln notebook.
-- **Output to**: json.loads, content.get, content.get, Notebook, path.read_text
-
-### src.markpact.notebook_converter.parse_databricks
-> Parse Databricks .dib notebook.
-- **Output to**: json.loads, content.get, content.get, Notebook, path.read_text
-
-### src.markpact.notebook_converter.parse_notebook
-> Parse notebook file based on format.
-- **Output to**: src.markpact.notebook_converter.detect_format, src.markpact.notebook_converter.parse_jupyter, src.markpact.notebook_converter.parse_rmarkdown, src.markpact.notebook_converter.parse_quarto, src.markpact.notebook_converter.parse_zeppelin
-
-### src.markpact.notebook_converter._extract_and_format_deps
-> Extract dependencies and format as markpact block.
-- **Output to**: src.markpact.notebook_converter.extract_dependencies, lines.append, lines.append, lines.append, lines.append
-
-### src.markpact.notebook_converter._process_notebook_cells
-> Process notebook cells and return (code_cells, markdown_sections).
-- **Output to**: code_cells.append, src.markpact.notebook_converter._should_skip_first_markdown_cell, src.markpact.notebook_converter._extract_markdown_section, code_cells.append, markdown_sections.append
-
-### src.markpact.notebook_converter.convert_notebook
-> Convert a notebook file to markpact format.
-
-Args:
-    input_path: Path to notebook file (.ipynb, .R
-- **Output to**: src.markpact.notebook_converter.detect_format, src.markpact.notebook_converter.parse_notebook, src.markpact.notebook_converter.notebook_to_markpact, input_path.exists, FileNotFoundError
-
-### src.markpact.notebook_converter.get_supported_formats
-> Get dictionary of supported notebook formats.
-
-### src.markpact.parser.parse_blocks
-> Parse all markpact:* codeblocks from markdown text.
-
-Supports both formats:
-- New: ```python markpac
-- **Output to**: CODEBLOCK_NEW_RE.finditer, CODEBLOCK_OLD_RE.finditer, blocks.append, blocks.append, Block
-
-### src.markpact.parser.parse_blocks_recursive
-> Parse blocks with recursive include resolution.
-
-Resolves ``<!-- markpact:include path=sub/README.md
-- **Output to**: src.markpact.parser.parse_blocks, _INCLUDE_COMMENT_RE.finditer, set, Path.cwd, None.resolve
-
-### src.markpact.auto_fix._run_subprocess
-> Run subprocess with proper error handling.
-- **Output to**: subprocess.run
-
-### src.markpact.converter.convert_markdown_to_markpact
-> Convert regular Markdown to markpact format.
-
-Analyzes code blocks and converts them to markpact:* f
-- **Output to**: ConversionResult, re.search, re.compile, pattern.sub, result.changes.append
-
-### src.markpact.cli.helpers._parse_blocks_to_state
-> Parse blocks and extract state. Returns state dict with error key if failed.
-- **Output to**: block.get_path, src.markpact.cli.helpers._resolve_file_body, print, print, sandbox.write_file
-
-### src.markpact.syncer._process_block
-> Process a single markpact:file block match. CC≤8.
-- **Output to**: src.markpact.syncer._read_source_file, src.markpact.syncer._build_header_suffix, result.details.append, m.group, m.group
-
-### src.markpact.cli._parse_main_args
-> Build and parse the main argument parser.
-- **Output to**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
-
-### src.markpact.cli._process_readme
-> Parse blocks, extract state, dispatch to mode handler.
-- **Output to**: Sandbox, readme.read_text, src.markpact.cli.convert_cmd._handle_markdown_conversion, getattr, src.markpact.cli.helpers._parse_blocks_to_state
-
-### src.markpact.cli.sync_cmd._build_sync_parser
-> Build the sync subcommand argument parser.
-- **Output to**: argparse.ArgumentParser, parser.add_argument, parser.add_argument, parser.add_argument, parser.add_argument
-
-### src.markpact.cli.convert_cmd._handle_list_notebook_formats
-> Handle --list-notebook-formats flag.
-- **Output to**: print, None.items, print, print, src.markpact.notebook_converter.get_supported_formats
-
 ## Behavioral Patterns
 
 ### recursion_parse_blocks_recursive
@@ -458,50 +561,75 @@ Analyzes code blocks and converts them to markpact:* f
 - **Confidence**: 0.90
 - **Functions**: src.markpact.parser.parse_blocks_recursive
 
+### recursion_list
+- **Type**: recursion
+- **Confidence**: 0.90
+- **Functions**: src.markpact.runtime.plugins.PluginLoader.list
+
+### recursion_list
+- **Type**: recursion
+- **Confidence**: 0.90
+- **Functions**: src.markpact.runtime.executors.ExecutorRegistry.list
+
+### state_machine_RuntimeV3
+- **Type**: state_machine
+- **Confidence**: 0.70
+- **Functions**: src.markpact.runtime.core_v3.RuntimeV3.__init__, src.markpact.runtime.core_v3.RuntimeV3.parse, src.markpact.runtime.core_v3.RuntimeV3._process_blocks, src.markpact.runtime.core_v3.RuntimeV3._load_config, src.markpact.runtime.core_v3.RuntimeV3._load_steps
+
+### state_machine_StateManager
+- **Type**: state_machine
+- **Confidence**: 0.70
+- **Functions**: src.markpact.runtime.state.StateManager.__init__, src.markpact.runtime.state.StateManager._load, src.markpact.runtime.state.StateManager._save, src.markpact.runtime.state.StateManager.is_step_done, src.markpact.runtime.state.StateManager.mark_step_done
+
+### state_machine_ConditionChecker
+- **Type**: state_machine
+- **Confidence**: 0.70
+- **Functions**: src.markpact.runtime.state.ConditionChecker.__init__, src.markpact.runtime.state.ConditionChecker.check_when, src.markpact.runtime.state.ConditionChecker.check_skip_if, src.markpact.runtime.state.ConditionChecker._is_docker_running, src.markpact.runtime.state.ConditionChecker._is_container_running
+
 ## Public API Surface
 
 Functions exposed as public API (no underscore prefix):
 
+- `src.markpact.runtime.cli.main` - 61 calls
+- `src.markpact.tester.run_service_with_tests` - 35 calls
 - `src.markpact.cli.config_cmd.handle_config_cli` - 35 calls
+- `src.markpact.runtime.parser.MarkpactParser.parse` - 32 calls
 - `src.markpact.notebook_converter.parse_zeppelin` - 30 calls
 - `src.markpact.notebook_converter.parse_databricks` - 30 calls
+- `src.markpact.runtime.core_v2.RuntimeV2.execute` - 25 calls
 - `src.markpact.notebook_converter.parse_jupyter` - 24 calls
+- `src.markpact.tester.run_shell_tests` - 23 calls
 - `examples.demo_live_markpact.run_live` - 22 calls
+- `src.markpact.tester.run_http_test` - 21 calls
+- `src.markpact.runtime.core_v3.RuntimeV3.reconcile` - 21 calls
 - `src.markpact.template.resolve_template` - 20 calls
 - `src.markpact.packer.pack_directory` - 20 calls
 - `src.markpact.converter.convert_markdown_to_markpact` - 19 calls
 - `src.markpact.parser.parse_blocks` - 18 calls
 - `src.markpact.parser.parse_blocks_recursive` - 18 calls
+- `src.markpact.runtime.plugins.PluginLoader.load_from_path` - 18 calls
 - `src.markpact.syncer.sync_readme_recursive` - 18 calls
 - `src.markpact.syncer.print_sync_report` - 18 calls
 - `examples.demo_live_markpact.show_menu` - 18 calls
 - `examples.demo_live_markpact.main` - 18 calls
-- `src.markpact.notebook_converter.notebook_to_markpact` - 16 calls
 - `src.markpact.publish.helpers.prompt_publish_config` - 16 calls
-- `src.markpact.syncer.sync_readme` - 15 calls
+- `src.markpact.notebook_converter.notebook_to_markpact` - 16 calls
 - `src.markpact.cli.pack_cmd.handle_pack_cli` - 15 calls
 - `src.markpact.publish.main.parse_publish_block` - 15 calls
-- `src.markpact.auto_fix.run_with_auto_fix_llm` - 14 calls
+- `src.markpact.syncer.sync_readme` - 15 calls
 - `src.markpact.cli.sync_cmd.handle_sync_cli` - 14 calls
+- `src.markpact.auto_fix.run_with_auto_fix_llm` - 14 calls
+- `src.markpact.runtime.executors.HttpExecutor.execute` - 14 calls
 - `src.markpact.publish.pypi.publish_pypi` - 14 calls
+- `src.markpact.tester.http_request` - 12 calls
 - `src.markpact.config.load_env` - 12 calls
+- `src.markpact.runtime.ssh_manager.SSHSessionManager.exec_command` - 12 calls
 - `src.markpact.packer.print_pack_report` - 12 calls
-- `src.markpact.syncer.find_untracked_files` - 12 calls
-- `src.markpact.syncer.add_untracked_blocks` - 12 calls
 - `src.markpact.publish.helpers.ensure_publish_block_in_readme` - 12 calls
 - `src.markpact.publish.docker_pub.publish_docker` - 12 calls
-- `scripts.sync_version.sync_versions` - 11 calls
-- `src.markpact.docker_runner.generate_dockerfile` - 11 calls
-- `src.markpact.publish.helpers.infer_publish_config` - 11 calls
-- `src.markpact.template.load_secrets` - 10 calls
-- `src.markpact.notebook_converter.extract_dependencies` - 10 calls
-- `src.markpact.syncer.create_backup` - 10 calls
-- `src.markpact.publish.npm.publish_npm` - 10 calls
-- `src.markpact.config.save_env` - 9 calls
-- `src.markpact.config.list_providers` - 9 calls
-- `src.markpact.docker_runner.stream_docker_logs` - 9 calls
-- `src.markpact.docker_runner.run_docker_with_tests` - 9 calls
-- `src.markpact.notebook_converter.convert_notebook` - 9 calls
+- `src.markpact.syncer.find_untracked_files` - 12 calls
+- `src.markpact.syncer.add_untracked_blocks` - 12 calls
+- `src.markpact.runtime.models.Step.from_dict` - 12 calls
 
 ## System Interactions
 
@@ -511,34 +639,34 @@ How components interact:
 graph TD
     main --> ArgumentParser
     main --> add_argument
-    _save_outputs --> write_text
-    _save_outputs --> ok
-    _save_outputs --> print
-    _save_outputs --> str
-    _save_outputs --> page_no
-    ensure_publish_block --> read_text
-    ensure_publish_block --> search
-    ensure_publish_block --> append
-    ensure_publish_block --> join
-    sync_versions --> get_pyproject_versio
-    sync_versions --> get_bumpversion_vers
-    sync_versions --> max
-    sync_versions --> tag_exists
-    sync_versions --> get_next_version
-    stream_docker_logs --> time
-    stream_docker_logs --> readline
-    stream_docker_logs --> print
-    stream_docker_logs --> run
-    stream_docker_logs --> poll
-    run_docker_with_test --> _build_docker_image
-    run_docker_with_test --> _resolve_docker_port
-    run_docker_with_test --> _start_docker_contai
-    run_docker_with_test --> _run_docker_tests
-    run_docker_with_test --> _stop_docker_contain
-    extract_version_from --> read_text
-    extract_version_from --> search
-    extract_version_from --> group
-    from_env --> cls
+    parse --> finditer
+    parse --> set
+    parse --> sort
+    execute --> parse
+    execute --> _process_blocks
+    execute --> start_deployment
+    execute --> end_deployment
+    execute --> _print_summary
+    reconcile --> time
+    reconcile --> parse
+    reconcile --> _process_blocks
+    reconcile --> _filter_steps
+    reconcile --> len
+    load_from_path --> resolve
+    load_from_path --> add
+    load_from_path --> is_dir
+    load_from_path --> exists
+    load_from_path --> print
+    _register_defaults --> register
+    _execute_step --> time
+    _execute_step --> get
+    _execute_step --> print
+    _execute_step --> StepResult
+    _eval_condition --> startswith
+    _eval_condition --> _check_command_succe
+    _execute_step_single --> time
+    _execute_step_single --> get
+    _execute_step_single --> print
 ```
 
 ## Reverse Engineering Guidelines

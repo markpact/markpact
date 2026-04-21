@@ -1,0 +1,105 @@
+# code2llm | 52f 11374L | python:49,shell:3 | 2026-04-21
+# CC̄=4.4 | critical:10/417 | dups:0 | cycles:0
+
+HEALTH[12]:
+  🔴 GOD   src/markpact/runtime/executors.py = 505L, 11 classes, 23m, max CC=8
+  🔴 GOD   src/markpact/runtime/core_v3.py = 651L, 4 classes, 29m, max CC=17
+  🟡 CC    _parse_blocks_to_state CC=15 (limit:15)
+  🟡 CC    run_with_auto_fix_llm CC=18 (limit:15)
+  🟡 CC    run_service_with_tests CC=16 (limit:15)
+  🟡 CC    main CC=24 (limit:15)
+  🟡 CC    _parse_pypirc_section CC=15 (limit:15)
+  🟡 CC    _process_block CC=15 (limit:15)
+  🟡 CC    _rollback CC=17 (limit:15)
+  🟡 CC    execute CC=16 (limit:15)
+  🟡 CC    _step_analyze_blocks CC=20 (limit:15)
+  🟡 CC    _pdf_analyze CC=20 (limit:15)
+
+REFACTOR[3]:
+  1. split src/markpact/runtime/executors.py  (god module)
+  2. split src/markpact/runtime/core_v3.py  (god module)
+  3. split 10 high-CC methods  (CC>15)
+
+PIPELINES[147]:
+  [1] Src [run_docker_with_logs]: run_docker_with_logs → stop_existing_container
+      PURITY: 100% pure
+  [2] Src [stream_docker_logs]: stream_docker_logs
+      PURITY: 100% pure
+  [3] Src [run_docker_with_tests]: run_docker_with_tests → _build_docker_image
+      PURITY: 100% pure
+  [4] Src [main]: main → _parse_main_args
+      PURITY: 100% pure
+  [5] Src [root]: root
+      PURITY: 100% pure
+
+LAYERS:
+  examples/                       CC̄=4.6    ←in:0  →out:3
+  │ !! demo_live_markpact         969L  2C   29m  CC=20     ←0
+  │ app                          7L  0C    1m  CC=1      ←0
+  │ run.sh                       2L  0C    0m  CC=0.0    ←0
+  │
+  src/                            CC̄=4.5    ←in:0  →out:0
+  │ !! notebook_converter         710L  2C   25m  CC=11     ←1
+  │ !! core_v3                    651L  4C   29m  CC=17     ←0
+  │ !! syncer                     612L  1C   21m  CC=15     ←1
+  │ !! core_v2                    507L  2C   19m  CC=16     ←0
+  │ !! executors                  505L  11C   23m  CC=8      ←0
+  │ !! pypi                       445L  0C   21m  CC=15     ←3
+  │ packer                     431L  1C   12m  CC=11     ←1
+  │ !! auto_fix                   427L  0C   15m  CC=18     ←1
+  │ docker_runner              417L  0C   16m  CC=8      ←1
+  │ generator                  362L  1C   11m  CC=8      ←4
+  │ converter                  320L  2C   10m  CC=11     ←1
+  │ !! tester                     312L  2C    7m  CC=16     ←2
+  │ core                       296L  2C   12m  CC=11     ←0
+  │ sync_cmd                   291L  0C   11m  CC=14     ←1
+  │ plugins                    283L  3C   14m  CC=14     ←0
+  │ !! cli                        267L  0C    1m  CC=24     ←0
+  │ helpers                    226L  0C   13m  CC=9      ←4
+  │ __init__                   205L  0C    5m  CC=14     ←0
+  │ config                     204L  0C   12m  CC=8      ←2
+  │ template                   184L  0C    5m  CC=6      ←1
+  │ state                      176L  2C   17m  CC=9      ←0
+  │ parser                     154L  1C    4m  CC=13     ←2
+  │ parser                     153L  3C    5m  CC=8      ←0
+  │ models                     143L  5C    4m  CC=10     ←0
+  │ ssh_manager                114L  1C    7m  CC=5      ←1
+  │ convert_cmd                112L  0C    5m  CC=12     ←1
+  │ main                       110L  0C    2m  CC=11     ←3
+  │ docker_pub                 108L  0C    2m  CC=9      ←2
+  │ llm_config                 107L  0C    5m  CC=8      ←1
+  │ run_cmd                    105L  0C    7m  CC=7      ←1
+  │ steps                      103L  3C    3m  CC=7      ←2
+  │ npm                        100L  0C    3m  CC=6      ←2
+  │ publish_cmd                 95L  0C    5m  CC=10     ←1
+  │ __init__                    89L  0C    0m  CC=0.0    ←0
+  │ config_cmd                  74L  0C    1m  CC=12     ←1
+  │ version                     72L  0C    3m  CC=4      ←2
+  │ !! helpers                     66L  0C    2m  CC=15     ←1
+  │ pack_cmd                    62L  0C    1m  CC=6      ←1
+  │ sandbox                     59L  1C    6m  CC=3      ←3
+  │ __init__                    56L  0C    0m  CC=0.0    ←0
+  │ __init__                    54L  0C    0m  CC=0.0    ←0
+  │ exceptions                  53L  8C    5m  CC=2      ←0
+  │ runner                      42L  0C    3m  CC=3      ←2
+  │ github                      37L  0C    1m  CC=3      ←1
+  │ models                      32L  2C    1m  CC=2      ←0
+  │ publisher                   27L  0C    0m  CC=0.0    ←0
+  │
+  scripts/                        CC̄=1.1    ←in:0  →out:0
+  │ test_examples.sh           314L  0C    6m  CC=0.0    ←0
+  │ sync_version               106L  0C    7m  CC=5      ←0
+  │
+  ./                              CC̄=0.0    ←in:0  →out:0
+  │ project.sh                  18L  0C    0m  CC=0.0    ←0
+  │
+
+COUPLING:
+                    examples  src.markpact
+      examples            ──             3
+  src.markpact            ←3            ──
+  CYCLES: none
+
+EXTERNAL:
+  validation: run `vallm batch .` → validation.toon
+  duplication: run `redup scan .` → duplication.toon
