@@ -1,104 +1,176 @@
-# code2llm | 52f 11374L | python:49,shell:3 | 2026-04-21
-# CC̄=4.4 | critical:10/417 | dups:0 | cycles:0
+# code2llm | 106f 24705L | python:49,md:38,yaml:10,shell:3,toml:2,json:2,txt:1 | 2026-04-23
+# CC̄=1.8 | critical:10/998 | dups:0 | cycles:0
 
 HEALTH[12]:
   🔴 GOD   src/markpact/runtime/executors.py = 505L, 11 classes, 23m, max CC=8
   🔴 GOD   src/markpact/runtime/core_v3.py = 651L, 4 classes, 29m, max CC=17
   🟡 CC    _parse_blocks_to_state CC=15 (limit:15)
   🟡 CC    run_with_auto_fix_llm CC=18 (limit:15)
-  🟡 CC    run_service_with_tests CC=16 (limit:15)
   🟡 CC    main CC=24 (limit:15)
   🟡 CC    _parse_pypirc_section CC=15 (limit:15)
+  🟡 CC    run_service_with_tests CC=16 (limit:15)
   🟡 CC    _process_block CC=15 (limit:15)
-  🟡 CC    _rollback CC=17 (limit:15)
-  🟡 CC    execute CC=16 (limit:15)
   🟡 CC    _step_analyze_blocks CC=20 (limit:15)
   🟡 CC    _pdf_analyze CC=20 (limit:15)
+  🟡 CC    _rollback CC=17 (limit:15)
+  🟡 CC    execute CC=16 (limit:15)
 
 REFACTOR[3]:
   1. split src/markpact/runtime/executors.py  (god module)
   2. split src/markpact/runtime/core_v3.py  (god module)
   3. split 10 high-CC methods  (CC>15)
 
-PIPELINES[147]:
-  [1] Src [run_docker_with_logs]: run_docker_with_logs → stop_existing_container
+PIPELINES[205]:
+  [1] Src [load_secrets]: load_secrets → _find_secrets_file
       PURITY: 100% pure
-  [2] Src [stream_docker_logs]: stream_docker_logs
+  [2] Src [resolve_template]: resolve_template → _prompt_value
       PURITY: 100% pure
-  [3] Src [run_docker_with_tests]: run_docker_with_tests → _build_docker_image
+  [3] Src [has_template_placeholders]: has_template_placeholders
       PURITY: 100% pure
-  [4] Src [main]: main → _parse_main_args
+  [4] Src [root]: root
       PURITY: 100% pure
-  [5] Src [root]: root
+  [5] Src [_parse_blocks_to_state]: _parse_blocks_to_state → _resolve_file_body → load_secrets
       PURITY: 100% pure
 
 LAYERS:
-  examples/                       CC̄=4.6    ←in:0  →out:3
-  │ !! demo_live_markpact         969L  2C   29m  CC=20     ←0
-  │ app                          7L  0C    1m  CC=1      ←0
-  │ run.sh                       2L  0C    0m  CC=0.0    ←0
-  │
   src/                            CC̄=4.5    ←in:0  →out:0
-  │ !! notebook_converter         710L  2C   25m  CC=11     ←1
+  │ !! notebook_converter         710L  2C   25m  CC=11     ←0
   │ !! core_v3                    651L  4C   29m  CC=17     ←0
-  │ !! syncer                     612L  1C   21m  CC=15     ←1
+  │ !! syncer                     612L  1C   21m  CC=15     ←0
   │ !! core_v2                    507L  2C   19m  CC=16     ←0
   │ !! executors                  505L  11C   23m  CC=8      ←0
-  │ !! pypi                       445L  0C   21m  CC=15     ←3
-  │ packer                     431L  1C   12m  CC=11     ←1
-  │ !! auto_fix                   427L  0C   15m  CC=18     ←1
-  │ docker_runner              417L  0C   16m  CC=8      ←1
-  │ generator                  362L  1C   11m  CC=8      ←4
-  │ converter                  320L  2C   10m  CC=11     ←1
-  │ !! tester                     312L  2C    7m  CC=16     ←2
+  │ !! pypi                       445L  0C   21m  CC=15     ←0
+  │ packer                     431L  1C   12m  CC=11     ←0
+  │ !! auto_fix                   427L  0C   15m  CC=18     ←0
+  │ docker_runner              417L  0C   16m  CC=8      ←0
+  │ generator                  362L  1C   11m  CC=8      ←2
+  │ converter                  320L  2C   10m  CC=11     ←0
+  │ !! tester                     312L  2C    7m  CC=16     ←0
   │ core                       296L  2C   12m  CC=11     ←0
-  │ sync_cmd                   291L  0C   11m  CC=14     ←1
+  │ sync_cmd                   291L  0C   11m  CC=14     ←0
   │ plugins                    283L  3C   14m  CC=14     ←0
   │ !! cli                        267L  0C    1m  CC=24     ←0
-  │ helpers                    226L  0C   13m  CC=9      ←4
+  │ helpers                    226L  0C   13m  CC=9      ←0
   │ __init__                   205L  0C    5m  CC=14     ←0
-  │ config                     204L  0C   12m  CC=8      ←2
-  │ template                   184L  0C    5m  CC=6      ←1
+  │ config                     204L  0C   12m  CC=8      ←0
+  │ template                   184L  0C    5m  CC=6      ←0
   │ state                      176L  2C   17m  CC=9      ←0
-  │ parser                     154L  1C    4m  CC=13     ←2
+  │ parser                     154L  1C    4m  CC=13     ←0
   │ parser                     153L  3C    5m  CC=8      ←0
   │ models                     143L  5C    4m  CC=10     ←0
-  │ ssh_manager                114L  1C    7m  CC=5      ←1
-  │ convert_cmd                112L  0C    5m  CC=12     ←1
-  │ main                       110L  0C    2m  CC=11     ←3
-  │ docker_pub                 108L  0C    2m  CC=9      ←2
-  │ llm_config                 107L  0C    5m  CC=8      ←1
-  │ run_cmd                    105L  0C    7m  CC=7      ←1
+  │ ssh_manager                114L  1C    7m  CC=5      ←0
+  │ convert_cmd                112L  0C    5m  CC=12     ←0
+  │ main                       110L  0C    2m  CC=11     ←0
+  │ docker_pub                 108L  0C    2m  CC=9      ←0
+  │ llm_config                 107L  0C    5m  CC=8      ←0
+  │ run_cmd                    105L  0C    7m  CC=7      ←0
   │ steps                      103L  3C    3m  CC=7      ←2
-  │ npm                        100L  0C    3m  CC=6      ←2
-  │ publish_cmd                 95L  0C    5m  CC=10     ←1
+  │ npm                        100L  0C    3m  CC=6      ←0
+  │ publish_cmd                 95L  0C    5m  CC=10     ←0
   │ __init__                    89L  0C    0m  CC=0.0    ←0
-  │ config_cmd                  74L  0C    1m  CC=12     ←1
-  │ version                     72L  0C    3m  CC=4      ←2
-  │ !! helpers                     66L  0C    2m  CC=15     ←1
-  │ pack_cmd                    62L  0C    1m  CC=6      ←1
-  │ sandbox                     59L  1C    6m  CC=3      ←3
+  │ config_cmd                  74L  0C    1m  CC=12     ←0
+  │ version                     72L  0C    3m  CC=4      ←0
+  │ !! helpers                     66L  0C    2m  CC=15     ←0
+  │ pack_cmd                    62L  0C    1m  CC=6      ←0
+  │ sandbox                     59L  1C    6m  CC=3      ←0
   │ __init__                    56L  0C    0m  CC=0.0    ←0
   │ __init__                    54L  0C    0m  CC=0.0    ←0
   │ exceptions                  53L  8C    5m  CC=2      ←0
-  │ runner                      42L  0C    3m  CC=3      ←2
-  │ github                      37L  0C    1m  CC=3      ←1
+  │ runner                      42L  0C    3m  CC=3      ←0
+  │ github                      37L  0C    1m  CC=3      ←0
   │ models                      32L  2C    1m  CC=2      ←0
   │ publisher                   27L  0C    0m  CC=0.0    ←0
   │
-  scripts/                        CC̄=1.1    ←in:0  →out:0
+  examples/                       CC̄=1.9    ←in:0  →out:52  !! split
+  │ !! demo_live_markpact         969L  2C   29m  CC=20     ←0
+  │ README.md                  302L  0C    2m  CC=0.0    ←0
+  │ DEMOS.md                   296L  0C    0m  CC=0.0    ←0
+  │ README.md                  195L  2C    3m  CC=0.0    ←0
+  │ README.md                  164L  0C    6m  CC=0.0    ←0
+  │ README.md                  160L  0C    1m  CC=0.0    ←0
+  │ README.md                  157L  0C    1m  CC=0.0    ←0
+  │ README.md                  153L  0C    4m  CC=0.0    ←0
+  │ README.md                  136L  6C    7m  CC=0.0    ←2
+  │ README.md                  135L  0C    2m  CC=0.0    ←0
+  │ README.md                  126L  0C    3m  CC=0.0    ←0
+  │ README.md                  119L  0C    3m  CC=0.0    ←0
+  │ README.md                  107L  0C    0m  CC=0.0    ←0
+  │ README.md                   92L  0C    0m  CC=0.0    ←0
+  │ README.md                   90L  0C    1m  CC=0.0    ←0
+  │ README.md                   85L  3C    1m  CC=0.0    ←0
+  │ README.md                   73L  3C    1m  CC=0.0    ←0
+  │ README.md                   63L  1C    0m  CC=0.0    ←0
+  │ sample.md                   62L  1C    3m  CC=0.0    ←0
+  │ README.md                   62L  0C    0m  CC=0.0    ←0
+  │ README.md                   59L  0C    0m  CC=0.0    ←0
+  │ README.md                   57L  0C    0m  CC=0.0    ←0
+  │ README.md                   48L  1C    3m  CC=0.0    ←0
+  │ README.md                   44L  0C    3m  CC=0.0    ←0
+  │ app                          7L  0C    1m  CC=1      ←0
+  │ config.yaml                  4L  0C    0m  CC=0.0    ←0
+  │ run.sh                       2L  0C    0m  CC=0.0    ←0
+  │
+  scripts/                        CC̄=1.1    ←in:0  →out:3
   │ test_examples.sh           314L  0C    6m  CC=0.0    ←0
   │ sync_version               106L  0C    7m  CC=5      ←0
   │
   ./                              CC̄=0.0    ←in:0  →out:0
-  │ project.sh                  18L  0C    0m  CC=0.0    ←0
+  │ !! SUMD.md                   1041L  0C  262m  CC=0.0    ←18
+  │ !! README.md                  627L  0C    4m  CC=0.0    ←33
+  │ CHANGELOG.md               436L  0C    0m  CC=0.0    ←0
+  │ goal.yaml                  432L  0C    0m  CC=0.0    ←0
+  │ TODO.md                    109L  0C    1m  CC=0.0    ←0
+  │ pyproject.toml              94L  0C    0m  CC=0.0    ←0
+  │ project.toon-schema.json    66L  0C    0m  CC=0.0    ←0
+  │ pyqual.yaml                 55L  0C    0m  CC=0.0    ←0
+  │ project.sh                  40L  0C    0m  CC=0.0    ←0
+  │ .bumpversion.toml           14L  0C    0m  CC=0.0    ←0
+  │ markpact.config.json         6L  0C    0m  CC=0.0    ←0
+  │ Makefile                     0L  0C    0m  CC=0.0    ←0
   │
+  docs/                           CC̄=0.0    ←in:0  →out:0
+  │ README.md                  413L  0C    1m  CC=0.0    ←0
+  │ runtime-v2-improvements.md   371L  0C    1m  CC=0.0    ←0
+  │ generator.md               326L  0C    0m  CC=0.0    ←0
+  │ ci-cd.md                   143L  0C    0m  CC=0.0    ←0
+  │ contract.md                119L  0C    1m  CC=0.0    ←0
+  │ llm.md                     119L  1C    2m  CC=0.0    ←0
+  │ publishing.md               92L  0C    0m  CC=0.0    ←0
+  │
+  generated/                      CC̄=0.0    ←in:0  →out:0
+  │ README.md                   60L  1C    1m  CC=0.0    ←0
+  │
+  url-test/                       CC̄=0.0    ←in:0  →out:0
+  │ README.md                  125L  3C    2m  CC=0.0    ←0
+  │
+  project/                        CC̄=0.0    ←in:0  →out:0
+  │ !! calls.yaml                2961L  0C    0m  CC=0.0    ←0
+  │ !! project.yaml               777L  0C    0m  CC=0.0    ←0
+  │ !! context.md                 682L  0C    0m  CC=0.0    ←0
+  │ !! map.toon.yaml              501L  0C  262m  CC=0.0    ←0
+  │ README.md                  340L  0C    0m  CC=0.0    ←0
+  │ calls.toon.yaml            315L  0C    0m  CC=0.0    ←0
+  │ analysis.toon.yaml         105L  0C    0m  CC=0.0    ←0
+  │ evolution.toon.yaml         78L  0C    0m  CC=0.0    ←0
+  │ project.toon.yaml           58L  0C    0m  CC=0.0    ←0
+  │ prompt.txt                  55L  0C    0m  CC=0.0    ←0
+  │
+  ── zero ──
+     Makefile                                  0L
 
 COUPLING:
-                    examples  src.markpact
-      examples            ──             3
-  src.markpact            ←3            ──
+                                  src.markpact                 README                   SUMD               examples                scripts  examples.fastapi-todo
+           src.markpact                     ──                    347                     94                     ←1                                             2  !! fan-out
+                 README                   ←347                     ──                                           ←49                     ←3                         hub
+                   SUMD                    ←94                                            ──                     ←2                                                hub
+               examples                      1                     49                      2                     ──                                                !! fan-out
+                scripts                                             3                                                                   ──                       
+  examples.fastapi-todo                     ←2                                                                                                                 ──
   CYCLES: none
+  HUB: SUMD/ (fan-in=96)
+  HUB: README/ (fan-in=399)
+  SMELL: examples/ fan-out=52 → split needed
+  SMELL: src.markpact/ fan-out=443 → split needed
 
 EXTERNAL:
   validation: run `vallm batch .` → validation.toon

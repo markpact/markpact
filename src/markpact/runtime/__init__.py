@@ -54,7 +54,7 @@ from .exceptions import (
 Runtime = RuntimeV3
 RuntimeConfig = RuntimeConfigV3
 
-__version__ = "0.1.41"
+__version__ = "0.1.42"
 __all__ = [
     # Main runtime (v3 default)
     "Runtime",

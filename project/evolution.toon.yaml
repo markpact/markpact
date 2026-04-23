@@ -1,4 +1,4 @@
-# code2llm/evolution | 374 func | 42f | 2026-04-21
+# code2llm/evolution | 911 func | 52f | 2026-04-23
 
 NEXT[9] (ranked by impact):
   [1] !! SPLIT           src/markpact/runtime/core_v3.py
@@ -44,7 +44,7 @@ RISKS[3]:
   ⚠ Splitting src/markpact/syncer.py may break 21 import paths
 
 METRICS-TARGET:
-  CC̄:          4.5 → ≤3.1
+  CC̄:          1.9 → ≤1.3
   max-CC:      24 → ≤12
   god-modules: 5 → 0
   high-CC(≥15): 8 → ≤4
@@ -75,4 +75,4 @@ PATTERNS (language parser shared logic):
     - Standardized FunctionInfo/ClassInfo models
 
 HISTORY:
-  (first run — no previous data)
+  prev CC̄=4.5 → now CC̄=1.9

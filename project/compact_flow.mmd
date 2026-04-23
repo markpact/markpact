@@ -1,4 +1,13 @@
 flowchart TD
+    README["README<br/>4 funcs"]
+    SUMD["SUMD<br/>262 funcs"]
     examples__demo_live_markpact["examples.demo_live_markpact<br/>29 funcs"]
+    examples__fastapi_todo["examples.fastapi-todo<br/>7 funcs"]
+    scripts__sync_version["scripts.sync_version<br/>7 funcs"]
     src__markpact["src.markpact<br/>374 funcs"]
-    examples__demo_live_markpact -->|2| src__markpact
+    src__markpact ==>|347| README
+    src__markpact ==>|94| SUMD
+    examples__demo_live_markpact ==>|49| README
+    scripts__sync_version -->|3| README
+    examples__demo_live_markpact -->|2| SUMD
+    src__markpact -->|2| examples__fastapi_todo

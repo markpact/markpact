@@ -1,0 +1,195 @@
+// LESS format — define @variables here as needed
+
+app {
+  name: markpact;
+  version: 0.1.41;
+}
+
+dependencies {
+  runtime: "goal>=2.1.0, costs>=0.1.20, pfix>=0.1.60";
+  dev: "pytest>=7.0, pytest-cov>=4.0, ruff>=0.1, build, twine, bump2version>=1.0, litellm>=1.0, goal>=2.1.0, costs>=0.1.20, pfix>=0.1.60";
+}
+
+entity[name="Step"] {
+  id: string!;
+  action: string!;
+  description: string!;
+  command: string!;
+  params: Dict[str, Any]!;
+  risk: string!;
+  timeout: int!;
+  retry: int!;
+  when: string;
+  skip_if: string;
+  check_cmd: string;
+  rollback_cmd: string;
+}
+
+entity[name="DeploymentConfig"] {
+  name: string!;
+  version: string!;
+  description: string!;
+  target: Dict[str, Any]!;
+  plugins: List[Dict[str, Any]]!;
+}
+
+entity[name="DeployState"] {
+  steps_done: List[str]!;
+  step_hashes: Dict[str, str]!;
+  failed_step: string;
+  start_time: string;
+  end_time: string;
+  variables: Dict[str, Any]!;
+}
+
+entity[name="ExecutionSummary"] {
+  total_steps: int!;
+  succeeded: int!;
+  failed: int!;
+  skipped: int!;
+  total_duration: float!;
+  start_time: string;
+  end_time: string;
+  status: string!;
+}
+
+interface[type="api"] {
+  type: rest;
+  framework: fastapi;
+}
+
+interface[type="cli"] {
+  framework: argparse;
+}
+interface[type="cli"] page[name="markpact"] {
+
+}
+
+workflow[name="extract"] {
+  trigger: manual;
+  step-1: run cmd=sed -n '/^```markpact:bootstrap/,/^```[[:space:]]*$$/p' $(README) | sed '1d;$$d' > markpact.py;
+  step-2: run cmd=echo "Extracted markpact.py";
+}
+
+workflow[name="run"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) markpact.py $(README);
+}
+
+workflow[name="run-port"] {
+  trigger: manual;
+  step-1: run cmd=MARKPACT_PORT=$(PORT) $(PYTHON) markpact.py $(README);
+}
+
+workflow[name="run-cli"] {
+  trigger: manual;
+  step-1: run cmd=markpact $(README);
+}
+
+workflow[name="convert"] {
+  trigger: manual;
+  step-1: run cmd=markpact $(README) --convert-only;
+}
+
+workflow[name="clean"] {
+  trigger: manual;
+  step-1: run cmd=rm -rf $(SANDBOX) markpact.py dist/ build/ *.egg-info src/*.egg-info;
+  step-2: run cmd=find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true;
+  step-3: run cmd=find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true;
+  step-4: run cmd=echo "Cleaned all generated files";
+}
+
+workflow[name="install"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m pip install -e .;
+}
+
+workflow[name="dev"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m pip install -e ".[dev]";
+  step-2: run cmd=$(MAKE) fix-editable;
+}
+
+workflow[name="fix-editable"] {
+  trigger: manual;
+  step-1: run cmd=echo "$(PWD)/src" > .venv/lib/python3.13/site-packages/markpact.pth;
+}
+
+workflow[name="test"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m pytest tests/ -v;
+}
+
+workflow[name="test-cov"] {
+  trigger: manual;
+  step-1: run cmd=PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src $(PYTHON) -m pytest tests/ -v --cov=src/markpact --cov-report=term-missing;
+}
+
+workflow[name="lint"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m ruff check src/ tests/;
+}
+
+workflow[name="format"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m ruff format src/ tests/;
+}
+
+workflow[name="build"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m build;
+}
+
+workflow[name="publish-test"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m twine upload --repository testpypi --config-file ~/.pypirc dist/*;
+}
+
+workflow[name="publish"] {
+  trigger: manual;
+  step-1: run cmd=$(PYTHON) -m twine upload dist/*;
+}
+
+workflow[name="version"] {
+  trigger: manual;
+  step-1: run cmd=grep -m1 'version = ' pyproject.toml | cut -d'"' -f2;
+}
+
+workflow[name="bump-patch"] {
+  trigger: manual;
+  step-1: run cmd=bump2version patch --config-file .bumpversion.toml --allow-dirty;
+  step-2: run cmd=echo "Bumped to $$(python3 scripts/sync_version.py --get)";
+}
+
+workflow[name="bump-minor"] {
+  trigger: manual;
+  step-1: run cmd=bump2version minor --config-file .bumpversion.toml --allow-dirty;
+  step-2: run cmd=echo "Bumped to $$(python3 scripts/sync_version.py --get)";
+}
+
+workflow[name="bump-major"] {
+  trigger: manual;
+  step-1: run cmd=bump2version major --config-file .bumpversion.toml --allow-dirty;
+  step-2: run cmd=echo "Bumped to $$(python3 scripts/sync_version.py --get)";
+}
+
+workflow[name="sync-version"] {
+  trigger: manual;
+  step-1: run cmd=python3 scripts/sync_version.py;
+}
+
+workflow[name="release"] {
+  trigger: manual;
+  step-1: depend target=bump-patch;
+  step-2: depend target=publish;
+}
+
+deploy {
+  target: docker;
+}
+
+environment[name="local"] {
+  runtime: docker-compose;
+  env_file: .env;
+  python_version: >=3.10;
+}

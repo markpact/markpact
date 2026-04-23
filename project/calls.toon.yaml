@@ -1,50 +1,63 @@
 # code2llm call graph | /home/tom/github/wronai/markpact
-# nodes: 240 | edges: 276 | modules: 33
-# CC̄=4.4
+# nodes: 316 | edges: 396 | modules: 38
+# CC̄=1.8
 
 HUBS[20]:
+  README.print
+    CC=0  in:399  out:0  total:399
   examples.demo_live_markpact._step_analyze_blocks
     CC=20  in:1  out:40  total:41
-  src.markpact.cli.config_cmd.handle_config_cli
-    CC=12  in:1  out:35  total:36
   src.markpact.cli._parse_main_args
     CC=1  in:1  out:35  total:36
   src.markpact.tester.run_service_with_tests
-    CC=16  in:1  out:35  total:36
-  src.markpact.notebook_converter.parse_databricks
-    CC=7  in:1  out:30  total:31
+    CC=16  in:0  out:35  total:35
+  src.markpact.cli.config_cmd.handle_config_cli
+    CC=12  in:0  out:35  total:35
   src.markpact.notebook_converter.parse_zeppelin
     CC=7  in:1  out:30  total:31
+  src.markpact.notebook_converter.parse_databricks
+    CC=7  in:1  out:30  total:31
   src.markpact.cli.convert_cmd._handle_llm_generation
-    CC=11  in:1  out:26  total:27
+    CC=11  in:0  out:26  total:26
   src.markpact.notebook_converter.parse_jupyter
     CC=11  in:1  out:24  total:25
-  src.markpact.tester.run_shell_tests
-    CC=8  in:1  out:23  total:24
+  src.markpact.runtime.core_v2.RuntimeV2.execute
+    CC=16  in:0  out:25  total:25
   examples.demo_live_markpact.run_live
     CC=8  in:1  out:22  total:23
-  src.markpact.tester.run_http_test
-    CC=8  in:1  out:21  total:22
   examples.demo_live_markpact._step_generate_contract
     CC=2  in:1  out:21  total:22
-  src.markpact.packer.pack_directory
-    CC=11  in:1  out:20  total:21
-  src.markpact.template.resolve_template
-    CC=2  in:1  out:20  total:21
-  src.markpact.parser.parse_blocks
-    CC=6  in:3  out:18  total:21
-  src.markpact.syncer.print_sync_report
-    CC=10  in:2  out:18  total:20
-  src.markpact.converter.convert_markdown_to_markpact
-    CC=3  in:1  out:19  total:20
-  src.markpact.parser.parse_blocks_recursive
-    CC=13  in:2  out:18  total:20
+  src.markpact.tester.run_http_test
+    CC=8  in:1  out:21  total:22
+  src.markpact.runtime.core_v3.RuntimeV3.reconcile
+    CC=12  in:0  out:21  total:21
   examples.demo_live_markpact._print_summary
     CC=5  in:1  out:19  total:20
+  src.markpact.packer.pack_directory
+    CC=11  in:0  out:20  total:20
   examples.demo_live_markpact._finalize
     CC=3  in:1  out:19  total:20
+  src.markpact.parser.parse_blocks
+    CC=6  in:1  out:18  total:19
+  src.markpact.converter.convert_markdown_to_markpact
+    CC=3  in:0  out:19  total:19
+  examples.demo_live_markpact.ok
+    CC=2  in:18  out:1  total:19
 
 MODULES:
+  README  [1 funcs]
+    print  CC=0  out:0
+  SUMD  [60 funcs]
+    _build_description  CC=0  out:0
+    _extract_readme_description  CC=0  out:0
+    _format_subprocess_failure  CC=0  out:0
+    _handle_from_notebook  CC=0  out:0
+    _handle_list_examples  CC=0  out:0
+    _handle_list_notebook_formats  CC=0  out:0
+    _handle_llm_generation  CC=0  out:0
+    _handle_markdown_conversion  CC=0  out:0
+    _handle_publish_mode  CC=0  out:0
+    _parse_blocks_to_state  CC=0  out:0
   examples.demo_live_markpact  [20 funcs]
     _finalize  CC=3  out:19
     _print_summary  CC=5  out:19
@@ -56,6 +69,8 @@ MODULES:
     _step_sha_integrity  CC=5  out:15
     _step_validate_blocks  CC=7  out:11
     fail  CC=2  out:1
+  examples.fastapi-todo.README  [1 funcs]
+    setattr  CC=0  out:0
   scripts.sync_version  [7 funcs]
     get_bumpversion_version  CC=2  out:6
     get_next_version  CC=1  out:4
@@ -92,8 +107,6 @@ MODULES:
   src.markpact.cli.helpers  [2 funcs]
     _parse_blocks_to_state  CC=15  out:12
     _resolve_file_body  CC=6  out:8
-  src.markpact.cli.pack_cmd  [1 funcs]
-    handle_pack_cli  CC=6  out:15
   src.markpact.cli.publish_cmd  [5 funcs]
     _determine_bump_type  CC=3  out:0
     _execute_publish_result  CC=4  out:5
@@ -140,7 +153,7 @@ MODULES:
     convert_markdown_to_markpact  CC=3  out:19
     detect_block_type  CC=6  out:6
     print_conversion_report  CC=3  out:9
-  src.markpact.docker_runner  [15 funcs]
+  src.markpact.docker_runner  [14 funcs]
     _build_docker_image  CC=3  out:3
     _build_docker_image_simple  CC=4  out:5
     _find_docker_port  CC=6  out:5
@@ -150,17 +163,16 @@ MODULES:
     _start_docker_container  CC=2  out:3
     _stop_docker_container  CC=2  out:3
     build_and_run_docker  CC=3  out:4
-    check_docker_available  CC=2  out:1
-  src.markpact.generator  [8 funcs]
+    is_port_free  CC=2  out:2
+  src.markpact.generator  [7 funcs]
     _call_llm_with_config  CC=2  out:1
     _clean_llm_response  CC=4  out:4
     _configure_litellm  CC=3  out:2
     _fix_unclosed_blocks  CC=7  out:6
     _set_provider_api_key  CC=8  out:2
     generate_contract  CC=5  out:9
-    get_example_prompt  CC=1  out:1
-    list_example_prompts  CC=1  out:1
-  src.markpact.notebook_converter  [24 funcs]
+    save_contract  CC=2  out:3
+  src.markpact.notebook_converter  [23 funcs]
     _extract_and_format_deps  CC=3  out:5
     _extract_description_from_cells  CC=7  out:5
     _extract_file_hint  CC=2  out:4
@@ -171,7 +183,7 @@ MODULES:
     _parse_quarto_yaml_front_matter  CC=7  out:12
     _parse_rmd_code_chunks  CC=5  out:15
     _parse_rmd_yaml_front_matter  CC=5  out:11
-  src.markpact.packer  [10 funcs]
+  src.markpact.packer  [11 funcs]
     _build_run_command  CC=8  out:0
     _collect_files  CC=10  out:13
     _detect_file_indicators  CC=5  out:8
@@ -190,55 +202,79 @@ MODULES:
     publish_docker  CC=9  out:12
   src.markpact.publish.github  [1 funcs]
     publish_github_packages  CC=3  out:3
-  src.markpact.publish.helpers  [12 funcs]
+  src.markpact.publish.helpers  [11 funcs]
     _analyze_blocks_for_types  CC=4  out:3
     _build_package_name  CC=9  out:5
     _check_file_type  CC=2  out:7
     _detect_registry  CC=7  out:1
     _first_heading  CC=3  out:3
     _first_paragraph  CC=7  out:8
-    _format_subprocess_failure  CC=5  out:2
     _get_default_author  CC=4  out:3
     _is_web_service  CC=3  out:1
     _slugify  CC=2  out:5
+    infer_publish_config  CC=2  out:11
   src.markpact.publish.llm_config  [5 funcs]
     _call_llm_for_publish_config  CC=2  out:1
     _extract_publish_block_from_response  CC=4  out:5
     _set_provider_api_key_for_publish  CC=8  out:2
     _setup_llm_for_publish  CC=3  out:1
     generate_publish_config_with_llm  CC=8  out:5
-  src.markpact.publish.main  [2 funcs]
-    parse_publish_block  CC=11  out:15
+  src.markpact.publish.main  [1 funcs]
     publish  CC=9  out:9
   src.markpact.publish.npm  [3 funcs]
     _build_npm_description  CC=3  out:5
     generate_package_json  CC=2  out:3
     publish_npm  CC=6  out:10
-  src.markpact.publish.pypi  [19 funcs]
+  src.markpact.publish.pypi  [20 funcs]
     _build_description  CC=3  out:5
     _build_package  CC=5  out:5
     _build_upload_cmd  CC=5  out:6
     _check_pypi_credentials  CC=9  out:7
     _copy_readme  CC=10  out:16
     _determine_base_path  CC=5  out:7
+    _ensure_build_backend  CC=7  out:4
     _extract_readme_description  CC=8  out:8
     _get_build_error_hint  CC=6  out:0
     _get_upload_error_hint  CC=8  out:0
-    _normalize_package_name  CC=4  out:3
-  src.markpact.publish.version  [2 funcs]
-    bump_version  CC=4  out:7
-    update_version_in_readme  CC=2  out:3
   src.markpact.runner  [3 funcs]
     ensure_venv  CC=3  out:3
     install_deps  CC=2  out:3
     run_cmd  CC=3  out:6
+  src.markpact.runtime.core  [5 funcs]
+    __init__  CC=3  out:8
+    _execute_step  CC=6  out:17
+    _print_summary  CC=11  out:9
+    execute  CC=9  out:11
+    parse  CC=3  out:6
+  src.markpact.runtime.core_v2  [8 funcs]
+    __init__  CC=4  out:10
+    _execute_step_single  CC=9  out:15
+    _execute_step_with_retry  CC=9  out:6
+    _print_summary  CC=11  out:12
+    _rollback  CC=8  out:10
+    execute  CC=16  out:25
+    parse  CC=3  out:6
+    reset_state  CC=1  out:2
+  src.markpact.runtime.core_v3  [4 funcs]
+    _execute_step  CC=3  out:6
+    _execute_step_with_retry  CC=8  out:12
+    _rollback  CC=17  out:13
+    reconcile  CC=12  out:21
   src.markpact.runtime.executors  [1 funcs]
     _run_ssh_persistent  CC=4  out:6
-  src.markpact.runtime.ssh_manager  [1 funcs]
-    get_ssh_manager  CC=1  out:1
-  src.markpact.sandbox  [1 funcs]
-    find_free_port  CC=3  out:4
-  src.markpact.syncer  [20 funcs]
+  src.markpact.runtime.plugins  [5 funcs]
+    _extract_plugin_from_module  CC=6  out:9
+    _load_from_directory  CC=5  out:7
+    _load_from_file  CC=4  out:5
+    load_from_module  CC=6  out:10
+    load_from_path  CC=14  out:18
+  src.markpact.runtime.ssh_manager  [2 funcs]
+    close  CC=2  out:2
+    connect  CC=5  out:7
+  src.markpact.runtime.state  [2 funcs]
+    _load  CC=3  out:6
+    _save  CC=2  out:3
+  src.markpact.syncer  [19 funcs]
     _backup_dir  CC=1  out:0
     _build_block  CC=1  out:1
     _build_header_suffix  CC=2  out:2
@@ -249,46 +285,49 @@ MODULES:
     _prune_backups  CC=2  out:3
     _read_source_file  CC=3  out:4
     _write_new_blocks  CC=2  out:4
-  src.markpact.template  [4 funcs]
+  src.markpact.template  [2 funcs]
     _find_secrets_file  CC=4  out:3
-    has_template_placeholders  CC=2  out:3
     load_secrets  CC=6  out:10
-    resolve_template  CC=2  out:20
-  src.markpact.tester  [6 funcs]
+  src.markpact.tester  [5 funcs]
+    print_summary  CC=3  out:5
     http_request  CC=7  out:12
     run_http_test  CC=8  out:21
     run_service_with_tests  CC=16  out:35
-    run_shell_tests  CC=8  out:23
     run_tests_from_block  CC=4  out:7
-    wait_for_service  CC=4  out:6
 
 EDGES:
   src.markpact.template.load_secrets → src.markpact.template._find_secrets_file
-  src.markpact.converter.detect_block_type → src.markpact.converter._detect_deps
-  src.markpact.converter.detect_block_type → src.markpact.converter._detect_run
-  src.markpact.converter.detect_block_type → src.markpact.converter._detect_file
-  src.markpact.converter.convert_markdown_to_markpact → src.markpact.converter.detect_block_type
-  src.markpact.converter.print_conversion_report → src.markpact.converter._print_conversion_header
-  src.markpact.converter.print_conversion_report → src.markpact.converter._print_block_changes
-  src.markpact.converter.print_conversion_report → src.markpact.converter._print_conversion_summary
-  src.markpact.cli.helpers._resolve_file_body → src.markpact.template.load_secrets
-  src.markpact.cli.helpers._resolve_file_body → src.markpact.template.resolve_template
-  src.markpact.cli.helpers._resolve_file_body → src.markpact.template.has_template_placeholders
+  src.markpact.cli.helpers._resolve_file_body → SUMD.load_secrets
+  src.markpact.cli.helpers._resolve_file_body → SUMD.resolve_template
+  src.markpact.cli.helpers._resolve_file_body → SUMD.has_template_placeholders
+  src.markpact.cli.helpers._resolve_file_body → README.print
   src.markpact.cli.helpers._parse_blocks_to_state → src.markpact.cli.helpers._resolve_file_body
+  src.markpact.cli.helpers._parse_blocks_to_state → README.print
+  src.markpact.docker_runner.stop_existing_container → README.print
+  src.markpact.docker_runner._build_docker_image_simple → README.print
   src.markpact.docker_runner._find_docker_port → src.markpact.docker_runner.is_port_free
-  src.markpact.docker_runner._find_docker_port → src.markpact.sandbox.find_free_port
+  src.markpact.docker_runner._find_docker_port → README.print
+  src.markpact.docker_runner._find_docker_port → SUMD.find_free_port
+  src.markpact.docker_runner._run_docker_container_interactive → README.print
   src.markpact.docker_runner.build_and_run_docker → src.markpact.docker_runner._build_docker_image_simple
   src.markpact.docker_runner.build_and_run_docker → src.markpact.docker_runner.stop_existing_container
   src.markpact.docker_runner.build_and_run_docker → src.markpact.docker_runner._find_docker_port
   src.markpact.docker_runner.build_and_run_docker → src.markpact.docker_runner._run_docker_container_interactive
   src.markpact.docker_runner.run_docker_with_logs → src.markpact.docker_runner.stop_existing_container
-  src.markpact.docker_runner.run_docker_with_logs → src.markpact.sandbox.find_free_port
+  src.markpact.docker_runner.run_docker_with_logs → SUMD.find_free_port
+  src.markpact.docker_runner.run_docker_with_logs → README.print
   src.markpact.docker_runner.run_docker_with_logs → src.markpact.docker_runner.is_port_free
+  src.markpact.docker_runner.stream_docker_logs → README.print
+  src.markpact.docker_runner._build_docker_image → README.print
   src.markpact.docker_runner._resolve_docker_port → src.markpact.docker_runner.is_port_free
-  src.markpact.docker_runner._resolve_docker_port → src.markpact.sandbox.find_free_port
+  src.markpact.docker_runner._resolve_docker_port → README.print
+  src.markpact.docker_runner._resolve_docker_port → SUMD.find_free_port
   src.markpact.docker_runner._start_docker_container → src.markpact.docker_runner.stop_existing_container
-  src.markpact.docker_runner._run_docker_tests → src.markpact.tester.run_tests_from_block
-  src.markpact.docker_runner._run_docker_tests → src.markpact.tester.wait_for_service
+  src.markpact.docker_runner._start_docker_container → README.print
+  src.markpact.docker_runner._run_docker_tests → SUMD.run_tests_from_block
+  src.markpact.docker_runner._run_docker_tests → README.print
+  src.markpact.docker_runner._run_docker_tests → SUMD.wait_for_service
+  src.markpact.docker_runner._stop_docker_container → README.print
   src.markpact.docker_runner.run_docker_with_tests → src.markpact.docker_runner._build_docker_image
   src.markpact.docker_runner.run_docker_with_tests → src.markpact.docker_runner._resolve_docker_port
   src.markpact.docker_runner.run_docker_with_tests → src.markpact.docker_runner._start_docker_container
@@ -298,18 +337,12 @@ EDGES:
   src.markpact.cli.main → src.markpact.cli._handle_generation_phase
   src.markpact.cli.main → src.markpact.cli._process_readme
   src.markpact.cli.main → src.markpact.cli._dispatch_subcommand
-  src.markpact.cli.main → src.markpact.cli.convert_cmd._handle_list_examples
-  src.markpact.cli.main → src.markpact.cli.convert_cmd._handle_list_notebook_formats
-  src.markpact.cli._dispatch_subcommand → src.markpact.cli.config_cmd.handle_config_cli
-  src.markpact.cli._dispatch_subcommand → src.markpact.cli.pack_cmd.handle_pack_cli
-  src.markpact.cli._dispatch_subcommand → src.markpact.cli.sync_cmd.handle_sync_cli
-  src.markpact.cli._handle_generation_phase → src.markpact.cli.convert_cmd._handle_from_notebook
-  src.markpact.cli._handle_generation_phase → src.markpact.cli.convert_cmd._handle_llm_generation
-  src.markpact.cli._process_readme → src.markpact.cli.convert_cmd._handle_markdown_conversion
-  src.markpact.cli._process_readme → src.markpact.cli.helpers._parse_blocks_to_state
-  src.markpact.cli._process_readme → src.markpact.parser.parse_blocks_recursive
-  src.markpact.cli._process_readme → src.markpact.parser.parse_blocks
-  src.markpact.cli._process_readme → src.markpact.cli.publish_cmd._handle_publish_mode
-  src.markpact.cli.sync_cmd._handle_backups_mode → src.markpact.syncer.list_backups
-  src.markpact.cli.sync_cmd._handle_rollback_mode → src.markpact.syncer.restore_backup
-  src.markpact.cli.sync_cmd._handle_list_mode → src.markpact.syncer.list_tracked_paths
+  src.markpact.cli.main → SUMD._handle_list_examples
+  src.markpact.cli.main → SUMD._handle_list_notebook_formats
+  src.markpact.cli._dispatch_subcommand → SUMD.handle_config_cli
+  src.markpact.cli._dispatch_subcommand → SUMD.handle_pack_cli
+  src.markpact.cli._dispatch_subcommand → SUMD.handle_sync_cli
+  src.markpact.cli._handle_generation_phase → SUMD._handle_from_notebook
+  src.markpact.cli._handle_generation_phase → SUMD._handle_llm_generation
+  src.markpact.cli._handle_generation_phase → README.print
+  src.markpact.cli._process_readme → SUMD._handle_markdown_conversion

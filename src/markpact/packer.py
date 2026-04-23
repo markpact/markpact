@@ -84,6 +84,7 @@ class PackResult:
     dry_run: bool = False
     success: bool = True
     message: str = ""
+    output_size: int = 0
 
     def summary(self) -> str:
         """Return human-readable summary."""
@@ -391,7 +392,9 @@ def pack_directory(
     
     # Write output
     _write_output(output_path, lines, files_to_pack, dry_run, verbose)
-    
+
+    output_size = output_path.stat().st_size if output_path.exists() else 0
+
     return PackResult(
         source_dir=src,
         output_path=output_path,
@@ -400,6 +403,7 @@ def pack_directory(
         blocks=blocks_info,
         dry_run=dry_run,
         success=True,
+        output_size=output_size,
     )
 
 
@@ -418,6 +422,11 @@ def print_pack_report(result: PackResult) -> None:
     
     print(f"\nSource: {result.source_dir}")
     print(f"Output: {result.output_path}")
+    size_kb = result.output_size / 1024
+    if size_kb < 1:
+        print(f"Size: {result.output_size} bytes")
+    else:
+        print(f"Size: {size_kb:.1f} KB")
     print(f"\n✓ Files packed: {result.files_packed}")
     
     if result.blocks:

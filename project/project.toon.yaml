@@ -1,7 +1,7 @@
-# markpact | 417 func | 46f | 14367L | python | 2026-04-21
+# markpact | 998 func | 72f | 28285L | python | 2026-04-23
 
 HEALTH:
-  CC̄=4.4  critical=38 (limit:10)  dup=4  cycles=0
+  CC̄=1.8  critical=38 (limit:10)  dup=6  cycles=0
 
 ALERTS[20]:
   !!! high_fan_out     run_service_with_tests = 23 (limit:10)
@@ -15,23 +15,23 @@ ALERTS[20]:
   !!  high_fan_out     _process_readme = 16 (limit:10)
   !!  high_fan_out     RuntimeV3.reconcile = 16 (limit:10)
 
-MODULES[52] (top by size):
+MODULES[106] (top by size):
+  M[project/calls.yaml] 2961L C:0 F:0 CC↑0 D:0 (yaml)
+  M[SUMD.md] 1041L C:0 F:262 CC↑0 D:18 (md)
   M[examples/demo_live_markpact.py] 969L C:2 F:29 CC↑20 D:0 (python)
-  M[src/markpact/notebook_converter.py] 710L C:2 F:25 CC↑11 D:1 (python)
+  M[project/project.yaml] 777L C:0 F:0 CC↑0 D:0 (yaml)
+  M[src/markpact/notebook_converter.py] 710L C:2 F:25 CC↑11 D:0 (python)
+  M[project/context.md] 682L C:0 F:0 CC↑0 D:0 (md)
   M[src/markpact/runtime/core_v3.py] 651L C:4 F:29 CC↑17 D:0 (python)
-  M[src/markpact/syncer.py] 612L C:1 F:21 CC↑15 D:1 (python)
+  M[README.md] 627L C:0 F:4 CC↑0 D:33 (md)
+  M[src/markpact/syncer.py] 612L C:1 F:21 CC↑15 D:0 (python)
   M[src/markpact/runtime/core_v2.py] 507L C:2 F:19 CC↑16 D:0 (python)
   M[src/markpact/runtime/executors.py] 505L C:11 F:23 CC↑8 D:0 (python)
-  M[src/markpact/publish/pypi.py] 445L C:0 F:21 CC↑15 D:3 (python)
-  M[src/markpact/packer.py] 431L C:1 F:12 CC↑11 D:1 (python)
-  M[src/markpact/auto_fix.py] 427L C:0 F:15 CC↑18 D:1 (python)
-  M[src/markpact/docker_runner.py] 417L C:0 F:16 CC↑8 D:1 (python)
-  M[src/markpact/generator.py] 362L C:1 F:11 CC↑8 D:3 (python)
-  M[src/markpact/converter.py] 320L C:2 F:10 CC↑11 D:1 (python)
-  M[scripts/test_examples.sh] 314L C:0 F:6 CC↑0 D:0 (shell)
-  M[src/markpact/tester.py] 312L C:2 F:7 CC↑16 D:2 (python)
-  M[src/markpact/runtime/core.py] 296L C:2 F:12 CC↑11 D:0 (python)
-  LANGS: python:49/shell:3
+  M[project/map.toon.yaml] 501L C:0 F:262 CC↑0 D:0 (yaml)
+  M[src/markpact/publish/pypi.py] 445L C:0 F:21 CC↑15 D:0 (python)
+  M[CHANGELOG.md] 436L C:0 F:0 CC↑0 D:0 (md)
+  M[goal.yaml] 432L C:0 F:0 CC↑0 D:0 (yaml)
+  LANGS: python:49/md:38/yaml:10/shell:3/toml:2/json:2/other:1/txt:1
 
 HOTSPOTS[10]:
   ★ run_service_with_tests fan=23  // Start a service, run tests, and return results.
@@ -55,4 +55,4 @@ REFACTOR[15]:
 EVOLUTION:
   2026-03-06 CC̄=5.2 crit=27 8119L // Automated analysis
   2026-03-07 CC̄=4.7 crit=25 9688L // Automated analysis
-  2026-04-21 CC̄=4.4 crit=38 14367L // Automated analysis
+  2026-04-23 CC̄=1.8 crit=38 28285L // Automated analysis

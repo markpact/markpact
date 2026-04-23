@@ -1,0 +1,99 @@
+# redup/duplication | 8 groups | 49f 10757L | 2026-04-23
+
+SUMMARY:
+  files_scanned: 49
+  total_lines:   10757
+  dup_groups:    8
+  dup_fragments: 17
+  saved_lines:   92
+  scan_ms:       5033
+
+HOTSPOTS[7] (files with most duplication):
+  src/markpact/notebook_converter.py  dup=79L  groups=1  frags=2  (0.7%)
+  src/markpact/runtime/core.py  dup=24L  groups=2  frags=2  (0.2%)
+  src/markpact/runtime/core_v2.py  dup=24L  groups=2  frags=2  (0.2%)
+  src/markpact/cli/convert_cmd.py  dup=16L  groups=1  frags=2  (0.1%)
+  src/markpact/auto_fix.py  dup=14L  groups=1  frags=2  (0.1%)
+  src/markpact/config.py  dup=9L  groups=1  frags=3  (0.1%)
+  examples/demo_live_markpact.py  dup=6L  groups=1  frags=2  (0.1%)
+
+DUPLICATES[8] (ranked by impact):
+  [53de7ca7b2b8d159] ! STRU  _parse_rmd_code_chunks  L=41 N=2 saved=41 sim=1.00
+      src/markpact/notebook_converter.py:126-166  (_parse_rmd_code_chunks)
+      src/markpact/notebook_converter.py:223-260  (_parse_quarto_code_chunks)
+  [28d6f1d39ecfd0cc]   EXAC  _load_plugins  L=12 N=2 saved=12 sim=1.00
+      src/markpact/runtime/core.py:78-89  (_load_plugins)
+      src/markpact/runtime/core_v2.py:97-108  (_load_plugins)
+  [092e6323444fbfe6]   EXAC  parse  L=12 N=2 saved=12 sim=1.00
+      src/markpact/runtime/core.py:91-102  (parse)
+      src/markpact/runtime/core_v2.py:110-121  (parse)
+  [1aeee8024563e101]   STRU  _handle_list_examples  L=8 N=2 saved=8 sim=1.00
+      src/markpact/cli/convert_cmd.py:12-19  (_handle_list_examples)
+      src/markpact/cli/convert_cmd.py:22-29  (_handle_list_notebook_formats)
+  [805c8fd6e0aa41d1]   STRU  _setup_env_with_venv_simple  L=7 N=2 saved=7 sim=1.00
+      src/markpact/auto_fix.py:90-96  (_setup_env_with_venv_simple)
+      src/markpact/auto_fix.py:279-285  (_setup_env_with_venv)
+  [1bb09be55cf9f692]   STRU  set_model  L=3 N=3 saved=6 sim=1.00
+      src/markpact/config.py:134-136  (set_model)
+      src/markpact/config.py:139-141  (set_api_key)
+      src/markpact/config.py:144-146  (set_api_base)
+  [28156e4c54dd940f]   EXAC  name  L=3 N=2 saved=3 sim=1.00
+      src/markpact/runtime/executors.py:26-28  (name)
+      src/markpact/runtime/plugins.py:31-33  (name)
+  [8696c3423bddd809]   STRU  ok  L=3 N=2 saved=3 sim=1.00
+      examples/demo_live_markpact.py:383-385  (ok)
+      examples/demo_live_markpact.py:388-390  (fail)
+
+REFACTOR[8] (ranked by priority):
+  [1] ○ extract_function   → src/markpact/utils/_parse_rmd_code_chunks.py
+      WHY: 2 occurrences of 41-line block across 1 files — saves 41 lines
+      FILES: src/markpact/notebook_converter.py
+  [2] ○ extract_function   → src/markpact/runtime/utils/_load_plugins.py
+      WHY: 2 occurrences of 12-line block across 2 files — saves 12 lines
+      FILES: src/markpact/runtime/core.py, src/markpact/runtime/core_v2.py
+  [3] ○ extract_function   → src/markpact/runtime/utils/parse.py
+      WHY: 2 occurrences of 12-line block across 2 files — saves 12 lines
+      FILES: src/markpact/runtime/core.py, src/markpact/runtime/core_v2.py
+  [4] ○ extract_function   → src/markpact/cli/utils/_handle_list_examples.py
+      WHY: 2 occurrences of 8-line block across 1 files — saves 8 lines
+      FILES: src/markpact/cli/convert_cmd.py
+  [5] ○ extract_function   → src/markpact/utils/_setup_env_with_venv_simple.py
+      WHY: 2 occurrences of 7-line block across 1 files — saves 7 lines
+      FILES: src/markpact/auto_fix.py
+  [6] ○ extract_function   → src/markpact/utils/set_model.py
+      WHY: 3 occurrences of 3-line block across 1 files — saves 6 lines
+      FILES: src/markpact/config.py
+  [7] ○ extract_function   → src/markpact/runtime/utils/name.py
+      WHY: 2 occurrences of 3-line block across 2 files — saves 3 lines
+      FILES: src/markpact/runtime/executors.py, src/markpact/runtime/plugins.py
+  [8] ○ extract_function   → examples/utils/ok.py
+      WHY: 2 occurrences of 3-line block across 1 files — saves 3 lines
+      FILES: examples/demo_live_markpact.py
+
+QUICK_WINS[6] (low risk, high savings — do first):
+  [1] extract_function   saved=41L  → src/markpact/utils/_parse_rmd_code_chunks.py
+      FILES: notebook_converter.py
+  [2] extract_function   saved=12L  → src/markpact/runtime/utils/_load_plugins.py
+      FILES: core.py, core_v2.py
+  [3] extract_function   saved=12L  → src/markpact/runtime/utils/parse.py
+      FILES: core.py, core_v2.py
+  [4] extract_function   saved=8L  → src/markpact/cli/utils/_handle_list_examples.py
+      FILES: convert_cmd.py
+  [5] extract_function   saved=7L  → src/markpact/utils/_setup_env_with_venv_simple.py
+      FILES: auto_fix.py
+  [6] extract_function   saved=6L  → src/markpact/utils/set_model.py
+      FILES: config.py
+
+EFFORT_ESTIMATE (total ≈ 3.8h):
+  hard   _parse_rmd_code_chunks              saved=41L  ~123min
+  easy   _load_plugins                       saved=12L  ~24min
+  easy   parse                               saved=12L  ~24min
+  easy   _handle_list_examples               saved=8L  ~16min
+  easy   _setup_env_with_venv_simple         saved=7L  ~14min
+  easy   set_model                           saved=6L  ~12min
+  easy   name                                saved=3L  ~6min
+  easy   ok                                  saved=3L  ~6min
+
+METRICS-TARGET:
+  dup_groups:  8 → 0
+  saved_lines: 92 lines recoverable

@@ -1,107 +1,37 @@
 project: /home/tom/github/wronai/markpact
 generated_from: code2llm call graph analysis
 stats:
-  total_nodes: 240
-  total_edges: 276
-  modules_count: 33
+  total_nodes: 316
+  total_edges: 396
+  modules_count: 38
 nodes:
-  src.markpact.cli.run_cmd._print_dry_run_tests:
-    name: _print_dry_run_tests
-    module: src.markpact.cli.run_cmd
-    line: 27
-    cyclomatic_complexity: 2
-    calls_out: 4
-    calls_in: 1
-  src.markpact.publish.helpers._format_subprocess_failure:
-    name: _format_subprocess_failure
-    module: src.markpact.publish.helpers
-    line: 47
-    cyclomatic_complexity: 5
-    calls_out: 2
-    calls_in: 5
-  src.markpact.publish.pypi._build_description:
-    name: _build_description
-    module: src.markpact.publish.pypi
-    line: 53
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 2
-  src.markpact.notebook_converter.parse_databricks:
-    name: parse_databricks
-    module: src.markpact.notebook_converter
-    line: 340
-    cyclomatic_complexity: 7
-    calls_out: 30
-    calls_in: 1
-  src.markpact.notebook_converter.notebook_to_markpact:
-    name: notebook_to_markpact
-    module: src.markpact.notebook_converter
-    line: 636
-    cyclomatic_complexity: 3
-    calls_out: 16
-    calls_in: 1
-  src.markpact.notebook_converter._parse_rmd_code_chunks:
-    name: _parse_rmd_code_chunks
-    module: src.markpact.notebook_converter
-    line: 126
-    cyclomatic_complexity: 5
-    calls_out: 15
-    calls_in: 1
-  examples.demo_live_markpact._step_sha_integrity:
-    name: _step_sha_integrity
+  src.markpact.config.show_config:
+    name: show_config
+    module: src.markpact.config
+    line: 167
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 0
+  examples.demo_live_markpact.list_prompts:
+    name: list_prompts
     module: examples.demo_live_markpact
-    line: 630
-    cyclomatic_complexity: 5
-    calls_out: 15
-    calls_in: 1
-  src.markpact.publish.helpers._is_web_service:
-    name: _is_web_service
-    module: src.markpact.publish.helpers
-    line: 92
+    line: 485
     cyclomatic_complexity: 3
-    calls_out: 1
+    calls_out: 3
     calls_in: 1
-  src.markpact.publish.helpers._build_package_name:
-    name: _build_package_name
-    module: src.markpact.publish.helpers
-    line: 114
-    cyclomatic_complexity: 9
-    calls_out: 5
-    calls_in: 1
-  src.markpact.cli.helpers._resolve_file_body:
-    name: _resolve_file_body
-    module: src.markpact.cli.helpers
-    line: 10
-    cyclomatic_complexity: 6
-    calls_out: 8
-    calls_in: 1
-  src.markpact.cli.sync_cmd._handle_add_mode:
-    name: _handle_add_mode
-    module: src.markpact.cli.sync_cmd
-    line: 135
-    cyclomatic_complexity: 8
-    calls_out: 8
-    calls_in: 1
-  src.markpact.converter._print_conversion_summary:
-    name: _print_conversion_summary
-    module: src.markpact.converter
-    line: 283
-    cyclomatic_complexity: 11
-    calls_out: 9
-    calls_in: 1
-  src.markpact.cli.convert_cmd._handle_from_notebook:
-    name: _handle_from_notebook
-    module: src.markpact.cli.convert_cmd
-    line: 32
-    cyclomatic_complexity: 6
-    calls_out: 8
-    calls_in: 1
-  src.markpact.packer._collect_files:
-    name: _collect_files
-    module: src.markpact.packer
-    line: 185
-    cyclomatic_complexity: 10
-    calls_out: 13
+  src.markpact.docker_runner.build_and_run_docker:
+    name: build_and_run_docker
+    module: src.markpact.docker_runner
+    line: 160
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 0
+  SUMD.generate_publish_config_with_llm:
+    name: generate_publish_config_with_llm
+    module: SUMD
+    line: 594
+    cyclomatic_complexity: 0
+    calls_out: 0
     calls_in: 1
   src.markpact.cli.sync_cmd._handle_backups_mode:
     name: _handle_backups_mode
@@ -110,12 +40,425 @@ nodes:
     cyclomatic_complexity: 4
     calls_out: 7
     calls_in: 1
-  src.markpact.publish.helpers._check_file_type:
-    name: _check_file_type
-    module: src.markpact.publish.helpers
-    line: 56
+  src.markpact.tester.run_service_with_tests:
+    name: run_service_with_tests
+    module: src.markpact.tester
+    line: 185
+    cyclomatic_complexity: 16
+    calls_out: 35
+    calls_in: 0
+  src.markpact.publish.llm_config._setup_llm_for_publish:
+    name: _setup_llm_for_publish
+    module: src.markpact.publish.llm_config
+    line: 12
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 1
+  SUMD.run_cmd:
+    name: run_cmd
+    module: SUMD
+    line: 665
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.notebook_converter.parse_zeppelin:
+    name: parse_zeppelin
+    module: src.markpact.notebook_converter
+    line: 282
+    cyclomatic_complexity: 7
+    calls_out: 30
+    calls_in: 1
+  src.markpact.docker_runner._run_docker_tests:
+    name: _run_docker_tests
+    module: src.markpact.docker_runner
+    line: 350
+    cyclomatic_complexity: 6
+    calls_out: 8
+    calls_in: 1
+  src.markpact.syncer._backup_dir:
+    name: _backup_dir
+    module: src.markpact.syncer
+    line: 32
+    cyclomatic_complexity: 1
+    calls_out: 0
+    calls_in: 2
+  src.markpact.notebook_converter.extract_dependencies:
+    name: extract_dependencies
+    module: src.markpact.notebook_converter
+    line: 416
+    cyclomatic_complexity: 11
+    calls_out: 10
+    calls_in: 1
+  src.markpact.publish.npm.publish_npm:
+    name: publish_npm
+    module: src.markpact.publish.npm
+    line: 53
+    cyclomatic_complexity: 6
+    calls_out: 10
+    calls_in: 0
+  examples.demo_live_markpact._setup_session:
+    name: _setup_session
+    module: examples.demo_live_markpact
+    line: 810
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  src.markpact.syncer.list_tracked_paths:
+    name: list_tracked_paths
+    module: src.markpact.syncer
+    line: 192
     cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 2
+  SUMD.add_untracked_blocks:
+    name: add_untracked_blocks
+    module: SUMD
+    line: 384
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.runtime.plugins.PluginLoader.load_from_module:
+    name: load_from_module
+    module: src.markpact.runtime.plugins
+    line: 114
+    cyclomatic_complexity: 6
+    calls_out: 10
+    calls_in: 0
+  src.markpact.publish.pypi._determine_base_path:
+    name: _determine_base_path
+    module: src.markpact.publish.pypi
+    line: 118
+    cyclomatic_complexity: 5
     calls_out: 7
+    calls_in: 1
+  src.markpact.runner.install_deps:
+    name: install_deps
+    module: src.markpact.runner
+    line: 33
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 0
+  src.markpact.notebook_converter.parse_quarto:
+    name: parse_quarto
+    module: src.markpact.notebook_converter
+    line: 263
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 1
+  SUMD.bump_version:
+    name: bump_version
+    module: SUMD
+    line: 656
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.tester.run_tests_from_block:
+    name: run_tests_from_block
+    module: src.markpact.tester
+    line: 170
+    cyclomatic_complexity: 4
+    calls_out: 7
+    calls_in: 1
+  src.markpact.auto_fix.fix_with_llm:
+    name: fix_with_llm
+    module: src.markpact.auto_fix
+    line: 219
+    cyclomatic_complexity: 8
+    calls_out: 7
+    calls_in: 1
+  src.markpact.publish.pypi.get_license_classifier:
+    name: get_license_classifier
+    module: src.markpact.publish.pypi
+    line: 18
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 1
+  src.markpact.packer._should_include:
+    name: _should_include
+    module: src.markpact.packer
+    line: 101
+    cyclomatic_complexity: 6
+    calls_out: 2
+    calls_in: 1
+  SUMD._format_subprocess_failure:
+    name: _format_subprocess_failure
+    module: SUMD
+    line: 516
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 5
+  src.markpact.cli.publish_cmd._determine_bump_type:
+    name: _determine_bump_type
+    module: src.markpact.cli.publish_cmd
+    line: 40
+    cyclomatic_complexity: 3
+    calls_out: 0
+    calls_in: 1
+  src.markpact.notebook_converter._parse_rmd_code_chunks:
+    name: _parse_rmd_code_chunks
+    module: src.markpact.notebook_converter
+    line: 126
+    cyclomatic_complexity: 5
+    calls_out: 15
+    calls_in: 1
+  src.markpact.publish.helpers._first_heading:
+    name: _first_heading
+    module: src.markpact.publish.helpers
+    line: 20
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 1
+  src.markpact.cli.main:
+    name: main
+    module: src.markpact.cli
+    line: 36
+    cyclomatic_complexity: 7
+    calls_out: 7
+    calls_in: 0
+  SUMD.print_conversion_report:
+    name: print_conversion_report
+    module: SUMD
+    line: 441
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.syncer.sync_readme:
+    name: sync_readme
+    module: src.markpact.syncer
+    line: 351
+    cyclomatic_complexity: 6
+    calls_out: 15
+    calls_in: 1
+  src.markpact.runtime.core_v2.RuntimeV2._execute_step_single:
+    name: _execute_step_single
+    module: src.markpact.runtime.core_v2
+    line: 252
+    cyclomatic_complexity: 9
+    calls_out: 15
+    calls_in: 0
+  src.markpact.template.load_secrets:
+    name: load_secrets
+    module: src.markpact.template
+    line: 62
+    cyclomatic_complexity: 6
+    calls_out: 10
+    calls_in: 0
+  src.markpact.template._find_secrets_file:
+    name: _find_secrets_file
+    module: src.markpact.template
+    line: 43
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  src.markpact.cli.helpers._parse_blocks_to_state:
+    name: _parse_blocks_to_state
+    module: src.markpact.cli.helpers
+    line: 37
+    cyclomatic_complexity: 15
+    calls_out: 12
+    calls_in: 0
+  scripts.sync_version.sync_versions:
+    name: sync_versions
+    module: scripts.sync_version
+    line: 66
+    cyclomatic_complexity: 5
+    calls_out: 11
+    calls_in: 0
+  src.markpact.syncer.sync_readme_recursive:
+    name: sync_readme_recursive
+    module: src.markpact.syncer
+    line: 409
+    cyclomatic_complexity: 1
+    calls_out: 18
+    calls_in: 0
+  src.markpact.docker_runner._resolve_docker_port:
+    name: _resolve_docker_port
+    module: src.markpact.docker_runner
+    line: 299
+    cyclomatic_complexity: 6
+    calls_out: 4
+    calls_in: 1
+  src.markpact.publish.pypi._build_upload_cmd:
+    name: _build_upload_cmd
+    module: src.markpact.publish.pypi
+    line: 329
+    cyclomatic_complexity: 5
+    calls_out: 6
+    calls_in: 1
+  examples.demo_live_markpact.hdr:
+    name: hdr
+    module: examples.demo_live_markpact
+    line: 372
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 8
+  src.markpact.publish.helpers._first_paragraph:
+    name: _first_paragraph
+    module: src.markpact.publish.helpers
+    line: 27
+    cyclomatic_complexity: 7
+    calls_out: 8
+    calls_in: 1
+  src.markpact.cli.sync_cmd._execute_recursive_sync:
+    name: _execute_recursive_sync
+    module: src.markpact.cli.sync_cmd
+    line: 164
+    cyclomatic_complexity: 11
+    calls_out: 5
+    calls_in: 1
+  SUMD.check_docker_available:
+    name: check_docker_available
+    module: SUMD
+    line: 545
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.cli.run_cmd._handle_docker_mode:
+    name: _handle_docker_mode
+    module: src.markpact.cli.run_cmd
+    line: 12
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 0
+  src.markpact.publish.docker_pub.generate_dockerfile:
+    name: generate_dockerfile
+    module: src.markpact.publish.docker_pub
+    line: 15
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 1
+  src.markpact.runtime.core_v2.RuntimeV2.parse:
+    name: parse
+    module: src.markpact.runtime.core_v2
+    line: 110
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 0
+  SUMD.publish_npm:
+    name: publish_npm
+    module: SUMD
+    line: 638
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.runner.ensure_venv:
+    name: ensure_venv
+    module: src.markpact.runner
+    line: 24
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 1
+  SUMD._handle_list_notebook_formats:
+    name: _handle_list_notebook_formats
+    module: SUMD
+    line: 424
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.parse_blocks:
+    name: parse_blocks
+    module: SUMD
+    line: 416
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.cli.publish_cmd._resolve_publish_config:
+    name: _resolve_publish_config
+    module: src.markpact.cli.publish_cmd
+    line: 11
+    cyclomatic_complexity: 10
+    calls_out: 6
+    calls_in: 1
+  src.markpact.syncer._build_header_suffix:
+    name: _build_header_suffix
+    module: src.markpact.syncer
+    line: 284
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  SUMD.get_example_prompt:
+    name: get_example_prompt
+    module: SUMD
+    line: 605
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.cli.convert_cmd._handle_from_notebook:
+    name: _handle_from_notebook
+    module: src.markpact.cli.convert_cmd
+    line: 32
+    cyclomatic_complexity: 6
+    calls_out: 8
+    calls_in: 0
+  src.markpact.generator._call_llm_with_config:
+    name: _call_llm_with_config
+    module: src.markpact.generator
+    line: 228
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 1
+  examples.demo_live_markpact._step_generate_contract:
+    name: _step_generate_contract
+    module: examples.demo_live_markpact
+    line: 495
+    cyclomatic_complexity: 2
+    calls_out: 21
+    calls_in: 1
+  src.markpact.cli.sync_cmd._build_sync_parser:
+    name: _build_sync_parser
+    module: src.markpact.cli.sync_cmd
+    line: 22
+    cyclomatic_complexity: 1
+    calls_out: 16
+    calls_in: 1
+  src.markpact.cli.run_cmd._split_test_blocks:
+    name: _split_test_blocks
+    module: src.markpact.cli.run_cmd
+    line: 34
+    cyclomatic_complexity: 7
+    calls_out: 3
+    calls_in: 1
+  src.markpact.publish.helpers._is_web_service:
+    name: _is_web_service
+    module: src.markpact.publish.helpers
+    line: 92
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 1
+  src.markpact.cli.sync_cmd._handle_rollback_mode:
+    name: _handle_rollback_mode
+    module: src.markpact.cli.sync_cmd
+    line: 101
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 1
+  SUMD.get_supported_formats:
+    name: get_supported_formats
+    module: SUMD
+    line: 488
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.runtime.core.Runtime.execute:
+    name: execute
+    module: src.markpact.runtime.core
+    line: 104
+    cyclomatic_complexity: 9
+    calls_out: 11
+    calls_in: 0
+  SUMD._handle_publish_mode:
+    name: _handle_publish_mode
+    module: SUMD
+    line: 510
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.packer._get_language:
+    name: _get_language
+    module: src.markpact.packer
+    line: 115
+    cyclomatic_complexity: 3
+    calls_out: 3
     calls_in: 1
   src.markpact.docker_runner.run_docker_with_tests:
     name: run_docker_with_tests
@@ -131,173 +474,61 @@ nodes:
     cyclomatic_complexity: 6
     calls_out: 5
     calls_in: 0
-  src.markpact.packer._detect_file_indicators:
-    name: _detect_file_indicators
-    module: src.markpact.packer
-    line: 125
-    cyclomatic_complexity: 5
-    calls_out: 8
-    calls_in: 1
-  src.markpact.auto_fix._try_llm_fix:
-    name: _try_llm_fix
-    module: src.markpact.auto_fix
-    line: 340
+  src.markpact.syncer._read_source_file:
+    name: _read_source_file
+    module: src.markpact.syncer
+    line: 293
     cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 1
-  scripts.sync_version.get_bumpversion_version:
-    name: get_bumpversion_version
-    module: scripts.sync_version
-    line: 19
-    cyclomatic_complexity: 2
-    calls_out: 6
-    calls_in: 1
-  src.markpact.notebook_converter._parse_quarto_yaml_front_matter:
-    name: _parse_quarto_yaml_front_matter
+    calls_out: 4
+    calls_in: 2
+  src.markpact.notebook_converter.detect_format:
+    name: detect_format
     module: src.markpact.notebook_converter
-    line: 200
+    line: 38
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 2
+  src.markpact.packer._generate_readme_content:
+    name: _generate_readme_content
+    module: src.markpact.packer
+    line: 226
     cyclomatic_complexity: 7
     calls_out: 12
     calls_in: 1
-  src.markpact.publish.pypi._setup_env_creds:
-    name: _setup_env_creds
-    module: src.markpact.publish.pypi
-    line: 247
-    cyclomatic_complexity: 4
-    calls_out: 10
-    calls_in: 1
-  src.markpact.config.init_env:
-    name: init_env
-    module: src.markpact.config
-    line: 111
-    cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 2
-  src.markpact.cli.convert_cmd._handle_llm_generation:
-    name: _handle_llm_generation
-    module: src.markpact.cli.convert_cmd
-    line: 53
-    cyclomatic_complexity: 11
-    calls_out: 26
-    calls_in: 1
-  src.markpact.publish.main.publish:
-    name: publish
-    module: src.markpact.publish.main
-    line: 61
-    cyclomatic_complexity: 9
-    calls_out: 9
-    calls_in: 1
-  src.markpact.publish.helpers._slugify:
-    name: _slugify
-    module: src.markpact.publish.helpers
-    line: 13
-    cyclomatic_complexity: 2
-    calls_out: 5
-    calls_in: 1
-  src.markpact.config.show_config:
-    name: show_config
-    module: src.markpact.config
-    line: 167
-    cyclomatic_complexity: 6
-    calls_out: 7
-    calls_in: 1
-  src.markpact.generator._call_llm_with_config:
-    name: _call_llm_with_config
-    module: src.markpact.generator
-    line: 228
-    cyclomatic_complexity: 2
-    calls_out: 1
-    calls_in: 1
-  examples.demo_live_markpact.hdr:
-    name: hdr
-    module: examples.demo_live_markpact
-    line: 372
-    cyclomatic_complexity: 1
-    calls_out: 3
-    calls_in: 8
-  src.markpact.cli.run_cmd._handle_test_mode:
-    name: _handle_test_mode
-    module: src.markpact.cli.run_cmd
-    line: 66
-    cyclomatic_complexity: 4
-    calls_out: 6
-    calls_in: 1
-  src.markpact.docker_runner._build_docker_image:
-    name: _build_docker_image
-    module: src.markpact.docker_runner
-    line: 275
-    cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 1
-  src.markpact.cli.sync_cmd.handle_sync_cli:
-    name: handle_sync_cli
-    module: src.markpact.cli.sync_cmd
-    line: 250
-    cyclomatic_complexity: 14
-    calls_out: 14
-    calls_in: 1
-  src.markpact.converter.print_conversion_report:
-    name: print_conversion_report
-    module: src.markpact.converter
-    line: 302
-    cyclomatic_complexity: 3
-    calls_out: 9
-    calls_in: 1
-  src.markpact.notebook_converter.convert_notebook:
-    name: convert_notebook
-    module: src.markpact.notebook_converter
-    line: 669
-    cyclomatic_complexity: 5
-    calls_out: 9
-    calls_in: 1
-  src.markpact.publish.helpers._first_paragraph:
-    name: _first_paragraph
-    module: src.markpact.publish.helpers
-    line: 27
-    cyclomatic_complexity: 7
-    calls_out: 8
-    calls_in: 1
-  scripts.sync_version.tag_exists:
-    name: tag_exists
+  scripts.sync_version.set_pyproject_version:
+    name: set_pyproject_version
     module: scripts.sync_version
-    line: 52
+    line: 28
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 1
+  src.markpact.runtime.ssh_manager.SSHSessionManager.close:
+    name: close
+    module: src.markpact.runtime.ssh_manager
+    line: 90
     cyclomatic_complexity: 2
-    calls_out: 1
+    calls_out: 2
+    calls_in: 0
+  src.markpact.converter._detect_deps:
+    name: _detect_deps
+    module: src.markpact.converter
+    line: 90
+    cyclomatic_complexity: 9
+    calls_out: 2
     calls_in: 1
-  src.markpact.generator.generate_contract:
-    name: generate_contract
-    module: src.markpact.generator
-    line: 257
-    cyclomatic_complexity: 5
-    calls_out: 9
-    calls_in: 3
-  src.markpact.syncer.create_backup:
-    name: create_backup
-    module: src.markpact.syncer
-    line: 37
-    cyclomatic_complexity: 3
-    calls_out: 10
-    calls_in: 2
-  src.markpact.auto_fix.run_with_auto_fix_llm:
-    name: run_with_auto_fix_llm
-    module: src.markpact.auto_fix
-    line: 354
-    cyclomatic_complexity: 18
-    calls_out: 14
+  src.markpact.tester.http_request:
+    name: http_request
+    module: src.markpact.tester
+    line: 69
+    cyclomatic_complexity: 7
+    calls_out: 12
     calls_in: 1
-  src.markpact.publish.pypi._setup_upload_env:
-    name: _setup_upload_env
-    module: src.markpact.publish.pypi
-    line: 317
-    cyclomatic_complexity: 3
-    calls_out: 6
-    calls_in: 1
-  src.markpact.cli.convert_cmd._handle_list_examples:
-    name: _handle_list_examples
-    module: src.markpact.cli.convert_cmd
-    line: 12
-    cyclomatic_complexity: 2
-    calls_out: 5
+  src.markpact.parser.parse_blocks:
+    name: parse_blocks
+    module: src.markpact.parser
+    line: 40
+    cyclomatic_complexity: 6
+    calls_out: 18
     calls_in: 1
   src.markpact.notebook_converter._process_notebook_cells:
     name: _process_notebook_cells
@@ -306,145 +537,19 @@ nodes:
     cyclomatic_complexity: 11
     calls_out: 12
     calls_in: 1
-  src.markpact.notebook_converter._should_skip_first_markdown_cell:
-    name: _should_skip_first_markdown_cell
+  src.markpact.notebook_converter._parse_quarto_code_chunks:
+    name: _parse_quarto_code_chunks
     module: src.markpact.notebook_converter
-    line: 525
-    cyclomatic_complexity: 6
-    calls_out: 7
-    calls_in: 1
-  src.markpact.syncer.print_sync_report:
-    name: print_sync_report
-    module: src.markpact.syncer
-    line: 577
-    cyclomatic_complexity: 10
-    calls_out: 18
-    calls_in: 2
-  src.markpact.syncer._build_block:
-    name: _build_block
-    module: src.markpact.syncer
-    line: 499
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.publish.pypi.generate_pyproject_toml:
-    name: generate_pyproject_toml
-    module: src.markpact.publish.pypi
-    line: 65
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 1
-  src.markpact.docker_runner.check_docker_available:
-    name: check_docker_available
-    module: src.markpact.docker_runner
-    line: 191
-    cyclomatic_complexity: 2
-    calls_out: 1
-    calls_in: 1
-  src.markpact.cli.publish_cmd._print_publish_dry_run:
-    name: _print_publish_dry_run
-    module: src.markpact.cli.publish_cmd
-    line: 49
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  src.markpact.notebook_converter._extract_and_format_deps:
-    name: _extract_and_format_deps
-    module: src.markpact.notebook_converter
-    line: 512
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 1
-  src.markpact.docker_runner._find_docker_port:
-    name: _find_docker_port
-    module: src.markpact.docker_runner
-    line: 116
-    cyclomatic_complexity: 6
-    calls_out: 5
-    calls_in: 1
-  src.markpact.template._find_secrets_file:
-    name: _find_secrets_file
-    module: src.markpact.template
-    line: 43
-    cyclomatic_complexity: 4
-    calls_out: 3
-    calls_in: 1
-  src.markpact.syncer.sync_readme_recursive:
-    name: sync_readme_recursive
-    module: src.markpact.syncer
-    line: 409
-    cyclomatic_complexity: 1
-    calls_out: 18
-    calls_in: 1
-  src.markpact.publish.pypi._build_package:
-    name: _build_package
-    module: src.markpact.publish.pypi
-    line: 230
+    line: 223
     cyclomatic_complexity: 5
-    calls_out: 5
+    calls_out: 15
     calls_in: 1
-  src.markpact.packer.pack_directory:
-    name: pack_directory
-    module: src.markpact.packer
-    line: 315
-    cyclomatic_complexity: 11
-    calls_out: 20
-    calls_in: 1
-  src.markpact.notebook_converter.parse_jupyter:
-    name: parse_jupyter
-    module: src.markpact.notebook_converter
-    line: 52
-    cyclomatic_complexity: 11
-    calls_out: 24
-    calls_in: 1
-  src.markpact.docker_runner._resolve_docker_port:
-    name: _resolve_docker_port
-    module: src.markpact.docker_runner
-    line: 299
-    cyclomatic_complexity: 6
-    calls_out: 4
-    calls_in: 1
-  src.markpact.converter._detect_file:
-    name: _detect_file
-    module: src.markpact.converter
-    line: 114
-    cyclomatic_complexity: 5
-    calls_out: 4
-    calls_in: 1
-  src.markpact.template.resolve_template:
-    name: resolve_template
-    module: src.markpact.template
-    line: 95
-    cyclomatic_complexity: 2
-    calls_out: 20
-    calls_in: 1
-  src.markpact.parser.parse_blocks:
-    name: parse_blocks
-    module: src.markpact.parser
-    line: 40
-    cyclomatic_complexity: 6
-    calls_out: 18
-    calls_in: 3
-  src.markpact.converter.convert_markdown_to_markpact:
-    name: convert_markdown_to_markpact
-    module: src.markpact.converter
-    line: 187
-    cyclomatic_complexity: 3
-    calls_out: 19
-    calls_in: 1
-  src.markpact.config.set_api_base:
-    name: set_api_base
-    module: src.markpact.config
-    line: 144
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.publish.github.publish_github_packages:
-    name: publish_github_packages
-    module: src.markpact.publish.github
-    line: 9
-    cyclomatic_complexity: 3
-    calls_out: 3
+  src.markpact.cli._process_readme:
+    name: _process_readme
+    module: src.markpact.cli
+    line: 147
+    cyclomatic_complexity: 14
+    calls_out: 17
     calls_in: 1
   src.markpact.notebook_converter._parse_rmd_yaml_front_matter:
     name: _parse_rmd_yaml_front_matter
@@ -453,54 +558,47 @@ nodes:
     cyclomatic_complexity: 5
     calls_out: 11
     calls_in: 1
-  scripts.sync_version.set_bumpversion_version:
-    name: set_bumpversion_version
-    module: scripts.sync_version
-    line: 40
+  src.markpact.runtime.core_v2.RuntimeV2.reset_state:
+    name: reset_state
+    module: src.markpact.runtime.core_v2
+    line: 497
     cyclomatic_complexity: 1
-    calls_out: 4
-    calls_in: 1
-  examples.demo_live_markpact.ok:
-    name: ok
-    module: examples.demo_live_markpact
-    line: 383
-    cyclomatic_complexity: 2
-    calls_out: 1
-    calls_in: 18
-  src.markpact.runtime.executors.ShellExecutor._run_ssh_persistent:
-    name: _run_ssh_persistent
-    module: src.markpact.runtime.executors
-    line: 92
-    cyclomatic_complexity: 4
-    calls_out: 6
-    calls_in: 0
-  src.markpact.generator._configure_litellm:
-    name: _configure_litellm
-    module: src.markpact.generator
-    line: 202
-    cyclomatic_complexity: 3
     calls_out: 2
+    calls_in: 0
+  SUMD.build_and_run_docker:
+    name: build_and_run_docker
+    module: SUMD
+    line: 544
+    cyclomatic_complexity: 0
+    calls_out: 0
     calls_in: 1
-  src.markpact.auto_fix._setup_env_with_venv_simple:
-    name: _setup_env_with_venv_simple
+  SUMD.has_template_placeholders:
+    name: has_template_placeholders
+    module: SUMD
+    line: 630
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.syncer._detect_lang:
+    name: _detect_lang
+    module: src.markpact.syncer
+    line: 485
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  src.markpact.publish.helpers.infer_publish_config:
+    name: infer_publish_config
+    module: src.markpact.publish.helpers
+    line: 141
+    cyclomatic_complexity: 2
+    calls_out: 11
+    calls_in: 0
+  src.markpact.auto_fix._setup_env_with_venv:
+    name: _setup_env_with_venv
     module: src.markpact.auto_fix
-    line: 90
+    line: 279
     cyclomatic_complexity: 2
     calls_out: 4
-    calls_in: 1
-  src.markpact.cli.convert_cmd._handle_markdown_conversion:
-    name: _handle_markdown_conversion
-    module: src.markpact.cli.convert_cmd
-    line: 91
-    cyclomatic_complexity: 12
-    calls_out: 11
-    calls_in: 1
-  src.markpact.auto_fix._run_and_print:
-    name: _run_and_print
-    module: src.markpact.auto_fix
-    line: 99
-    cyclomatic_complexity: 6
-    calls_out: 5
     calls_in: 1
   src.markpact.publish.pypi.publish_pypi:
     name: publish_pypi
@@ -508,27 +606,398 @@ nodes:
     line: 400
     cyclomatic_complexity: 8
     calls_out: 14
-    calls_in: 2
-  src.markpact.runtime.ssh_manager.get_ssh_manager:
-    name: get_ssh_manager
-    module: src.markpact.runtime.ssh_manager
-    line: 112
+    calls_in: 0
+  examples.demo_live_markpact.info:
+    name: info
+    module: examples.demo_live_markpact
+    line: 404
     cyclomatic_complexity: 1
     calls_out: 1
-    calls_in: 1
-  examples.demo_live_markpact.run_live:
-    name: run_live
+    calls_in: 5
+  src.markpact.runtime.plugins.PluginLoader.load_from_path:
+    name: load_from_path
+    module: src.markpact.runtime.plugins
+    line: 70
+    cyclomatic_complexity: 14
+    calls_out: 18
+    calls_in: 0
+  examples.demo_live_markpact.step:
+    name: step
     module: examples.demo_live_markpact
-    line: 852
-    cyclomatic_complexity: 8
-    calls_out: 22
+    line: 379
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 4
+  src.markpact.notebook_converter.parse_jupyter:
+    name: parse_jupyter
+    module: src.markpact.notebook_converter
+    line: 52
+    cyclomatic_complexity: 11
+    calls_out: 24
     calls_in: 1
-  src.markpact.generator._fix_unclosed_blocks:
-    name: _fix_unclosed_blocks
-    module: src.markpact.generator
-    line: 181
-    cyclomatic_complexity: 7
+  src.markpact.config.apply_preset:
+    name: apply_preset
+    module: src.markpact.config
+    line: 149
+    cyclomatic_complexity: 4
     calls_out: 6
+    calls_in: 0
+  SUMD.load_env:
+    name: load_env
+    module: SUMD
+    line: 558
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.restore_backup:
+    name: restore_backup
+    module: SUMD
+    line: 369
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.config.ensure_config_dir:
+    name: ensure_config_dir
+    module: src.markpact.config
+    line: 54
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 1
+  src.markpact.publish.helpers.prompt_publish_config:
+    name: prompt_publish_config
+    module: src.markpact.publish.helpers
+    line: 176
+    cyclomatic_complexity: 4
+    calls_out: 16
+    calls_in: 0
+  SUMD.infer_publish_config:
+    name: infer_publish_config
+    module: SUMD
+    line: 523
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.notebook_converter._parse_quarto_yaml_front_matter:
+    name: _parse_quarto_yaml_front_matter
+    module: src.markpact.notebook_converter
+    line: 200
+    cyclomatic_complexity: 7
+    calls_out: 12
+    calls_in: 1
+  src.markpact.runtime.ssh_manager.SSHSessionManager.connect:
+    name: connect
+    module: src.markpact.runtime.ssh_manager
+    line: 19
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 0
+  src.markpact.publish.llm_config._set_provider_api_key_for_publish:
+    name: _set_provider_api_key_for_publish
+    module: src.markpact.publish.llm_config
+    line: 26
+    cyclomatic_complexity: 8
+    calls_out: 2
+    calls_in: 1
+  SUMD._build_description:
+    name: _build_description
+    module: SUMD
+    line: 344
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.diff_block:
+    name: diff_block
+    module: SUMD
+    line: 373
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.publish.helpers._analyze_blocks_for_types:
+    name: _analyze_blocks_for_types
+    module: src.markpact.publish.helpers
+    line: 68
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  src.markpact.runtime.core_v2.RuntimeV2.__init__:
+    name: __init__
+    module: src.markpact.runtime.core_v2
+    line: 60
+    cyclomatic_complexity: 4
+    calls_out: 10
+    calls_in: 0
+  examples.demo_live_markpact.main:
+    name: main
+    module: examples.demo_live_markpact
+    line: 934
+    cyclomatic_complexity: 6
+    calls_out: 18
+    calls_in: 0
+  src.markpact.config.set_api_key:
+    name: set_api_key
+    module: src.markpact.config
+    line: 139
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  scripts.sync_version.get_bumpversion_version:
+    name: get_bumpversion_version
+    module: scripts.sync_version
+    line: 19
+    cyclomatic_complexity: 2
+    calls_out: 6
+    calls_in: 1
+  SUMD.run_shell_tests:
+    name: run_shell_tests
+    module: SUMD
+    line: 331
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.syncer._write_new_blocks:
+    name: _write_new_blocks
+    module: src.markpact.syncer
+    line: 529
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  src.markpact.runtime.core.Runtime.parse:
+    name: parse
+    module: src.markpact.runtime.core
+    line: 91
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 0
+  src.markpact.publish.pypi._parse_pypirc_section:
+    name: _parse_pypirc_section
+    module: src.markpact.publish.pypi
+    line: 261
+    cyclomatic_complexity: 15
+    calls_out: 15
+    calls_in: 1
+  src.markpact.syncer.add_untracked_blocks:
+    name: add_untracked_blocks
+    module: src.markpact.syncer
+    line: 536
+    cyclomatic_complexity: 5
+    calls_out: 12
+    calls_in: 0
+  SUMD.run_tests_from_block:
+    name: run_tests_from_block
+    module: SUMD
+    line: 329
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.generate_dockerfile:
+    name: generate_dockerfile
+    module: SUMD
+    line: 539
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.notebook_converter._merge_code_files:
+    name: _merge_code_files
+    module: src.markpact.notebook_converter
+    line: 606
+    cyclomatic_complexity: 3
+    calls_out: 0
+    calls_in: 1
+  src.markpact.tester.TestSuite.print_summary:
+    name: print_summary
+    module: src.markpact.tester
+    line: 44
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 0
+  src.markpact.auto_fix._handle_missing_module_error:
+    name: _handle_missing_module_error
+    module: src.markpact.auto_fix
+    line: 321
+    cyclomatic_complexity: 5
+    calls_out: 6
+    calls_in: 1
+  src.markpact.cli.sync_cmd._handle_list_mode:
+    name: _handle_list_mode
+    module: src.markpact.cli.sync_cmd
+    line: 112
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  src.markpact.publish.pypi._setup_env_creds:
+    name: _setup_env_creds
+    module: src.markpact.publish.pypi
+    line: 247
+    cyclomatic_complexity: 4
+    calls_out: 10
+    calls_in: 1
+  SUMD.parse_publish_block:
+    name: parse_publish_block
+    module: SUMD
+    line: 458
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.converter.print_conversion_report:
+    name: print_conversion_report
+    module: src.markpact.converter
+    line: 302
+    cyclomatic_complexity: 3
+    calls_out: 9
+    calls_in: 0
+  src.markpact.notebook_converter.parse_databricks:
+    name: parse_databricks
+    module: src.markpact.notebook_converter
+    line: 340
+    cyclomatic_complexity: 7
+    calls_out: 30
+    calls_in: 1
+  src.markpact.docker_runner._build_docker_image:
+    name: _build_docker_image
+    module: src.markpact.docker_runner
+    line: 275
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 1
+  src.markpact.packer._detect_file_indicators:
+    name: _detect_file_indicators
+    module: src.markpact.packer
+    line: 125
+    cyclomatic_complexity: 5
+    calls_out: 8
+    calls_in: 1
+  src.markpact.docker_runner._find_docker_port:
+    name: _find_docker_port
+    module: src.markpact.docker_runner
+    line: 116
+    cyclomatic_complexity: 6
+    calls_out: 5
+    calls_in: 1
+  src.markpact.generator._configure_litellm:
+    name: _configure_litellm
+    module: src.markpact.generator
+    line: 202
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 1
+  src.markpact.packer.print_pack_report:
+    name: print_pack_report
+    module: src.markpact.packer
+    line: 406
+    cyclomatic_complexity: 6
+    calls_out: 12
+    calls_in: 0
+  SUMD.handle_sync_cli:
+    name: handle_sync_cli
+    module: SUMD
+    line: 405
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.init_env:
+    name: init_env
+    module: SUMD
+    line: 560
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.notebook_converter._should_skip_first_markdown_cell:
+    name: _should_skip_first_markdown_cell
+    module: src.markpact.notebook_converter
+    line: 525
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 1
+  src.markpact.publish.pypi._get_upload_error_hint:
+    name: _get_upload_error_hint
+    module: src.markpact.publish.pypi
+    line: 342
+    cyclomatic_complexity: 8
+    calls_out: 0
+    calls_in: 1
+  src.markpact.config.set_api_base:
+    name: set_api_base
+    module: src.markpact.config
+    line: 144
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  src.markpact.auto_fix._try_llm_fix:
+    name: _try_llm_fix
+    module: src.markpact.auto_fix
+    line: 340
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 1
+  src.markpact.cli.run_cmd._handle_normal_run:
+    name: _handle_normal_run
+    module: src.markpact.cli.run_cmd
+    line: 90
+    cyclomatic_complexity: 5
+    calls_out: 4
+    calls_in: 0
+  src.markpact.notebook_converter.parse_notebook:
+    name: parse_notebook
+    module: src.markpact.notebook_converter
+    line: 398
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 1
+  src.markpact.cli.sync_cmd._execute_single_sync:
+    name: _execute_single_sync
+    module: src.markpact.cli.sync_cmd
+    line: 213
+    cyclomatic_complexity: 12
+    calls_out: 8
+    calls_in: 1
+  src.markpact.publish.pypi._print_build_output:
+    name: _print_build_output
+    module: src.markpact.publish.pypi
+    line: 210
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 1
+  SUMD.run_with_auto_fix_llm:
+    name: run_with_auto_fix_llm
+    module: SUMD
+    line: 311
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.convert_markdown_to_markpact:
+    name: convert_markdown_to_markpact
+    module: SUMD
+    line: 437
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.packer._write_output:
+    name: _write_output
+    module: src.markpact.packer
+    line: 298
+    cyclomatic_complexity: 4
+    calls_out: 7
+    calls_in: 1
+  src.markpact.packer._collect_files:
+    name: _collect_files
+    module: src.markpact.packer
+    line: 185
+    cyclomatic_complexity: 10
+    calls_out: 13
+    calls_in: 1
+  SUMD._extract_readme_description:
+    name: _extract_readme_description
+    module: SUMD
+    line: 343
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.cli.sync_cmd._show_diffs:
+    name: _show_diffs
+    module: src.markpact.cli.sync_cmd
+    line: 191
+    cyclomatic_complexity: 6
+    calls_out: 9
     calls_in: 1
   src.markpact.converter.detect_block_type:
     name: detect_block_type
@@ -537,68 +1006,82 @@ nodes:
     cyclomatic_complexity: 6
     calls_out: 6
     calls_in: 1
-  examples.demo_live_markpact._save_outputs:
-    name: _save_outputs
-    module: examples.demo_live_markpact
-    line: 652
+  src.markpact.cli.convert_cmd._handle_list_examples:
+    name: _handle_list_examples
+    module: src.markpact.cli.convert_cmd
+    line: 12
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 0
+  SUMD.publish_github_packages:
+    name: publish_github_packages
+    module: SUMD
+    line: 670
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.runtime.plugins.PluginLoader._load_from_file:
+    name: _load_from_file
+    module: src.markpact.runtime.plugins
+    line: 176
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 0
+  src.markpact.converter.convert_markdown_to_markpact:
+    name: convert_markdown_to_markpact
+    module: src.markpact.converter
+    line: 187
     cyclomatic_complexity: 3
+    calls_out: 19
+    calls_in: 0
+  src.markpact.auto_fix.run_with_auto_fix_llm:
+    name: run_with_auto_fix_llm
+    module: src.markpact.auto_fix
+    line: 354
+    cyclomatic_complexity: 18
     calls_out: 14
     calls_in: 0
-  src.markpact.docker_runner.run_docker_with_logs:
-    name: run_docker_with_logs
-    module: src.markpact.docker_runner
-    line: 203
+  src.markpact.cli._dispatch_subcommand:
+    name: _dispatch_subcommand
+    module: src.markpact.cli
+    line: 67
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  src.markpact.cli.run_cmd._handle_test_mode:
+    name: _handle_test_mode
+    module: src.markpact.cli.run_cmd
+    line: 66
+    cyclomatic_complexity: 4
+    calls_out: 6
+    calls_in: 0
+  src.markpact.syncer.restore_backup:
+    name: restore_backup
+    module: src.markpact.syncer
+    line: 86
     cyclomatic_complexity: 5
     calls_out: 7
     calls_in: 0
-  src.markpact.cli.config_cmd.handle_config_cli:
-    name: handle_config_cli
-    module: src.markpact.cli.config_cmd
-    line: 9
-    cyclomatic_complexity: 12
-    calls_out: 35
-    calls_in: 1
-  src.markpact.cli.pack_cmd.handle_pack_cli:
-    name: handle_pack_cli
-    module: src.markpact.cli.pack_cmd
-    line: 12
-    cyclomatic_complexity: 6
-    calls_out: 15
-    calls_in: 1
-  src.markpact.generator._set_provider_api_key:
-    name: _set_provider_api_key
-    module: src.markpact.generator
-    line: 212
-    cyclomatic_complexity: 8
-    calls_out: 2
-    calls_in: 1
-  src.markpact.auto_fix.add_missing_dependency:
-    name: add_missing_dependency
-    module: src.markpact.auto_fix
-    line: 191
+  src.markpact.publish.pypi._build_description:
+    name: _build_description
+    module: src.markpact.publish.pypi
+    line: 53
     cyclomatic_complexity: 3
-    calls_out: 7
-    calls_in: 1
-  src.markpact.notebook_converter.parse_notebook:
-    name: parse_notebook
-    module: src.markpact.notebook_converter
-    line: 398
-    cyclomatic_complexity: 6
-    calls_out: 7
-    calls_in: 1
-  src.markpact.cli.publish_cmd._execute_publish_result:
-    name: _execute_publish_result
-    module: src.markpact.cli.publish_cmd
-    line: 58
-    cyclomatic_complexity: 4
     calls_out: 5
     calls_in: 1
-  src.markpact.tester.run_http_test:
-    name: run_http_test
-    module: src.markpact.tester
-    line: 103
-    cyclomatic_complexity: 8
-    calls_out: 21
+  examples.demo_live_markpact.ok:
+    name: ok
+    module: examples.demo_live_markpact
+    line: 383
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 18
+  src.markpact.converter._print_conversion_header:
+    name: _print_conversion_header
+    module: src.markpact.converter
+    line: 270
+    cyclomatic_complexity: 1
+    calls_out: 3
     calls_in: 1
   src.markpact.publish.pypi._upload_to_pypi:
     name: _upload_to_pypi
@@ -607,10 +1090,864 @@ nodes:
     cyclomatic_complexity: 9
     calls_out: 17
     calls_in: 1
-  src.markpact.cli.sync_cmd._resolve_paths:
-    name: _resolve_paths
+  src.markpact.config.init_env:
+    name: init_env
+    module: src.markpact.config
+    line: 111
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 0
+  SUMD.print_sync_report:
+    name: print_sync_report
+    module: SUMD
+    line: 385
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  SUMD.publish:
+    name: publish
+    module: SUMD
+    line: 459
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.publish.npm.generate_package_json:
+    name: generate_package_json
+    module: src.markpact.publish.npm
+    line: 27
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  src.markpact.packer._detect_framework_from_content:
+    name: _detect_framework_from_content
+    module: src.markpact.packer
+    line: 135
+    cyclomatic_complexity: 6
+    calls_out: 1
+    calls_in: 1
+  src.markpact.parser.parse_blocks_recursive:
+    name: parse_blocks_recursive
+    module: src.markpact.parser
+    line: 80
+    cyclomatic_complexity: 13
+    calls_out: 18
+    calls_in: 1
+  src.markpact.config.set_model:
+    name: set_model
+    module: src.markpact.config
+    line: 134
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  src.markpact.publish.pypi._normalize_package_name:
+    name: _normalize_package_name
+    module: src.markpact.publish.pypi
+    line: 108
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  src.markpact.converter._print_block_changes:
+    name: _print_block_changes
+    module: src.markpact.converter
+    line: 277
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 1
+  src.markpact.syncer.list_backups:
+    name: list_backups
+    module: src.markpact.syncer
+    line: 70
+    cyclomatic_complexity: 2
+    calls_out: 6
+    calls_in: 1
+  src.markpact.publish.pypi._run_build_command:
+    name: _run_build_command
+    module: src.markpact.publish.pypi
+    line: 200
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 1
+  examples.demo_live_markpact._print_summary:
+    name: _print_summary
+    module: examples.demo_live_markpact
+    line: 675
+    cyclomatic_complexity: 5
+    calls_out: 19
+    calls_in: 1
+  src.markpact.docker_runner.stop_existing_container:
+    name: stop_existing_container
+    module: src.markpact.docker_runner
+    line: 13
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 3
+  src.markpact.runtime.state.StateManager._load:
+    name: _load
+    module: src.markpact.runtime.state
+    line: 21
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 0
+  examples.demo_live_markpact._step_analyze_blocks:
+    name: _step_analyze_blocks
+    module: examples.demo_live_markpact
+    line: 585
+    cyclomatic_complexity: 20
+    calls_out: 40
+    calls_in: 1
+  src.markpact.tester.run_http_test:
+    name: run_http_test
+    module: src.markpact.tester
+    line: 103
+    cyclomatic_complexity: 8
+    calls_out: 21
+    calls_in: 1
+  SUMD.resolve_template:
+    name: resolve_template
+    module: SUMD
+    line: 629
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.generator.save_contract:
+    name: save_contract
+    module: src.markpact.generator
+    line: 307
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 0
+  SUMD._handle_llm_generation:
+    name: _handle_llm_generation
+    module: SUMD
+    line: 426
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.cli._parse_main_args:
+    name: _parse_main_args
+    module: src.markpact.cli
+    line: 78
+    cyclomatic_complexity: 1
+    calls_out: 35
+    calls_in: 1
+  src.markpact.syncer.print_sync_report:
+    name: print_sync_report
+    module: src.markpact.syncer
+    line: 577
+    cyclomatic_complexity: 10
+    calls_out: 18
+    calls_in: 0
+  src.markpact.converter._detect_file:
+    name: _detect_file
+    module: src.markpact.converter
+    line: 114
+    cyclomatic_complexity: 5
+    calls_out: 4
+    calls_in: 1
+  src.markpact.packer.pack_directory:
+    name: pack_directory
+    module: src.markpact.packer
+    line: 315
+    cyclomatic_complexity: 11
+    calls_out: 20
+    calls_in: 0
+  src.markpact.cli.sync_cmd.handle_sync_cli:
+    name: handle_sync_cli
     module: src.markpact.cli.sync_cmd
+    line: 250
+    cyclomatic_complexity: 14
+    calls_out: 14
+    calls_in: 0
+  src.markpact.runner.run_cmd:
+    name: run_cmd
+    module: src.markpact.runner
+    line: 11
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 2
+  src.markpact.notebook_converter.parse_rmarkdown:
+    name: parse_rmarkdown
+    module: src.markpact.notebook_converter
+    line: 178
+    cyclomatic_complexity: 1
+    calls_out: 5
+    calls_in: 1
+  src.markpact.notebook_converter._extract_and_format_deps:
+    name: _extract_and_format_deps
+    module: src.markpact.notebook_converter
+    line: 512
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  examples.demo_live_markpact.wait:
+    name: wait
+    module: examples.demo_live_markpact
+    line: 393
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 1
+  SUMD.get_env_path:
+    name: get_env_path
+    module: SUMD
+    line: 556
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.publish_docker:
+    name: publish_docker
+    module: SUMD
+    line: 529
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 3
+  src.markpact.cli._handle_generation_phase:
+    name: _handle_generation_phase
+    module: src.markpact.cli
+    line: 123
+    cyclomatic_complexity: 9
+    calls_out: 7
+    calls_in: 1
+  src.markpact.syncer.create_backup:
+    name: create_backup
+    module: src.markpact.syncer
+    line: 37
+    cyclomatic_complexity: 3
+    calls_out: 10
+    calls_in: 2
+  src.markpact.runtime.plugins.PluginLoader._extract_plugin_from_module:
+    name: _extract_plugin_from_module
+    module: src.markpact.runtime.plugins
+    line: 194
+    cyclomatic_complexity: 6
+    calls_out: 9
+    calls_in: 0
+  src.markpact.runtime.core.Runtime._print_summary:
+    name: _print_summary
+    module: src.markpact.runtime.core
+    line: 271
+    cyclomatic_complexity: 11
+    calls_out: 9
+    calls_in: 0
+  src.markpact.auto_fix.detect_error_type:
+    name: detect_error_type
+    module: src.markpact.auto_fix
+    line: 42
+    cyclomatic_complexity: 7
+    calls_out: 8
+    calls_in: 2
+  src.markpact.publish.github.publish_github_packages:
+    name: publish_github_packages
+    module: src.markpact.publish.github
+    line: 9
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 0
+  src.markpact.runtime.core_v2.RuntimeV2.execute:
+    name: execute
+    module: src.markpact.runtime.core_v2
+    line: 123
+    cyclomatic_complexity: 16
+    calls_out: 25
+    calls_in: 0
+  src.markpact.publish.pypi._check_pypi_credentials:
+    name: _check_pypi_credentials
+    module: src.markpact.publish.pypi
+    line: 301
+    cyclomatic_complexity: 9
+    calls_out: 7
+    calls_in: 1
+  src.markpact.publish.npm._build_npm_description:
+    name: _build_npm_description
+    module: src.markpact.publish.npm
+    line: 15
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  SUMD._handle_from_notebook:
+    name: _handle_from_notebook
+    module: SUMD
+    line: 425
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.install_deps:
+    name: install_deps
+    module: SUMD
+    line: 667
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 3
+  SUMD.update_version_in_readme:
+    name: update_version_in_readme
+    module: SUMD
+    line: 658
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.runtime.core_v3.RuntimeV3._rollback:
+    name: _rollback
+    module: src.markpact.runtime.core_v3
+    line: 582
+    cyclomatic_complexity: 17
+    calls_out: 13
+    calls_in: 0
+  src.markpact.cli.convert_cmd._handle_list_notebook_formats:
+    name: _handle_list_notebook_formats
+    module: src.markpact.cli.convert_cmd
+    line: 22
+    cyclomatic_complexity: 2
+    calls_out: 5
+    calls_in: 0
+  src.markpact.runtime.executors.ShellExecutor._run_ssh_persistent:
+    name: _run_ssh_persistent
+    module: src.markpact.runtime.executors
+    line: 92
+    cyclomatic_complexity: 4
+    calls_out: 6
+    calls_in: 0
+  src.markpact.syncer._prune_backups:
+    name: _prune_backups
+    module: src.markpact.syncer
+    line: 120
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  src.markpact.publish.docker_pub.publish_docker:
+    name: publish_docker
+    module: src.markpact.publish.docker_pub
+    line: 39
+    cyclomatic_complexity: 9
+    calls_out: 12
+    calls_in: 0
+  src.markpact.publish.llm_config._call_llm_for_publish_config:
+    name: _call_llm_for_publish_config
+    module: src.markpact.publish.llm_config
+    line: 42
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 1
+  scripts.sync_version.get_next_version:
+    name: get_next_version
+    module: scripts.sync_version
+    line: 60
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 1
+  src.markpact.cli.publish_cmd._execute_publish_result:
+    name: _execute_publish_result
+    module: src.markpact.cli.publish_cmd
+    line: 58
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  src.markpact.publish.helpers._check_file_type:
+    name: _check_file_type
+    module: src.markpact.publish.helpers
+    line: 56
+    cyclomatic_complexity: 2
+    calls_out: 7
+    calls_in: 1
+  src.markpact.publish.helpers._build_package_name:
+    name: _build_package_name
+    module: src.markpact.publish.helpers
+    line: 114
+    cyclomatic_complexity: 9
+    calls_out: 5
+    calls_in: 1
+  src.markpact.publish.pypi._copy_readme:
+    name: _copy_readme
+    module: src.markpact.publish.pypi
+    line: 174
+    cyclomatic_complexity: 10
+    calls_out: 16
+    calls_in: 1
+  examples.demo_live_markpact._step_sha_integrity:
+    name: _step_sha_integrity
+    module: examples.demo_live_markpact
+    line: 630
+    cyclomatic_complexity: 5
+    calls_out: 15
+    calls_in: 1
+  src.markpact.cli.config_cmd.handle_config_cli:
+    name: handle_config_cli
+    module: src.markpact.cli.config_cmd
+    line: 9
+    cyclomatic_complexity: 12
+    calls_out: 35
+    calls_in: 0
+  src.markpact.runtime.state.StateManager._save:
+    name: _save
+    module: src.markpact.runtime.state
+    line: 31
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 0
+  src.markpact.publish.helpers._detect_registry:
+    name: _detect_registry
+    module: src.markpact.publish.helpers
+    line: 100
+    cyclomatic_complexity: 7
+    calls_out: 1
+    calls_in: 1
+  src.markpact.auto_fix._setup_env_with_venv_simple:
+    name: _setup_env_with_venv_simple
+    module: src.markpact.auto_fix
+    line: 90
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  src.markpact.config.save_env:
+    name: save_env
+    module: src.markpact.config
+    line: 83
+    cyclomatic_complexity: 1
+    calls_out: 9
+    calls_in: 3
+  src.markpact.cli.run_cmd._run_http_tests:
+    name: _run_http_tests
+    module: src.markpact.cli.run_cmd
+    line: 41
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 1
+  src.markpact.cli.run_cmd._print_dry_run_tests:
+    name: _print_dry_run_tests
+    module: src.markpact.cli.run_cmd
+    line: 27
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  src.markpact.runtime.core.Runtime._execute_step:
+    name: _execute_step
+    module: src.markpact.runtime.core
+    line: 208
+    cyclomatic_complexity: 6
+    calls_out: 17
+    calls_in: 0
+  scripts.sync_version.set_bumpversion_version:
+    name: set_bumpversion_version
+    module: scripts.sync_version
+    line: 40
+    cyclomatic_complexity: 1
+    calls_out: 4
+    calls_in: 1
+  examples.fastapi-todo.README.setattr:
+    name: setattr
+    module: examples.fastapi-todo.README
+    line: 120
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.notebook_converter.notebook_to_markpact:
+    name: notebook_to_markpact
+    module: src.markpact.notebook_converter
+    line: 636
+    cyclomatic_complexity: 3
+    calls_out: 16
+    calls_in: 1
+  src.markpact.cli.sync_cmd._handle_missing_mode:
+    name: _handle_missing_mode
+    module: src.markpact.cli.sync_cmd
+    line: 123
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  src.markpact.docker_runner._run_docker_container_interactive:
+    name: _run_docker_container_interactive
+    module: src.markpact.docker_runner
+    line: 133
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 1
+  src.markpact.auto_fix.extract_module_name:
+    name: extract_module_name
+    module: src.markpact.auto_fix
+    line: 210
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  examples.demo_live_markpact.run_live:
+    name: run_live
+    module: examples.demo_live_markpact
+    line: 852
+    cyclomatic_complexity: 8
+    calls_out: 22
+    calls_in: 1
+  src.markpact.cli.publish_cmd._handle_publish_mode:
+    name: _handle_publish_mode
+    module: src.markpact.cli.publish_cmd
+    line: 75
+    cyclomatic_complexity: 5
+    calls_out: 5
+    calls_in: 0
+  src.markpact.cli.sync_cmd._handle_add_mode:
+    name: _handle_add_mode
+    module: src.markpact.cli.sync_cmd
+    line: 135
+    cyclomatic_complexity: 8
+    calls_out: 8
+    calls_in: 1
+  src.markpact.cli.run_cmd._run_shell_tests:
+    name: _run_shell_tests
+    module: src.markpact.cli.run_cmd
+    line: 55
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  examples.demo_live_markpact.show_menu:
+    name: show_menu
+    module: examples.demo_live_markpact
+    line: 447
+    cyclomatic_complexity: 10
+    calls_out: 18
+    calls_in: 1
+  src.markpact.docker_runner.run_docker_with_logs:
+    name: run_docker_with_logs
+    module: src.markpact.docker_runner
+    line: 203
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 0
+  scripts.sync_version.tag_exists:
+    name: tag_exists
+    module: scripts.sync_version
+    line: 52
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 1
+  src.markpact.syncer._collect_untracked_blocks:
+    name: _collect_untracked_blocks
+    module: src.markpact.syncer
+    line: 505
+    cyclomatic_complexity: 9
+    calls_out: 7
+    calls_in: 1
+  examples.demo_live_markpact.fail:
+    name: fail
+    module: examples.demo_live_markpact
+    line: 388
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 6
+  src.markpact.docker_runner.is_port_free:
+    name: is_port_free
+    module: src.markpact.docker_runner
+    line: 86
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 3
+  examples.demo_live_markpact._step_parse_blocks:
+    name: _step_parse_blocks
+    module: examples.demo_live_markpact
+    line: 525
+    cyclomatic_complexity: 7
+    calls_out: 16
+    calls_in: 1
+  SUMD.find_untracked_files:
+    name: find_untracked_files
+    module: SUMD
+    line: 372
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 3
+  SUMD.sync_readme:
+    name: sync_readme
+    module: SUMD
+    line: 378
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.runtime.core_v2.RuntimeV2._print_summary:
+    name: _print_summary
+    module: src.markpact.runtime.core_v2
+    line: 473
+    cyclomatic_complexity: 11
+    calls_out: 12
+    calls_in: 0
+  src.markpact.syncer._build_block:
+    name: _build_block
+    module: src.markpact.syncer
+    line: 499
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 1
+  src.markpact.packer._detect_run_command:
+    name: _detect_run_command
+    module: src.markpact.packer
+    line: 178
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  src.markpact.cli.helpers._resolve_file_body:
+    name: _resolve_file_body
+    module: src.markpact.cli.helpers
+    line: 10
+    cyclomatic_complexity: 6
+    calls_out: 8
+    calls_in: 1
+  src.markpact.cli.convert_cmd._handle_llm_generation:
+    name: _handle_llm_generation
+    module: src.markpact.cli.convert_cmd
+    line: 53
+    cyclomatic_complexity: 11
+    calls_out: 26
+    calls_in: 0
+  src.markpact.auto_fix.fix_port_in_readme:
+    name: fix_port_in_readme
+    module: src.markpact.auto_fix
     line: 64
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 2
+  src.markpact.notebook_converter._extract_file_hint:
+    name: _extract_file_hint
+    module: src.markpact.notebook_converter
+    line: 546
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  src.markpact.runtime.plugins.PluginLoader._load_from_directory:
+    name: _load_from_directory
+    module: src.markpact.runtime.plugins
+    line: 148
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 0
+  examples.demo_live_markpact.wait_done:
+    name: wait_done
+    module: examples.demo_live_markpact
+    line: 397
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 2
+  README.print:
+    name: print
+    module: README
+    line: 374
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 399
+  SUMD.list_example_prompts:
+    name: list_example_prompts
+    module: SUMD
+    line: 606
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD._handle_markdown_conversion:
+    name: _handle_markdown_conversion
+    module: SUMD
+    line: 427
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.list_backups:
+    name: list_backups
+    module: SUMD
+    line: 368
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.publish.pypi._ensure_build_backend:
+    name: _ensure_build_backend
+    module: src.markpact.publish.pypi
+    line: 156
+    cyclomatic_complexity: 7
+    calls_out: 4
+    calls_in: 1
+  examples.demo_live_markpact._step_validate_blocks:
+    name: _step_validate_blocks
+    module: examples.demo_live_markpact
+    line: 552
+    cyclomatic_complexity: 7
+    calls_out: 11
+    calls_in: 1
+  src.markpact.runtime.core_v2.RuntimeV2._rollback:
+    name: _rollback
+    module: src.markpact.runtime.core_v2
+    line: 317
+    cyclomatic_complexity: 8
+    calls_out: 10
+    calls_in: 0
+  SUMD.parse_blocks_recursive:
+    name: parse_blocks_recursive
+    module: SUMD
+    line: 417
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.run_service_with_tests:
+    name: run_service_with_tests
+    module: SUMD
+    line: 330
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.auto_fix._run_subprocess:
+    name: _run_subprocess
+    module: src.markpact.auto_fix
+    line: 288
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 1
+  src.markpact.generator._set_provider_api_key:
+    name: _set_provider_api_key
+    module: src.markpact.generator
+    line: 212
+    cyclomatic_complexity: 8
+    calls_out: 2
+    calls_in: 1
+  src.markpact.packer._build_run_command:
+    name: _build_run_command
+    module: src.markpact.packer
+    line: 154
+    cyclomatic_complexity: 8
+    calls_out: 0
+    calls_in: 1
+  examples.demo_live_markpact._save_outputs:
+    name: _save_outputs
+    module: examples.demo_live_markpact
+    line: 652
+    cyclomatic_complexity: 3
+    calls_out: 14
+    calls_in: 0
+  src.markpact.publish.pypi._extract_readme_description:
+    name: _extract_readme_description
+    module: src.markpact.publish.pypi
+    line: 33
+    cyclomatic_complexity: 8
+    calls_out: 8
+    calls_in: 1
+  src.markpact.publish.pypi._get_build_error_hint:
+    name: _get_build_error_hint
+    module: src.markpact.publish.pypi
+    line: 220
+    cyclomatic_complexity: 6
+    calls_out: 0
+    calls_in: 1
+  src.markpact.notebook_converter._extract_description_from_cells:
+    name: _extract_description_from_cells
+    module: src.markpact.notebook_converter
+    line: 169
+    cyclomatic_complexity: 7
+    calls_out: 5
+    calls_in: 1
+  src.markpact.generator.generate_contract:
+    name: generate_contract
+    module: src.markpact.generator
+    line: 257
+    cyclomatic_complexity: 5
+    calls_out: 9
+    calls_in: 0
+  src.markpact.publish.llm_config._extract_publish_block_from_response:
+    name: _extract_publish_block_from_response
+    module: src.markpact.publish.llm_config
+    line: 70
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  SUMD.generate_contract:
+    name: generate_contract
+    module: SUMD
+    line: 603
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 3
+  src.markpact.publish.pypi._build_package:
+    name: _build_package
+    module: src.markpact.publish.pypi
+    line: 230
+    cyclomatic_complexity: 5
+    calls_out: 5
+    calls_in: 1
+  src.markpact.notebook_converter.suggest_run_command:
+    name: suggest_run_command
+    module: src.markpact.notebook_converter
+    line: 458
+    cyclomatic_complexity: 11
+    calls_out: 1
+    calls_in: 1
+  SUMD._handle_list_examples:
+    name: _handle_list_examples
+    module: SUMD
+    line: 423
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.config.load_env:
+    name: load_env
+    module: src.markpact.config
+    line: 61
+    cyclomatic_complexity: 8
+    calls_out: 12
+    calls_in: 3
+  src.markpact.notebook_converter._generate_header:
+    name: _generate_header
+    module: src.markpact.notebook_converter
+    line: 489
+    cyclomatic_complexity: 3
+    calls_out: 13
+    calls_in: 1
+  examples.demo_live_markpact._finalize:
+    name: _finalize
+    module: examples.demo_live_markpact
+    line: 827
+    cyclomatic_complexity: 3
+    calls_out: 19
+    calls_in: 1
+  src.markpact.config.set_config:
+    name: set_config
+    module: src.markpact.config
+    line: 126
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 3
+  SUMD.prompt_publish_config:
+    name: prompt_publish_config
+    module: SUMD
+    line: 524
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.cli.convert_cmd._handle_markdown_conversion:
+    name: _handle_markdown_conversion
+    module: src.markpact.cli.convert_cmd
+    line: 91
+    cyclomatic_complexity: 12
+    calls_out: 11
+    calls_in: 0
+  src.markpact.cli.publish_cmd._print_publish_dry_run:
+    name: _print_publish_dry_run
+    module: src.markpact.cli.publish_cmd
+    line: 49
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  src.markpact.docker_runner._build_docker_image_simple:
+    name: _build_docker_image_simple
+    module: src.markpact.docker_runner
+    line: 96
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  src.markpact.docker_runner._stop_docker_container:
+    name: _stop_docker_container
+    module: src.markpact.docker_runner
+    line: 375
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  src.markpact.runtime.core.Runtime.__init__:
+    name: __init__
+    module: src.markpact.runtime.core
+    line: 45
+    cyclomatic_complexity: 3
+    calls_out: 8
+    calls_in: 0
+  src.markpact.auto_fix._handle_port_error:
+    name: _handle_port_error
+    module: src.markpact.auto_fix
+    line: 300
     cyclomatic_complexity: 4
     calls_out: 9
     calls_in: 1
@@ -620,490 +1957,21 @@ nodes:
     line: 49
     cyclomatic_complexity: 1
     calls_out: 2
-    calls_in: 6
-  src.markpact.publish.docker_pub.publish_docker:
-    name: publish_docker
-    module: src.markpact.publish.docker_pub
-    line: 39
-    cyclomatic_complexity: 9
-    calls_out: 12
-    calls_in: 3
-  src.markpact.publish.pypi.get_license_classifier:
-    name: get_license_classifier
-    module: src.markpact.publish.pypi
-    line: 18
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.template.has_template_placeholders:
-    name: has_template_placeholders
-    module: src.markpact.template
-    line: 182
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  src.markpact.notebook_converter._merge_code_files:
-    name: _merge_code_files
-    module: src.markpact.notebook_converter
-    line: 606
-    cyclomatic_complexity: 3
-    calls_out: 0
-    calls_in: 1
-  src.markpact.tester.run_shell_tests:
-    name: run_shell_tests
-    module: src.markpact.tester
-    line: 273
-    cyclomatic_complexity: 8
-    calls_out: 23
-    calls_in: 1
-  src.markpact.runner.ensure_venv:
-    name: ensure_venv
-    module: src.markpact.runner
-    line: 24
-    cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 1
-  src.markpact.syncer.restore_backup:
-    name: restore_backup
-    module: src.markpact.syncer
-    line: 86
-    cyclomatic_complexity: 5
-    calls_out: 7
-    calls_in: 1
-  examples.demo_live_markpact._step_analyze_blocks:
-    name: _step_analyze_blocks
-    module: examples.demo_live_markpact
-    line: 585
-    cyclomatic_complexity: 20
-    calls_out: 40
-    calls_in: 1
-  src.markpact.cli.helpers._parse_blocks_to_state:
-    name: _parse_blocks_to_state
-    module: src.markpact.cli.helpers
-    line: 37
-    cyclomatic_complexity: 15
-    calls_out: 12
-    calls_in: 1
-  src.markpact.publish.npm._build_npm_description:
-    name: _build_npm_description
-    module: src.markpact.publish.npm
-    line: 15
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 1
-  src.markpact.publish.helpers._first_heading:
-    name: _first_heading
-    module: src.markpact.publish.helpers
-    line: 20
-    cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 1
-  src.markpact.syncer._write_new_blocks:
-    name: _write_new_blocks
-    module: src.markpact.syncer
-    line: 529
-    cyclomatic_complexity: 2
-    calls_out: 4
-    calls_in: 1
-  src.markpact.config.ensure_config_dir:
-    name: ensure_config_dir
-    module: src.markpact.config
-    line: 54
-    cyclomatic_complexity: 1
-    calls_out: 2
-    calls_in: 1
-  src.markpact.cli.run_cmd._run_shell_tests:
-    name: _run_shell_tests
-    module: src.markpact.cli.run_cmd
-    line: 55
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  examples.demo_live_markpact.info:
-    name: info
-    module: examples.demo_live_markpact
-    line: 404
-    cyclomatic_complexity: 1
-    calls_out: 1
     calls_in: 5
-  src.markpact.cli._handle_generation_phase:
-    name: _handle_generation_phase
-    module: src.markpact.cli
-    line: 123
-    cyclomatic_complexity: 9
-    calls_out: 7
-    calls_in: 1
-  examples.demo_live_markpact._setup_session:
-    name: _setup_session
-    module: examples.demo_live_markpact
-    line: 810
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 1
-  src.markpact.publish.llm_config._setup_llm_for_publish:
-    name: _setup_llm_for_publish
-    module: src.markpact.publish.llm_config
-    line: 12
-    cyclomatic_complexity: 3
-    calls_out: 1
-    calls_in: 1
-  src.markpact.publish.helpers.prompt_publish_config:
-    name: prompt_publish_config
-    module: src.markpact.publish.helpers
-    line: 176
-    cyclomatic_complexity: 4
-    calls_out: 16
-    calls_in: 1
-  src.markpact.syncer.list_backups:
-    name: list_backups
-    module: src.markpact.syncer
-    line: 70
-    cyclomatic_complexity: 2
-    calls_out: 6
-    calls_in: 2
-  src.markpact.notebook_converter.suggest_run_command:
-    name: suggest_run_command
-    module: src.markpact.notebook_converter
-    line: 458
-    cyclomatic_complexity: 11
-    calls_out: 1
-    calls_in: 1
-  examples.demo_live_markpact._step_parse_blocks:
-    name: _step_parse_blocks
-    module: examples.demo_live_markpact
-    line: 525
-    cyclomatic_complexity: 7
-    calls_out: 16
-    calls_in: 1
-  src.markpact.converter._print_conversion_header:
-    name: _print_conversion_header
-    module: src.markpact.converter
-    line: 270
-    cyclomatic_complexity: 1
-    calls_out: 3
-    calls_in: 1
-  src.markpact.syncer._backup_dir:
-    name: _backup_dir
-    module: src.markpact.syncer
-    line: 32
-    cyclomatic_complexity: 1
-    calls_out: 0
-    calls_in: 2
-  src.markpact.notebook_converter.parse_quarto:
-    name: parse_quarto
-    module: src.markpact.notebook_converter
-    line: 263
-    cyclomatic_complexity: 1
-    calls_out: 4
-    calls_in: 1
-  src.markpact.generator._clean_llm_response:
-    name: _clean_llm_response
-    module: src.markpact.generator
-    line: 244
-    cyclomatic_complexity: 4
-    calls_out: 4
-    calls_in: 1
-  examples.demo_live_markpact.main:
-    name: main
-    module: examples.demo_live_markpact
-    line: 934
-    cyclomatic_complexity: 6
-    calls_out: 18
-    calls_in: 0
-  src.markpact.packer._detect_framework_from_content:
-    name: _detect_framework_from_content
-    module: src.markpact.packer
-    line: 135
-    cyclomatic_complexity: 6
-    calls_out: 1
-    calls_in: 1
-  scripts.sync_version.get_pyproject_version:
-    name: get_pyproject_version
-    module: scripts.sync_version
-    line: 10
-    cyclomatic_complexity: 2
-    calls_out: 5
-    calls_in: 1
-  src.markpact.packer._write_output:
-    name: _write_output
-    module: src.markpact.packer
-    line: 298
-    cyclomatic_complexity: 4
-    calls_out: 7
-    calls_in: 1
-  src.markpact.docker_runner.build_and_run_docker:
-    name: build_and_run_docker
-    module: src.markpact.docker_runner
-    line: 160
-    cyclomatic_complexity: 3
-    calls_out: 4
-    calls_in: 1
-  src.markpact.cli.sync_cmd._execute_single_sync:
-    name: _execute_single_sync
-    module: src.markpact.cli.sync_cmd
-    line: 213
-    cyclomatic_complexity: 12
-    calls_out: 8
-    calls_in: 1
-  src.markpact.docker_runner._run_docker_tests:
-    name: _run_docker_tests
-    module: src.markpact.docker_runner
-    line: 350
-    cyclomatic_complexity: 6
-    calls_out: 8
-    calls_in: 1
-  src.markpact.syncer.diff_block:
-    name: diff_block
-    module: src.markpact.syncer
-    line: 251
-    cyclomatic_complexity: 1
-    calls_out: 4
-    calls_in: 1
-  src.markpact.converter._detect_run:
-    name: _detect_run
-    module: src.markpact.converter
-    line: 105
-    cyclomatic_complexity: 5
-    calls_out: 1
-    calls_in: 1
-  src.markpact.publish.llm_config._call_llm_for_publish_config:
-    name: _call_llm_for_publish_config
-    module: src.markpact.publish.llm_config
-    line: 42
-    cyclomatic_complexity: 2
-    calls_out: 1
-    calls_in: 1
-  src.markpact.cli.publish_cmd._determine_bump_type:
-    name: _determine_bump_type
-    module: src.markpact.cli.publish_cmd
-    line: 40
-    cyclomatic_complexity: 3
+  SUMD.handle_config_cli:
+    name: handle_config_cli
+    module: SUMD
+    line: 420
+    cyclomatic_complexity: 0
     calls_out: 0
     calls_in: 1
-  src.markpact.tester.run_tests_from_block:
-    name: run_tests_from_block
-    module: src.markpact.tester
-    line: 170
-    cyclomatic_complexity: 4
-    calls_out: 7
-    calls_in: 2
-  src.markpact.docker_runner._run_docker_container_interactive:
-    name: _run_docker_container_interactive
-    module: src.markpact.docker_runner
-    line: 133
+  src.markpact.runtime.core_v3.RuntimeV3._execute_step:
+    name: _execute_step
+    module: src.markpact.runtime.core_v3
+    line: 527
     cyclomatic_complexity: 3
     calls_out: 6
-    calls_in: 1
-  src.markpact.docker_runner.generate_dockerfile:
-    name: generate_dockerfile
-    module: src.markpact.docker_runner
-    line: 46
-    cyclomatic_complexity: 3
-    calls_out: 11
-    calls_in: 1
-  src.markpact.auto_fix._handle_port_error_simple:
-    name: _handle_port_error_simple
-    module: src.markpact.auto_fix
-    line: 126
-    cyclomatic_complexity: 4
-    calls_out: 9
-    calls_in: 1
-  src.markpact.publish.pypi._extract_readme_description:
-    name: _extract_readme_description
-    module: src.markpact.publish.pypi
-    line: 33
-    cyclomatic_complexity: 8
-    calls_out: 8
-    calls_in: 2
-  src.markpact.publish.pypi._check_pypi_credentials:
-    name: _check_pypi_credentials
-    module: src.markpact.publish.pypi
-    line: 301
-    cyclomatic_complexity: 9
-    calls_out: 7
-    calls_in: 1
-  src.markpact.cli.sync_cmd._handle_list_mode:
-    name: _handle_list_mode
-    module: src.markpact.cli.sync_cmd
-    line: 112
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 1
-  scripts.sync_version.get_next_version:
-    name: get_next_version
-    module: scripts.sync_version
-    line: 60
-    cyclomatic_complexity: 1
-    calls_out: 4
-    calls_in: 1
-  src.markpact.notebook_converter._extract_file_hint:
-    name: _extract_file_hint
-    module: src.markpact.notebook_converter
-    line: 546
-    cyclomatic_complexity: 2
-    calls_out: 4
-    calls_in: 1
-  examples.demo_live_markpact.show_menu:
-    name: show_menu
-    module: examples.demo_live_markpact
-    line: 447
-    cyclomatic_complexity: 10
-    calls_out: 18
-    calls_in: 1
-  scripts.sync_version.sync_versions:
-    name: sync_versions
-    module: scripts.sync_version
-    line: 66
-    cyclomatic_complexity: 5
-    calls_out: 11
     calls_in: 0
-  src.markpact.config.load_env:
-    name: load_env
-    module: src.markpact.config
-    line: 61
-    cyclomatic_complexity: 8
-    calls_out: 12
-    calls_in: 4
-  src.markpact.auto_fix._run_subprocess:
-    name: _run_subprocess
-    module: src.markpact.auto_fix
-    line: 288
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.syncer.find_untracked_files:
-    name: find_untracked_files
-    module: src.markpact.syncer
-    line: 204
-    cyclomatic_complexity: 11
-    calls_out: 12
-    calls_in: 3
-  src.markpact.runner.install_deps:
-    name: install_deps
-    module: src.markpact.runner
-    line: 33
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 3
-  src.markpact.cli.sync_cmd._handle_missing_mode:
-    name: _handle_missing_mode
-    module: src.markpact.cli.sync_cmd
-    line: 123
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 1
-  src.markpact.config.save_env:
-    name: save_env
-    module: src.markpact.config
-    line: 83
-    cyclomatic_complexity: 1
-    calls_out: 9
-    calls_in: 3
-  src.markpact.publish.npm.generate_package_json:
-    name: generate_package_json
-    module: src.markpact.publish.npm
-    line: 27
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  src.markpact.cli.run_cmd._split_test_blocks:
-    name: _split_test_blocks
-    module: src.markpact.cli.run_cmd
-    line: 34
-    cyclomatic_complexity: 7
-    calls_out: 3
-    calls_in: 1
-  examples.demo_live_markpact._step_generate_contract:
-    name: _step_generate_contract
-    module: examples.demo_live_markpact
-    line: 495
-    cyclomatic_complexity: 2
-    calls_out: 21
-    calls_in: 1
-  src.markpact.config.set_api_key:
-    name: set_api_key
-    module: src.markpact.config
-    line: 139
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.syncer._content_sha256:
-    name: _content_sha256
-    module: src.markpact.syncer
-    line: 276
-    cyclomatic_complexity: 1
-    calls_out: 3
-    calls_in: 1
-  src.markpact.auto_fix.extract_module_name:
-    name: extract_module_name
-    module: src.markpact.auto_fix
-    line: 210
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  src.markpact.cli._dispatch_subcommand:
-    name: _dispatch_subcommand
-    module: src.markpact.cli
-    line: 67
-    cyclomatic_complexity: 4
-    calls_out: 3
-    calls_in: 1
-  src.markpact.cli.sync_cmd._handle_rollback_mode:
-    name: _handle_rollback_mode
-    module: src.markpact.cli.sync_cmd
-    line: 101
-    cyclomatic_complexity: 3
-    calls_out: 4
-    calls_in: 1
-  src.markpact.cli.sync_cmd._build_sync_parser:
-    name: _build_sync_parser
-    module: src.markpact.cli.sync_cmd
-    line: 22
-    cyclomatic_complexity: 1
-    calls_out: 16
-    calls_in: 1
-  src.markpact.config.set_model:
-    name: set_model
-    module: src.markpact.config
-    line: 134
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.publish.pypi._determine_base_path:
-    name: _determine_base_path
-    module: src.markpact.publish.pypi
-    line: 118
-    cyclomatic_complexity: 5
-    calls_out: 7
-    calls_in: 1
-  src.markpact.config.apply_preset:
-    name: apply_preset
-    module: src.markpact.config
-    line: 149
-    cyclomatic_complexity: 4
-    calls_out: 6
-    calls_in: 1
-  src.markpact.cli._parse_main_args:
-    name: _parse_main_args
-    module: src.markpact.cli
-    line: 78
-    cyclomatic_complexity: 1
-    calls_out: 35
-    calls_in: 1
-  src.markpact.cli._process_readme:
-    name: _process_readme
-    module: src.markpact.cli
-    line: 147
-    cyclomatic_complexity: 14
-    calls_out: 17
-    calls_in: 1
-  src.markpact.notebook_converter.extract_dependencies:
-    name: extract_dependencies
-    module: src.markpact.notebook_converter
-    line: 416
-    cyclomatic_complexity: 11
-    calls_out: 10
-    calls_in: 1
   src.markpact.publish.helpers._get_default_author:
     name: _get_default_author
     module: src.markpact.publish.helpers
@@ -1111,215 +1979,47 @@ nodes:
     cyclomatic_complexity: 4
     calls_out: 3
     calls_in: 1
-  src.markpact.parser.parse_blocks_recursive:
-    name: parse_blocks_recursive
-    module: src.markpact.parser
-    line: 80
-    cyclomatic_complexity: 13
-    calls_out: 18
-    calls_in: 2
-  examples.demo_live_markpact.wait_done:
-    name: wait_done
-    module: examples.demo_live_markpact
-    line: 397
-    cyclomatic_complexity: 2
-    calls_out: 2
-    calls_in: 2
-  src.markpact.publish.pypi._print_build_output:
-    name: _print_build_output
-    module: src.markpact.publish.pypi
-    line: 210
-    cyclomatic_complexity: 3
-    calls_out: 6
-    calls_in: 1
-  src.markpact.cli.sync_cmd._execute_recursive_sync:
-    name: _execute_recursive_sync
-    module: src.markpact.cli.sync_cmd
-    line: 164
-    cyclomatic_complexity: 11
-    calls_out: 5
-    calls_in: 1
-  src.markpact.publish.pypi._build_upload_cmd:
-    name: _build_upload_cmd
-    module: src.markpact.publish.pypi
-    line: 329
-    cyclomatic_complexity: 5
-    calls_out: 6
-    calls_in: 1
-  src.markpact.syncer._process_block:
-    name: _process_block
-    module: src.markpact.syncer
-    line: 304
-    cyclomatic_complexity: 15
-    calls_out: 18
-    calls_in: 1
-  src.markpact.publish.pypi._parse_pypirc_section:
-    name: _parse_pypirc_section
-    module: src.markpact.publish.pypi
-    line: 261
-    cyclomatic_complexity: 15
-    calls_out: 15
-    calls_in: 1
-  src.markpact.cli.publish_cmd._resolve_publish_config:
-    name: _resolve_publish_config
-    module: src.markpact.cli.publish_cmd
-    line: 11
-    cyclomatic_complexity: 10
-    calls_out: 6
-    calls_in: 1
-  examples.demo_live_markpact.wait:
-    name: wait
-    module: examples.demo_live_markpact
-    line: 393
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.config.set_config:
-    name: set_config
-    module: src.markpact.config
-    line: 126
-    cyclomatic_complexity: 1
-    calls_out: 2
-    calls_in: 3
-  src.markpact.notebook_converter._parse_quarto_code_chunks:
-    name: _parse_quarto_code_chunks
-    module: src.markpact.notebook_converter
-    line: 223
-    cyclomatic_complexity: 5
-    calls_out: 15
-    calls_in: 1
-  src.markpact.publish.helpers._analyze_blocks_for_types:
-    name: _analyze_blocks_for_types
-    module: src.markpact.publish.helpers
-    line: 68
-    cyclomatic_complexity: 4
-    calls_out: 3
-    calls_in: 1
-  src.markpact.packer._generate_readme_content:
-    name: _generate_readme_content
-    module: src.markpact.packer
-    line: 226
-    cyclomatic_complexity: 7
-    calls_out: 12
-    calls_in: 1
-  src.markpact.notebook_converter.parse_zeppelin:
-    name: parse_zeppelin
-    module: src.markpact.notebook_converter
-    line: 282
-    cyclomatic_complexity: 7
-    calls_out: 30
-    calls_in: 1
-  src.markpact.auto_fix._handle_missing_module_error:
-    name: _handle_missing_module_error
-    module: src.markpact.auto_fix
-    line: 321
-    cyclomatic_complexity: 5
-    calls_out: 6
-    calls_in: 1
-  src.markpact.packer._get_language:
-    name: _get_language
-    module: src.markpact.packer
-    line: 115
-    cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 1
-  scripts.sync_version.set_pyproject_version:
-    name: set_pyproject_version
-    module: scripts.sync_version
-    line: 28
-    cyclomatic_complexity: 1
-    calls_out: 4
-    calls_in: 1
-  src.markpact.publish.helpers._detect_registry:
-    name: _detect_registry
-    module: src.markpact.publish.helpers
-    line: 100
-    cyclomatic_complexity: 7
-    calls_out: 1
-    calls_in: 1
-  src.markpact.auto_fix.detect_error_type:
-    name: detect_error_type
-    module: src.markpact.auto_fix
-    line: 42
-    cyclomatic_complexity: 7
-    calls_out: 8
-    calls_in: 2
-  src.markpact.template.load_secrets:
-    name: load_secrets
-    module: src.markpact.template
-    line: 62
-    cyclomatic_complexity: 6
-    calls_out: 10
-    calls_in: 1
-  src.markpact.syncer._detect_lang:
-    name: _detect_lang
-    module: src.markpact.syncer
-    line: 485
-    cyclomatic_complexity: 4
-    calls_out: 5
-    calls_in: 1
-  src.markpact.cli.run_cmd._handle_docker_mode:
-    name: _handle_docker_mode
-    module: src.markpact.cli.run_cmd
-    line: 12
-    cyclomatic_complexity: 4
-    calls_out: 9
-    calls_in: 1
-  src.markpact.syncer._build_header_suffix:
-    name: _build_header_suffix
-    module: src.markpact.syncer
-    line: 284
-    cyclomatic_complexity: 2
-    calls_out: 2
-    calls_in: 1
-  src.markpact.syncer._prune_backups:
-    name: _prune_backups
-    module: src.markpact.syncer
-    line: 120
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  examples.demo_live_markpact._step_validate_blocks:
-    name: _step_validate_blocks
-    module: examples.demo_live_markpact
-    line: 552
-    cyclomatic_complexity: 7
-    calls_out: 11
-    calls_in: 1
-  src.markpact.auto_fix.fix_with_llm:
-    name: fix_with_llm
-    module: src.markpact.auto_fix
-    line: 219
-    cyclomatic_complexity: 8
-    calls_out: 7
-    calls_in: 1
-  src.markpact.converter._print_block_changes:
-    name: _print_block_changes
-    module: src.markpact.converter
-    line: 277
-    cyclomatic_complexity: 2
-    calls_out: 1
-    calls_in: 1
-  src.markpact.publish.pypi._get_upload_error_hint:
-    name: _get_upload_error_hint
-    module: src.markpact.publish.pypi
-    line: 342
-    cyclomatic_complexity: 8
+  SUMD.sync_readme_recursive:
+    name: sync_readme_recursive
+    module: SUMD
+    line: 379
+    cyclomatic_complexity: 0
     calls_out: 0
     calls_in: 1
-  src.markpact.cli.convert_cmd._handle_list_notebook_formats:
-    name: _handle_list_notebook_formats
-    module: src.markpact.cli.convert_cmd
-    line: 22
+  SUMD.load_secrets:
+    name: load_secrets
+    module: SUMD
+    line: 627
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.publish_pypi:
+    name: publish_pypi
+    module: SUMD
+    line: 362
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.publish.helpers._slugify:
+    name: _slugify
+    module: src.markpact.publish.helpers
+    line: 13
     cyclomatic_complexity: 2
     calls_out: 5
     calls_in: 1
-  src.markpact.docker_runner._build_docker_image_simple:
-    name: _build_docker_image_simple
-    module: src.markpact.docker_runner
-    line: 96
-    cyclomatic_complexity: 4
+  src.markpact.publish.llm_config.generate_publish_config_with_llm:
+    name: generate_publish_config_with_llm
+    module: src.markpact.publish.llm_config
+    line: 80
+    cyclomatic_complexity: 8
     calls_out: 5
+    calls_in: 0
+  src.markpact.auto_fix.add_missing_dependency:
+    name: add_missing_dependency
+    module: src.markpact.auto_fix
+    line: 191
+    cyclomatic_complexity: 3
+    calls_out: 7
     calls_in: 1
   src.markpact.notebook_converter._extract_markdown_section:
     name: _extract_markdown_section
@@ -1328,131 +2028,12 @@ nodes:
     cyclomatic_complexity: 3
     calls_out: 3
     calls_in: 1
-  src.markpact.syncer._collect_untracked_blocks:
-    name: _collect_untracked_blocks
-    module: src.markpact.syncer
-    line: 505
-    cyclomatic_complexity: 9
-    calls_out: 7
-    calls_in: 1
-  src.markpact.auto_fix._handle_port_error:
-    name: _handle_port_error
-    module: src.markpact.auto_fix
-    line: 300
+  src.markpact.cli.sync_cmd._resolve_paths:
+    name: _resolve_paths
+    module: src.markpact.cli.sync_cmd
+    line: 64
     cyclomatic_complexity: 4
     calls_out: 9
-    calls_in: 1
-  src.markpact.notebook_converter.detect_format:
-    name: detect_format
-    module: src.markpact.notebook_converter
-    line: 38
-    cyclomatic_complexity: 1
-    calls_out: 2
-    calls_in: 2
-  src.markpact.publish.llm_config._extract_publish_block_from_response:
-    name: _extract_publish_block_from_response
-    module: src.markpact.publish.llm_config
-    line: 70
-    cyclomatic_complexity: 4
-    calls_out: 5
-    calls_in: 1
-  src.markpact.generator.list_example_prompts:
-    name: list_example_prompts
-    module: src.markpact.generator
-    line: 360
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.cli.publish_cmd._handle_publish_mode:
-    name: _handle_publish_mode
-    module: src.markpact.cli.publish_cmd
-    line: 75
-    cyclomatic_complexity: 5
-    calls_out: 5
-    calls_in: 1
-  examples.demo_live_markpact._print_summary:
-    name: _print_summary
-    module: examples.demo_live_markpact
-    line: 675
-    cyclomatic_complexity: 5
-    calls_out: 19
-    calls_in: 1
-  src.markpact.publish.llm_config._set_provider_api_key_for_publish:
-    name: _set_provider_api_key_for_publish
-    module: src.markpact.publish.llm_config
-    line: 26
-    cyclomatic_complexity: 8
-    calls_out: 2
-    calls_in: 1
-  examples.demo_live_markpact.list_prompts:
-    name: list_prompts
-    module: examples.demo_live_markpact
-    line: 485
-    cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 1
-  src.markpact.cli.main:
-    name: main
-    module: src.markpact.cli
-    line: 36
-    cyclomatic_complexity: 7
-    calls_out: 7
-    calls_in: 0
-  src.markpact.publish.llm_config.generate_publish_config_with_llm:
-    name: generate_publish_config_with_llm
-    module: src.markpact.publish.llm_config
-    line: 80
-    cyclomatic_complexity: 8
-    calls_out: 5
-    calls_in: 1
-  src.markpact.publish.main.parse_publish_block:
-    name: parse_publish_block
-    module: src.markpact.publish.main
-    line: 13
-    cyclomatic_complexity: 11
-    calls_out: 15
-    calls_in: 2
-  src.markpact.tester.http_request:
-    name: http_request
-    module: src.markpact.tester
-    line: 69
-    cyclomatic_complexity: 7
-    calls_out: 12
-    calls_in: 1
-  src.markpact.syncer.add_untracked_blocks:
-    name: add_untracked_blocks
-    module: src.markpact.syncer
-    line: 536
-    cyclomatic_complexity: 5
-    calls_out: 12
-    calls_in: 1
-  src.markpact.notebook_converter._generate_header:
-    name: _generate_header
-    module: src.markpact.notebook_converter
-    line: 489
-    cyclomatic_complexity: 3
-    calls_out: 13
-    calls_in: 1
-  src.markpact.publish.pypi._get_build_error_hint:
-    name: _get_build_error_hint
-    module: src.markpact.publish.pypi
-    line: 220
-    cyclomatic_complexity: 6
-    calls_out: 0
-    calls_in: 1
-  src.markpact.syncer.sync_readme:
-    name: sync_readme
-    module: src.markpact.syncer
-    line: 351
-    cyclomatic_complexity: 6
-    calls_out: 15
-    calls_in: 2
-  src.markpact.packer._detect_run_command:
-    name: _detect_run_command
-    module: src.markpact.packer
-    line: 178
-    cyclomatic_complexity: 1
-    calls_out: 3
     calls_in: 1
   src.markpact.docker_runner._start_docker_container:
     name: _start_docker_container
@@ -1461,272 +2042,220 @@ nodes:
     cyclomatic_complexity: 2
     calls_out: 3
     calls_in: 1
-  src.markpact.docker_runner._stop_docker_container:
-    name: _stop_docker_container
-    module: src.markpact.docker_runner
-    line: 375
-    cyclomatic_complexity: 2
-    calls_out: 3
+  src.markpact.publish.pypi._setup_upload_env:
+    name: _setup_upload_env
+    module: src.markpact.publish.pypi
+    line: 317
+    cyclomatic_complexity: 3
+    calls_out: 6
     calls_in: 1
-  src.markpact.cli.run_cmd._run_http_tests:
-    name: _run_http_tests
-    module: src.markpact.cli.run_cmd
-    line: 41
+  src.markpact.generator._clean_llm_response:
+    name: _clean_llm_response
+    module: src.markpact.generator
+    line: 244
     cyclomatic_complexity: 4
-    calls_out: 2
+    calls_out: 4
     calls_in: 1
-  src.markpact.notebook_converter._extract_description_from_cells:
-    name: _extract_description_from_cells
-    module: src.markpact.notebook_converter
-    line: 169
-    cyclomatic_complexity: 7
+  SUMD.wait_for_service:
+    name: wait_for_service
+    module: SUMD
+    line: 326
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 2
+  src.markpact.docker_runner.stream_docker_logs:
+    name: stream_docker_logs
+    module: src.markpact.docker_runner
+    line: 249
+    cyclomatic_complexity: 8
+    calls_out: 9
+    calls_in: 0
+  src.markpact.syncer._process_block:
+    name: _process_block
+    module: src.markpact.syncer
+    line: 304
+    cyclomatic_complexity: 15
+    calls_out: 18
+    calls_in: 1
+  src.markpact.auto_fix._run_and_print:
+    name: _run_and_print
+    module: src.markpact.auto_fix
+    line: 99
+    cyclomatic_complexity: 6
     calls_out: 5
     calls_in: 1
-  src.markpact.publish.version.update_version_in_readme:
-    name: update_version_in_readme
-    module: src.markpact.publish.version
-    line: 57
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  src.markpact.publish.pypi._run_build_command:
-    name: _run_build_command
+  src.markpact.publish.pypi.generate_pyproject_toml:
+    name: generate_pyproject_toml
     module: src.markpact.publish.pypi
-    line: 200
-    cyclomatic_complexity: 1
-    calls_out: 1
+    line: 65
+    cyclomatic_complexity: 3
+    calls_out: 5
     calls_in: 1
-  src.markpact.cli.sync_cmd._show_diffs:
-    name: _show_diffs
-    module: src.markpact.cli.sync_cmd
-    line: 191
-    cyclomatic_complexity: 6
+  src.markpact.converter._print_conversion_summary:
+    name: _print_conversion_summary
+    module: src.markpact.converter
+    line: 283
+    cyclomatic_complexity: 11
     calls_out: 9
     calls_in: 1
-  src.markpact.notebook_converter.parse_rmarkdown:
-    name: parse_rmarkdown
-    module: src.markpact.notebook_converter
-    line: 178
-    cyclomatic_complexity: 1
-    calls_out: 5
-    calls_in: 1
-  examples.demo_live_markpact.fail:
-    name: fail
-    module: examples.demo_live_markpact
-    line: 388
-    cyclomatic_complexity: 2
-    calls_out: 1
+  src.markpact.syncer.find_untracked_files:
+    name: find_untracked_files
+    module: src.markpact.syncer
+    line: 204
+    cyclomatic_complexity: 11
+    calls_out: 12
+    calls_in: 0
+  SUMD.find_free_port:
+    name: find_free_port
+    module: SUMD
+    line: 662
+    cyclomatic_complexity: 0
+    calls_out: 0
     calls_in: 6
-  src.markpact.publish.docker_pub.generate_dockerfile:
-    name: generate_dockerfile
-    module: src.markpact.publish.docker_pub
-    line: 15
-    cyclomatic_complexity: 1
-    calls_out: 2
-    calls_in: 1
-  examples.demo_live_markpact.step:
-    name: step
-    module: examples.demo_live_markpact
-    line: 379
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 4
-  src.markpact.publish.version.bump_version:
-    name: bump_version
-    module: src.markpact.publish.version
+  scripts.sync_version.get_pyproject_version:
+    name: get_pyproject_version
+    module: scripts.sync_version
     line: 10
-    cyclomatic_complexity: 4
-    calls_out: 7
-    calls_in: 2
-  src.markpact.tester.wait_for_service:
-    name: wait_for_service
-    module: src.markpact.tester
-    line: 54
-    cyclomatic_complexity: 4
-    calls_out: 6
-    calls_in: 4
-  src.markpact.publish.pypi._copy_readme:
-    name: _copy_readme
-    module: src.markpact.publish.pypi
-    line: 174
-    cyclomatic_complexity: 10
-    calls_out: 16
-    calls_in: 1
-  src.markpact.generator.get_example_prompt:
-    name: get_example_prompt
-    module: src.markpact.generator
-    line: 355
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  src.markpact.packer._should_include:
-    name: _should_include
-    module: src.markpact.packer
-    line: 101
-    cyclomatic_complexity: 6
-    calls_out: 2
-    calls_in: 1
-  src.markpact.cli.run_cmd._handle_normal_run:
-    name: _handle_normal_run
-    module: src.markpact.cli.run_cmd
-    line: 90
-    cyclomatic_complexity: 5
-    calls_out: 4
-    calls_in: 1
-  src.markpact.publish.helpers.infer_publish_config:
-    name: infer_publish_config
-    module: src.markpact.publish.helpers
-    line: 141
     cyclomatic_complexity: 2
-    calls_out: 11
-    calls_in: 1
-  src.markpact.auto_fix.fix_port_in_readme:
-    name: fix_port_in_readme
-    module: src.markpact.auto_fix
-    line: 64
-    cyclomatic_complexity: 3
     calls_out: 5
-    calls_in: 2
-  src.markpact.publish.npm.publish_npm:
-    name: publish_npm
-    module: src.markpact.publish.npm
-    line: 53
-    cyclomatic_complexity: 6
-    calls_out: 10
-    calls_in: 2
-  src.markpact.packer._build_run_command:
-    name: _build_run_command
-    module: src.markpact.packer
-    line: 154
-    cyclomatic_complexity: 8
+    calls_in: 1
+  SUMD._parse_blocks_to_state:
+    name: _parse_blocks_to_state
+    module: SUMD
+    line: 339
+    cyclomatic_complexity: 0
     calls_out: 0
     calls_in: 1
-  src.markpact.tester.run_service_with_tests:
-    name: run_service_with_tests
-    module: src.markpact.tester
-    line: 185
-    cyclomatic_complexity: 16
-    calls_out: 35
+  src.markpact.converter._detect_run:
+    name: _detect_run
+    module: src.markpact.converter
+    line: 105
+    cyclomatic_complexity: 5
+    calls_out: 1
     calls_in: 1
-  src.markpact.publish.pypi._normalize_package_name:
-    name: _normalize_package_name
-    module: src.markpact.publish.pypi
-    line: 108
-    cyclomatic_complexity: 4
+  src.markpact.notebook_converter.convert_notebook:
+    name: convert_notebook
+    module: src.markpact.notebook_converter
+    line: 669
+    cyclomatic_complexity: 5
+    calls_out: 9
+    calls_in: 0
+  src.markpact.runtime.core_v3.RuntimeV3._execute_step_with_retry:
+    name: _execute_step_with_retry
+    module: src.markpact.runtime.core_v3
+    line: 489
+    cyclomatic_complexity: 8
+    calls_out: 12
+    calls_in: 0
+  src.markpact.runtime.core_v3.RuntimeV3.reconcile:
+    name: reconcile
+    module: src.markpact.runtime.core_v3
+    line: 320
+    cyclomatic_complexity: 12
+    calls_out: 21
+    calls_in: 0
+  SUMD.list_tracked_paths:
+    name: list_tracked_paths
+    module: SUMD
+    line: 371
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  SUMD.convert_notebook:
+    name: convert_notebook
+    module: SUMD
+    line: 487
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.syncer._content_sha256:
+    name: _content_sha256
+    module: src.markpact.syncer
+    line: 276
+    cyclomatic_complexity: 1
     calls_out: 3
     calls_in: 1
-  src.markpact.sandbox.find_free_port:
-    name: find_free_port
-    module: src.markpact.sandbox
-    line: 8
-    cyclomatic_complexity: 3
-    calls_out: 4
-    calls_in: 6
-  examples.demo_live_markpact._finalize:
-    name: _finalize
-    module: examples.demo_live_markpact
-    line: 827
-    cyclomatic_complexity: 3
-    calls_out: 19
-    calls_in: 1
-  src.markpact.auto_fix._setup_env_with_venv:
-    name: _setup_env_with_venv
-    module: src.markpact.auto_fix
-    line: 279
-    cyclomatic_complexity: 2
-    calls_out: 4
-    calls_in: 1
-  src.markpact.converter._detect_deps:
-    name: _detect_deps
-    module: src.markpact.converter
-    line: 90
-    cyclomatic_complexity: 9
-    calls_out: 2
-    calls_in: 1
-  src.markpact.docker_runner.stop_existing_container:
-    name: stop_existing_container
-    module: src.markpact.docker_runner
-    line: 13
-    cyclomatic_complexity: 4
-    calls_out: 2
-    calls_in: 3
-  src.markpact.docker_runner.is_port_free:
-    name: is_port_free
-    module: src.markpact.docker_runner
-    line: 86
-    cyclomatic_complexity: 2
-    calls_out: 2
-    calls_in: 3
-  src.markpact.syncer.list_tracked_paths:
-    name: list_tracked_paths
-    module: src.markpact.syncer
-    line: 192
-    cyclomatic_complexity: 2
-    calls_out: 2
-    calls_in: 3
-  src.markpact.syncer._read_source_file:
-    name: _read_source_file
-    module: src.markpact.syncer
-    line: 293
-    cyclomatic_complexity: 3
-    calls_out: 4
-    calls_in: 2
-  src.markpact.runner.run_cmd:
-    name: run_cmd
-    module: src.markpact.runner
-    line: 11
-    cyclomatic_complexity: 3
-    calls_out: 6
-    calls_in: 3
-  src.markpact.notebook_converter.get_supported_formats:
-    name: get_supported_formats
-    module: src.markpact.notebook_converter
-    line: 702
-    cyclomatic_complexity: 1
+  SUMD.handle_pack_cli:
+    name: handle_pack_cli
+    module: SUMD
+    line: 633
+    cyclomatic_complexity: 0
     calls_out: 0
+    calls_in: 1
+  src.markpact.publish.main.publish:
+    name: publish
+    module: src.markpact.publish.main
+    line: 61
+    cyclomatic_complexity: 9
+    calls_out: 9
+    calls_in: 0
+  src.markpact.runtime.core_v2.RuntimeV2._execute_step_with_retry:
+    name: _execute_step_with_retry
+    module: src.markpact.runtime.core_v2
+    line: 221
+    cyclomatic_complexity: 9
+    calls_out: 6
+    calls_in: 0
+  SUMD.get_ssh_manager:
+    name: get_ssh_manager
+    module: SUMD
+    line: 644
+    cyclomatic_complexity: 0
+    calls_out: 0
+    calls_in: 1
+  src.markpact.auto_fix._handle_port_error_simple:
+    name: _handle_port_error_simple
+    module: src.markpact.auto_fix
+    line: 126
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 1
+  src.markpact.generator._fix_unclosed_blocks:
+    name: _fix_unclosed_blocks
+    module: src.markpact.generator
+    line: 181
+    cyclomatic_complexity: 7
+    calls_out: 6
     calls_in: 1
 edges:
 - caller: src.markpact.template.load_secrets
   callee: src.markpact.template._find_secrets_file
   call_type: resolved
-- caller: src.markpact.converter.detect_block_type
-  callee: src.markpact.converter._detect_deps
-  call_type: resolved
-- caller: src.markpact.converter.detect_block_type
-  callee: src.markpact.converter._detect_run
-  call_type: resolved
-- caller: src.markpact.converter.detect_block_type
-  callee: src.markpact.converter._detect_file
-  call_type: resolved
-- caller: src.markpact.converter.convert_markdown_to_markpact
-  callee: src.markpact.converter.detect_block_type
-  call_type: resolved
-- caller: src.markpact.converter.print_conversion_report
-  callee: src.markpact.converter._print_conversion_header
-  call_type: resolved
-- caller: src.markpact.converter.print_conversion_report
-  callee: src.markpact.converter._print_block_changes
-  call_type: resolved
-- caller: src.markpact.converter.print_conversion_report
-  callee: src.markpact.converter._print_conversion_summary
+- caller: src.markpact.cli.helpers._resolve_file_body
+  callee: SUMD.load_secrets
   call_type: resolved
 - caller: src.markpact.cli.helpers._resolve_file_body
-  callee: src.markpact.template.load_secrets
+  callee: SUMD.resolve_template
   call_type: resolved
 - caller: src.markpact.cli.helpers._resolve_file_body
-  callee: src.markpact.template.resolve_template
+  callee: SUMD.has_template_placeholders
   call_type: resolved
 - caller: src.markpact.cli.helpers._resolve_file_body
-  callee: src.markpact.template.has_template_placeholders
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.helpers._parse_blocks_to_state
   callee: src.markpact.cli.helpers._resolve_file_body
+  call_type: resolved
+- caller: src.markpact.cli.helpers._parse_blocks_to_state
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.docker_runner.stop_existing_container
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.docker_runner._build_docker_image_simple
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.docker_runner._find_docker_port
   callee: src.markpact.docker_runner.is_port_free
   call_type: resolved
 - caller: src.markpact.docker_runner._find_docker_port
-  callee: src.markpact.sandbox.find_free_port
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.docker_runner._find_docker_port
+  callee: SUMD.find_free_port
+  call_type: resolved
+- caller: src.markpact.docker_runner._run_docker_container_interactive
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.docker_runner.build_and_run_docker
   callee: src.markpact.docker_runner._build_docker_image_simple
@@ -1744,25 +2273,46 @@ edges:
   callee: src.markpact.docker_runner.stop_existing_container
   call_type: resolved
 - caller: src.markpact.docker_runner.run_docker_with_logs
-  callee: src.markpact.sandbox.find_free_port
+  callee: SUMD.find_free_port
+  call_type: resolved
+- caller: src.markpact.docker_runner.run_docker_with_logs
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.docker_runner.run_docker_with_logs
   callee: src.markpact.docker_runner.is_port_free
   call_type: resolved
+- caller: src.markpact.docker_runner.stream_docker_logs
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.docker_runner._build_docker_image
+  callee: README.print
+  call_type: resolved
 - caller: src.markpact.docker_runner._resolve_docker_port
   callee: src.markpact.docker_runner.is_port_free
   call_type: resolved
 - caller: src.markpact.docker_runner._resolve_docker_port
-  callee: src.markpact.sandbox.find_free_port
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.docker_runner._resolve_docker_port
+  callee: SUMD.find_free_port
   call_type: resolved
 - caller: src.markpact.docker_runner._start_docker_container
   callee: src.markpact.docker_runner.stop_existing_container
   call_type: resolved
-- caller: src.markpact.docker_runner._run_docker_tests
-  callee: src.markpact.tester.run_tests_from_block
+- caller: src.markpact.docker_runner._start_docker_container
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.docker_runner._run_docker_tests
-  callee: src.markpact.tester.wait_for_service
+  callee: SUMD.run_tests_from_block
+  call_type: resolved
+- caller: src.markpact.docker_runner._run_docker_tests
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.docker_runner._run_docker_tests
+  callee: SUMD.wait_for_service
+  call_type: resolved
+- caller: src.markpact.docker_runner._stop_docker_container
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.docker_runner.run_docker_with_tests
   callee: src.markpact.docker_runner._build_docker_image
@@ -1792,79 +2342,310 @@ edges:
   callee: src.markpact.cli._dispatch_subcommand
   call_type: resolved
 - caller: src.markpact.cli.main
-  callee: src.markpact.cli.convert_cmd._handle_list_examples
+  callee: SUMD._handle_list_examples
   call_type: resolved
 - caller: src.markpact.cli.main
-  callee: src.markpact.cli.convert_cmd._handle_list_notebook_formats
+  callee: SUMD._handle_list_notebook_formats
   call_type: resolved
 - caller: src.markpact.cli._dispatch_subcommand
-  callee: src.markpact.cli.config_cmd.handle_config_cli
+  callee: SUMD.handle_config_cli
   call_type: resolved
 - caller: src.markpact.cli._dispatch_subcommand
-  callee: src.markpact.cli.pack_cmd.handle_pack_cli
+  callee: SUMD.handle_pack_cli
   call_type: resolved
 - caller: src.markpact.cli._dispatch_subcommand
-  callee: src.markpact.cli.sync_cmd.handle_sync_cli
+  callee: SUMD.handle_sync_cli
   call_type: resolved
 - caller: src.markpact.cli._handle_generation_phase
-  callee: src.markpact.cli.convert_cmd._handle_from_notebook
+  callee: SUMD._handle_from_notebook
   call_type: resolved
 - caller: src.markpact.cli._handle_generation_phase
-  callee: src.markpact.cli.convert_cmd._handle_llm_generation
+  callee: SUMD._handle_llm_generation
+  call_type: resolved
+- caller: src.markpact.cli._handle_generation_phase
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli._process_readme
-  callee: src.markpact.cli.convert_cmd._handle_markdown_conversion
+  callee: SUMD._handle_markdown_conversion
   call_type: resolved
 - caller: src.markpact.cli._process_readme
-  callee: src.markpact.cli.helpers._parse_blocks_to_state
+  callee: SUMD._parse_blocks_to_state
   call_type: resolved
 - caller: src.markpact.cli._process_readme
-  callee: src.markpact.parser.parse_blocks_recursive
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli._process_readme
-  callee: src.markpact.parser.parse_blocks
+  callee: SUMD.parse_blocks_recursive
   call_type: resolved
 - caller: src.markpact.cli._process_readme
-  callee: src.markpact.cli.publish_cmd._handle_publish_mode
+  callee: SUMD.parse_blocks
+  call_type: resolved
+- caller: src.markpact.cli._process_readme
+  callee: SUMD._handle_publish_mode
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_docker_mode
+  callee: SUMD.generate_dockerfile
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_docker_mode
+  callee: SUMD.build_and_run_docker
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_docker_mode
+  callee: SUMD.check_docker_available
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_docker_mode
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._print_dry_run_tests
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._run_http_tests
+  callee: SUMD.run_service_with_tests
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._run_shell_tests
+  callee: SUMD.run_shell_tests
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_test_mode
+  callee: SUMD.find_free_port
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_test_mode
+  callee: src.markpact.cli.run_cmd._split_test_blocks
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_test_mode
+  callee: src.markpact.cli.run_cmd._run_http_tests
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_test_mode
+  callee: src.markpact.cli.run_cmd._run_shell_tests
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_test_mode
+  callee: src.markpact.cli.run_cmd._print_dry_run_tests
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_test_mode
+  callee: SUMD.install_deps
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_normal_run
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_normal_run
+  callee: SUMD.install_deps
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_normal_run
+  callee: SUMD.run_with_auto_fix_llm
+  call_type: resolved
+- caller: src.markpact.cli.run_cmd._handle_normal_run
+  callee: SUMD.run_cmd
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._resolve_publish_config
+  callee: SUMD.infer_publish_config
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._resolve_publish_config
+  callee: SUMD.prompt_publish_config
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._resolve_publish_config
+  callee: SUMD.generate_publish_config_with_llm
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._resolve_publish_config
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._print_publish_dry_run
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._print_publish_dry_run
+  callee: SUMD.bump_version
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._execute_publish_result
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._execute_publish_result
+  callee: SUMD.update_version_in_readme
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._handle_publish_mode
+  callee: src.markpact.cli.publish_cmd._determine_bump_type
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._handle_publish_mode
+  callee: SUMD.publish
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._handle_publish_mode
+  callee: src.markpact.cli.publish_cmd._execute_publish_result
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._handle_publish_mode
+  callee: src.markpact.cli.publish_cmd._resolve_publish_config
+  call_type: resolved
+- caller: src.markpact.cli.publish_cmd._handle_publish_mode
+  callee: src.markpact.cli.publish_cmd._print_publish_dry_run
+  call_type: resolved
+- caller: src.markpact.converter.detect_block_type
+  callee: src.markpact.converter._detect_deps
+  call_type: resolved
+- caller: src.markpact.converter.detect_block_type
+  callee: src.markpact.converter._detect_run
+  call_type: resolved
+- caller: src.markpact.converter.detect_block_type
+  callee: src.markpact.converter._detect_file
+  call_type: resolved
+- caller: src.markpact.converter.convert_markdown_to_markpact
+  callee: src.markpact.converter.detect_block_type
+  call_type: resolved
+- caller: src.markpact.converter._print_conversion_header
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.converter._print_block_changes
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.converter._print_conversion_summary
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.converter.print_conversion_report
+  callee: src.markpact.converter._print_conversion_header
+  call_type: resolved
+- caller: src.markpact.converter.print_conversion_report
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.converter.print_conversion_report
+  callee: src.markpact.converter._print_block_changes
+  call_type: resolved
+- caller: src.markpact.converter.print_conversion_report
+  callee: src.markpact.converter._print_conversion_summary
+  call_type: resolved
+- caller: src.markpact.auto_fix._run_and_print
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_port_error_simple
+  callee: SUMD.find_free_port
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_port_error_simple
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_port_error_simple
+  callee: src.markpact.auto_fix.fix_port_in_readme
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix
+  callee: src.markpact.auto_fix._setup_env_with_venv_simple
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix
+  callee: src.markpact.auto_fix.detect_error_type
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix
+  callee: src.markpact.auto_fix._run_and_print
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix
+  callee: src.markpact.auto_fix._handle_port_error_simple
+  call_type: resolved
+- caller: src.markpact.auto_fix.fix_with_llm
+  callee: SUMD.generate_contract
+  call_type: resolved
+- caller: src.markpact.auto_fix.fix_with_llm
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_port_error
+  callee: SUMD.find_free_port
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_port_error
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_port_error
+  callee: src.markpact.auto_fix.fix_port_in_readme
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_missing_module_error
+  callee: src.markpact.auto_fix.extract_module_name
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_missing_module_error
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_missing_module_error
+  callee: src.markpact.auto_fix.add_missing_dependency
+  call_type: resolved
+- caller: src.markpact.auto_fix._handle_missing_module_error
+  callee: SUMD.install_deps
+  call_type: resolved
+- caller: src.markpact.auto_fix._try_llm_fix
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.auto_fix._try_llm_fix
+  callee: src.markpact.auto_fix.fix_with_llm
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix_llm
+  callee: src.markpact.auto_fix._setup_env_with_venv
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix_llm
+  callee: src.markpact.auto_fix.detect_error_type
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix_llm
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix_llm
+  callee: src.markpact.auto_fix._run_subprocess
+  call_type: resolved
+- caller: src.markpact.auto_fix.run_with_auto_fix_llm
+  callee: src.markpact.auto_fix._handle_port_error
+  call_type: resolved
+- caller: src.markpact.cli.config_cmd.handle_config_cli
+  callee: SUMD.get_env_path
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._resolve_paths
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._handle_backups_mode
-  callee: src.markpact.syncer.list_backups
+  callee: SUMD.list_backups
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._handle_backups_mode
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._handle_rollback_mode
-  callee: src.markpact.syncer.restore_backup
+  callee: SUMD.restore_backup
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._handle_rollback_mode
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._handle_list_mode
-  callee: src.markpact.syncer.list_tracked_paths
+  callee: SUMD.list_tracked_paths
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._handle_list_mode
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._handle_missing_mode
-  callee: src.markpact.syncer.find_untracked_files
+  callee: SUMD.find_untracked_files
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._handle_missing_mode
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._handle_add_mode
-  callee: src.markpact.syncer.add_untracked_blocks
+  callee: SUMD.add_untracked_blocks
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._handle_add_mode
-  callee: src.markpact.syncer.find_untracked_files
+  callee: SUMD.find_untracked_files
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._handle_add_mode
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._execute_recursive_sync
-  callee: src.markpact.syncer.sync_readme_recursive
+  callee: SUMD.sync_readme_recursive
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._execute_recursive_sync
-  callee: src.markpact.syncer.print_sync_report
+  callee: SUMD.print_sync_report
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._execute_recursive_sync
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._show_diffs
-  callee: src.markpact.syncer.diff_block
+  callee: SUMD.diff_block
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._show_diffs
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._execute_single_sync
-  callee: src.markpact.syncer.sync_readme
+  callee: SUMD.sync_readme
+  call_type: resolved
+- caller: src.markpact.cli.sync_cmd._execute_single_sync
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._execute_single_sync
   callee: src.markpact.cli.sync_cmd._show_diffs
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._execute_single_sync
-  callee: src.markpact.syncer.print_sync_report
+  callee: SUMD.print_sync_report
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd._execute_single_sync
-  callee: src.markpact.syncer.find_untracked_files
+  callee: SUMD.find_untracked_files
   call_type: resolved
 - caller: src.markpact.cli.sync_cmd.handle_sync_cli
   callee: src.markpact.cli.sync_cmd._build_sync_parser
@@ -1890,359 +2671,50 @@ edges:
 - caller: src.markpact.cli.sync_cmd.handle_sync_cli
   callee: src.markpact.cli.sync_cmd._handle_add_mode
   call_type: resolved
-- caller: src.markpact.auto_fix._handle_port_error_simple
-  callee: src.markpact.sandbox.find_free_port
-  call_type: resolved
-- caller: src.markpact.auto_fix._handle_port_error_simple
-  callee: src.markpact.auto_fix.fix_port_in_readme
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix
-  callee: src.markpact.auto_fix._setup_env_with_venv_simple
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix
-  callee: src.markpact.auto_fix.detect_error_type
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix
-  callee: src.markpact.auto_fix._run_and_print
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix
-  callee: src.markpact.auto_fix._handle_port_error_simple
-  call_type: resolved
-- caller: src.markpact.auto_fix.fix_with_llm
-  callee: src.markpact.generator.generate_contract
-  call_type: resolved
-- caller: src.markpact.auto_fix._handle_port_error
-  callee: src.markpact.sandbox.find_free_port
-  call_type: resolved
-- caller: src.markpact.auto_fix._handle_port_error
-  callee: src.markpact.auto_fix.fix_port_in_readme
-  call_type: resolved
-- caller: src.markpact.auto_fix._handle_missing_module_error
-  callee: src.markpact.auto_fix.extract_module_name
-  call_type: resolved
-- caller: src.markpact.auto_fix._handle_missing_module_error
-  callee: src.markpact.auto_fix.add_missing_dependency
-  call_type: resolved
-- caller: src.markpact.auto_fix._handle_missing_module_error
-  callee: src.markpact.runner.install_deps
-  call_type: resolved
-- caller: src.markpact.auto_fix._try_llm_fix
-  callee: src.markpact.auto_fix.fix_with_llm
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix_llm
-  callee: src.markpact.auto_fix._setup_env_with_venv
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix_llm
-  callee: src.markpact.auto_fix.detect_error_type
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix_llm
-  callee: src.markpact.auto_fix._run_subprocess
-  call_type: resolved
-- caller: src.markpact.auto_fix.run_with_auto_fix_llm
-  callee: src.markpact.auto_fix._handle_port_error
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_docker_mode
-  callee: src.markpact.docker_runner.generate_dockerfile
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_docker_mode
-  callee: src.markpact.docker_runner.build_and_run_docker
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_docker_mode
-  callee: src.markpact.docker_runner.check_docker_available
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._run_http_tests
-  callee: src.markpact.tester.run_service_with_tests
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._run_shell_tests
-  callee: src.markpact.tester.run_shell_tests
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_test_mode
-  callee: src.markpact.sandbox.find_free_port
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_test_mode
-  callee: src.markpact.cli.run_cmd._split_test_blocks
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_test_mode
-  callee: src.markpact.cli.run_cmd._run_http_tests
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_test_mode
-  callee: src.markpact.cli.run_cmd._run_shell_tests
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_test_mode
-  callee: src.markpact.cli.run_cmd._print_dry_run_tests
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_test_mode
-  callee: src.markpact.runner.install_deps
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_normal_run
-  callee: src.markpact.runner.install_deps
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_normal_run
-  callee: src.markpact.auto_fix.run_with_auto_fix_llm
-  call_type: resolved
-- caller: src.markpact.cli.run_cmd._handle_normal_run
-  callee: src.markpact.runner.run_cmd
-  call_type: resolved
-- caller: src.markpact.tester.run_http_test
-  callee: src.markpact.tester.http_request
-  call_type: resolved
-- caller: src.markpact.tester.run_tests_from_block
-  callee: src.markpact.tester.run_http_test
-  call_type: resolved
-- caller: src.markpact.cli.config_cmd.handle_config_cli
-  callee: src.markpact.config.get_env_path
+- caller: src.markpact.cli.convert_cmd._handle_list_examples
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_list_examples
-  callee: src.markpact.generator.list_example_prompts
+  callee: SUMD.list_example_prompts
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_list_notebook_formats
-  callee: src.markpact.notebook_converter.get_supported_formats
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.convert_cmd._handle_list_notebook_formats
+  callee: SUMD.get_supported_formats
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_from_notebook
-  callee: src.markpact.notebook_converter.convert_notebook
+  callee: SUMD.convert_notebook
+  call_type: resolved
+- caller: src.markpact.cli.convert_cmd._handle_from_notebook
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_llm_generation
-  callee: src.markpact.config.init_env
+  callee: SUMD.init_env
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_llm_generation
-  callee: src.markpact.config.load_env
+  callee: SUMD.load_env
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_llm_generation
-  callee: src.markpact.generator.get_example_prompt
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.cli.convert_cmd._handle_llm_generation
+  callee: SUMD.get_example_prompt
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_markdown_conversion
-  callee: src.markpact.converter.convert_markdown_to_markpact
+  callee: SUMD.convert_markdown_to_markpact
   call_type: resolved
 - caller: src.markpact.cli.convert_cmd._handle_markdown_conversion
-  callee: src.markpact.converter.print_conversion_report
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.runner.ensure_venv
-  callee: src.markpact.runner.run_cmd
+- caller: src.markpact.cli.convert_cmd._handle_markdown_conversion
+  callee: SUMD.print_conversion_report
   call_type: resolved
-- caller: src.markpact.runner.install_deps
-  callee: src.markpact.runner.ensure_venv
+- caller: src.markpact.runtime.state.StateManager._load
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.runner.install_deps
-  callee: src.markpact.runner.run_cmd
-  call_type: resolved
-- caller: src.markpact.parser.parse_blocks_recursive
-  callee: src.markpact.parser.parse_blocks
-  call_type: resolved
-- caller: src.markpact.config.ensure_config_dir
-  callee: src.markpact.config.get_env_path
-  call_type: resolved
-- caller: src.markpact.config.load_env
-  callee: src.markpact.config.get_env_path
-  call_type: resolved
-- caller: src.markpact.config.save_env
-  callee: src.markpact.config.ensure_config_dir
-  call_type: resolved
-- caller: src.markpact.config.save_env
-  callee: src.markpact.config.get_env_path
-  call_type: resolved
-- caller: src.markpact.config.init_env
-  callee: src.markpact.config.get_env_path
-  call_type: resolved
-- caller: src.markpact.config.init_env
-  callee: src.markpact.config.save_env
-  call_type: resolved
-- caller: src.markpact.config.set_config
-  callee: src.markpact.config.load_env
-  call_type: resolved
-- caller: src.markpact.config.set_config
-  callee: src.markpact.config.save_env
-  call_type: resolved
-- caller: src.markpact.config.set_model
-  callee: src.markpact.config.set_config
-  call_type: resolved
-- caller: src.markpact.config.set_api_key
-  callee: src.markpact.config.set_config
-  call_type: resolved
-- caller: src.markpact.config.set_api_base
-  callee: src.markpact.config.set_config
-  call_type: resolved
-- caller: src.markpact.config.apply_preset
-  callee: src.markpact.config.load_env
-  call_type: resolved
-- caller: src.markpact.config.apply_preset
-  callee: src.markpact.config.save_env
-  call_type: resolved
-- caller: src.markpact.config.show_config
-  callee: src.markpact.config.load_env
-  call_type: resolved
-- caller: src.markpact.config.show_config
-  callee: src.markpact.config.get_env_path
-  call_type: resolved
-- caller: src.markpact.packer._detect_run_command
-  callee: src.markpact.packer._detect_file_indicators
-  call_type: resolved
-- caller: src.markpact.packer._detect_run_command
-  callee: src.markpact.packer._detect_framework_from_content
-  call_type: resolved
-- caller: src.markpact.packer._detect_run_command
-  callee: src.markpact.packer._build_run_command
-  call_type: resolved
-- caller: src.markpact.packer._collect_files
-  callee: src.markpact.packer._should_include
-  call_type: resolved
-- caller: src.markpact.packer._generate_readme_content
-  callee: src.markpact.packer._get_language
-  call_type: resolved
-- caller: src.markpact.packer._generate_readme_content
-  callee: src.markpact.packer._detect_run_command
-  call_type: resolved
-- caller: src.markpact.packer.pack_directory
-  callee: src.markpact.packer._collect_files
-  call_type: resolved
-- caller: src.markpact.packer.pack_directory
-  callee: src.markpact.packer._generate_readme_content
-  call_type: resolved
-- caller: src.markpact.packer.pack_directory
-  callee: src.markpact.packer._write_output
-  call_type: resolved
-- caller: src.markpact.publish.helpers._analyze_blocks_for_types
-  callee: src.markpact.publish.helpers._check_file_type
-  call_type: resolved
-- caller: src.markpact.publish.helpers._detect_registry
-  callee: src.markpact.publish.helpers._is_web_service
-  call_type: resolved
-- caller: src.markpact.publish.helpers.infer_publish_config
-  callee: src.markpact.publish.helpers._first_heading
-  call_type: resolved
-- caller: src.markpact.publish.helpers.infer_publish_config
-  callee: src.markpact.publish.helpers._first_paragraph
-  call_type: resolved
-- caller: src.markpact.publish.helpers.infer_publish_config
-  callee: src.markpact.publish.helpers._analyze_blocks_for_types
-  call_type: resolved
-- caller: src.markpact.publish.helpers.infer_publish_config
-  callee: src.markpact.publish.helpers._detect_registry
-  call_type: resolved
-- caller: src.markpact.publish.helpers.infer_publish_config
-  callee: src.markpact.publish.helpers._slugify
-  call_type: resolved
-- caller: src.markpact.publish.helpers.infer_publish_config
-  callee: src.markpact.publish.helpers._build_package_name
-  call_type: resolved
-- caller: src.markpact.publish.helpers.infer_publish_config
-  callee: src.markpact.publish.helpers._get_default_author
-  call_type: resolved
-- caller: src.markpact.publish.npm._build_npm_description
-  callee: src.markpact.publish.pypi._extract_readme_description
-  call_type: resolved
-- caller: src.markpact.publish.npm.generate_package_json
-  callee: src.markpact.publish.npm._build_npm_description
-  call_type: resolved
-- caller: src.markpact.publish.npm.publish_npm
-  callee: src.markpact.publish.npm.generate_package_json
-  call_type: resolved
-- caller: src.markpact.publish.npm.publish_npm
-  callee: src.markpact.publish.helpers._format_subprocess_failure
-  call_type: resolved
-- caller: src.markpact.publish.github.publish_github_packages
-  callee: src.markpact.publish.npm.publish_npm
-  call_type: resolved
-- caller: src.markpact.publish.github.publish_github_packages
-  callee: src.markpact.publish.docker_pub.publish_docker
-  call_type: resolved
-- caller: src.markpact.publish.main.publish
-  callee: src.markpact.publish.version.bump_version
-  call_type: resolved
-- caller: src.markpact.publish.main.publish
-  callee: src.markpact.publish.pypi.publish_pypi
-  call_type: resolved
-- caller: src.markpact.publish.main.publish
-  callee: src.markpact.publish.npm.publish_npm
-  call_type: resolved
-- caller: src.markpact.publish.main.publish
-  callee: src.markpact.publish.docker_pub.publish_docker
-  call_type: resolved
-- caller: src.markpact.publish.main.publish
-  callee: src.markpact.publish.github.publish_github_packages
-  call_type: resolved
-- caller: src.markpact.runtime.executors.ShellExecutor._run_ssh_persistent
-  callee: src.markpact.runtime.ssh_manager.get_ssh_manager
-  call_type: resolved
-- caller: src.markpact.publish.docker_pub.generate_dockerfile
-  callee: src.markpact.publish.pypi._build_description
-  call_type: resolved
-- caller: src.markpact.publish.docker_pub.publish_docker
-  callee: src.markpact.publish.docker_pub.generate_dockerfile
-  call_type: resolved
-- caller: src.markpact.publish.pypi._build_description
-  callee: src.markpact.publish.pypi._extract_readme_description
-  call_type: resolved
-- caller: src.markpact.publish.pypi.generate_pyproject_toml
-  callee: src.markpact.publish.pypi._build_description
-  call_type: resolved
-- caller: src.markpact.publish.pypi.generate_pyproject_toml
-  callee: src.markpact.publish.pypi.get_license_classifier
-  call_type: resolved
-- caller: src.markpact.publish.pypi._build_package
-  callee: src.markpact.publish.pypi._run_build_command
-  call_type: resolved
-- caller: src.markpact.publish.pypi._build_package
-  callee: src.markpact.publish.pypi._print_build_output
-  call_type: resolved
-- caller: src.markpact.publish.pypi._build_package
-  callee: src.markpact.publish.pypi._get_build_error_hint
-  call_type: resolved
-- caller: src.markpact.publish.pypi._check_pypi_credentials
-  callee: src.markpact.publish.pypi._setup_env_creds
-  call_type: resolved
-- caller: src.markpact.publish.pypi._check_pypi_credentials
-  callee: src.markpact.publish.pypi._parse_pypirc_section
-  call_type: resolved
-- caller: src.markpact.publish.pypi._upload_to_pypi
-  callee: src.markpact.publish.pypi._setup_upload_env
-  call_type: resolved
-- caller: src.markpact.publish.pypi._upload_to_pypi
-  callee: src.markpact.publish.pypi._build_upload_cmd
-  call_type: resolved
-- caller: src.markpact.publish.pypi._upload_to_pypi
-  callee: src.markpact.publish.helpers._format_subprocess_failure
-  call_type: resolved
-- caller: src.markpact.publish.pypi._upload_to_pypi
-  callee: src.markpact.publish.pypi._get_upload_error_hint
-  call_type: resolved
-- caller: src.markpact.publish.pypi.publish_pypi
-  callee: src.markpact.publish.pypi._normalize_package_name
-  call_type: resolved
-- caller: src.markpact.publish.pypi.publish_pypi
-  callee: src.markpact.publish.pypi._determine_base_path
-  call_type: resolved
-- caller: src.markpact.publish.pypi.publish_pypi
-  callee: src.markpact.publish.pypi.generate_pyproject_toml
-  call_type: resolved
-- caller: src.markpact.publish.pypi.publish_pypi
-  callee: src.markpact.publish.pypi._copy_readme
-  call_type: resolved
-- caller: src.markpact.publish.pypi.publish_pypi
-  callee: src.markpact.publish.pypi._build_package
-  call_type: resolved
-- caller: src.markpact.publish.pypi.publish_pypi
-  callee: src.markpact.publish.pypi._check_pypi_credentials
-  call_type: resolved
-- caller: src.markpact.publish.pypi.publish_pypi
-  callee: src.markpact.publish.pypi._upload_to_pypi
-  call_type: resolved
-- caller: scripts.sync_version.sync_versions
-  callee: scripts.sync_version.get_pyproject_version
-  call_type: resolved
-- caller: scripts.sync_version.sync_versions
-  callee: scripts.sync_version.get_bumpversion_version
-  call_type: resolved
-- caller: scripts.sync_version.sync_versions
-  callee: scripts.sync_version.tag_exists
-  call_type: resolved
-- caller: scripts.sync_version.sync_versions
-  callee: scripts.sync_version.get_next_version
-  call_type: resolved
-- caller: scripts.sync_version.sync_versions
-  callee: scripts.sync_version.set_pyproject_version
-  call_type: resolved
-- caller: scripts.sync_version.sync_versions
-  callee: scripts.sync_version.set_bumpversion_version
+- caller: src.markpact.runtime.state.StateManager._save
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.notebook_converter.parse_rmarkdown
   callee: src.markpact.notebook_converter._parse_rmd_yaml_front_matter
@@ -2310,17 +2782,323 @@ edges:
 - caller: src.markpact.notebook_converter.convert_notebook
   callee: src.markpact.notebook_converter.notebook_to_markpact
   call_type: resolved
+- caller: src.markpact.notebook_converter.convert_notebook
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.config.ensure_config_dir
+  callee: src.markpact.config.get_env_path
+  call_type: resolved
+- caller: src.markpact.config.load_env
+  callee: src.markpact.config.get_env_path
+  call_type: resolved
+- caller: src.markpact.config.save_env
+  callee: src.markpact.config.ensure_config_dir
+  call_type: resolved
+- caller: src.markpact.config.save_env
+  callee: src.markpact.config.get_env_path
+  call_type: resolved
+- caller: src.markpact.config.init_env
+  callee: src.markpact.config.get_env_path
+  call_type: resolved
+- caller: src.markpact.config.init_env
+  callee: src.markpact.config.save_env
+  call_type: resolved
+- caller: src.markpact.config.set_config
+  callee: src.markpact.config.load_env
+  call_type: resolved
+- caller: src.markpact.config.set_config
+  callee: src.markpact.config.save_env
+  call_type: resolved
+- caller: src.markpact.config.set_model
+  callee: src.markpact.config.set_config
+  call_type: resolved
+- caller: src.markpact.config.set_api_key
+  callee: src.markpact.config.set_config
+  call_type: resolved
+- caller: src.markpact.config.set_api_base
+  callee: src.markpact.config.set_config
+  call_type: resolved
+- caller: src.markpact.config.apply_preset
+  callee: src.markpact.config.load_env
+  call_type: resolved
+- caller: src.markpact.config.apply_preset
+  callee: src.markpact.config.save_env
+  call_type: resolved
+- caller: src.markpact.config.show_config
+  callee: src.markpact.config.load_env
+  call_type: resolved
+- caller: src.markpact.config.show_config
+  callee: src.markpact.config.get_env_path
+  call_type: resolved
+- caller: src.markpact.runner.run_cmd
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runner.ensure_venv
+  callee: src.markpact.runner.run_cmd
+  call_type: resolved
+- caller: src.markpact.runner.install_deps
+  callee: src.markpact.runner.ensure_venv
+  call_type: resolved
+- caller: src.markpact.runner.install_deps
+  callee: src.markpact.runner.run_cmd
+  call_type: resolved
+- caller: src.markpact.runtime.plugins.PluginLoader.load_from_path
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.plugins.PluginLoader.load_from_module
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.plugins.PluginLoader._load_from_directory
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.plugins.PluginLoader._load_from_file
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.plugins.PluginLoader._extract_plugin_from_module
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.ssh_manager.SSHSessionManager.connect
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.ssh_manager.SSHSessionManager.close
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
+  callee: src.markpact.publish.llm_config._setup_llm_for_publish
+  call_type: resolved
+- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
+  callee: src.markpact.publish.llm_config._set_provider_api_key_for_publish
+  call_type: resolved
+- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
+  callee: src.markpact.publish.llm_config._call_llm_for_publish_config
+  call_type: resolved
+- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
+  callee: src.markpact.publish.llm_config._extract_publish_block_from_response
+  call_type: resolved
+- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
+  callee: SUMD.parse_publish_block
+  call_type: resolved
+- caller: src.markpact.publish.npm._build_npm_description
+  callee: SUMD._extract_readme_description
+  call_type: resolved
+- caller: src.markpact.publish.npm.generate_package_json
+  callee: src.markpact.publish.npm._build_npm_description
+  call_type: resolved
+- caller: src.markpact.publish.npm.publish_npm
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.npm.publish_npm
+  callee: src.markpact.publish.npm.generate_package_json
+  call_type: resolved
+- caller: src.markpact.publish.npm.publish_npm
+  callee: SUMD._format_subprocess_failure
+  call_type: resolved
+- caller: src.markpact.runtime.executors.ShellExecutor._run_ssh_persistent
+  callee: SUMD.get_ssh_manager
+  call_type: resolved
+- caller: src.markpact.publish.main.publish
+  callee: SUMD.bump_version
+  call_type: resolved
+- caller: src.markpact.publish.main.publish
+  callee: SUMD.publish_pypi
+  call_type: resolved
+- caller: src.markpact.publish.main.publish
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.main.publish
+  callee: SUMD.publish_npm
+  call_type: resolved
+- caller: src.markpact.publish.main.publish
+  callee: SUMD.publish_docker
+  call_type: resolved
+- caller: src.markpact.publish.main.publish
+  callee: SUMD.publish_github_packages
+  call_type: resolved
+- caller: src.markpact.publish.helpers._analyze_blocks_for_types
+  callee: src.markpact.publish.helpers._check_file_type
+  call_type: resolved
+- caller: src.markpact.publish.helpers._detect_registry
+  callee: src.markpact.publish.helpers._is_web_service
+  call_type: resolved
+- caller: src.markpact.publish.helpers.infer_publish_config
+  callee: src.markpact.publish.helpers._first_heading
+  call_type: resolved
+- caller: src.markpact.publish.helpers.infer_publish_config
+  callee: src.markpact.publish.helpers._first_paragraph
+  call_type: resolved
+- caller: src.markpact.publish.helpers.infer_publish_config
+  callee: src.markpact.publish.helpers._analyze_blocks_for_types
+  call_type: resolved
+- caller: src.markpact.publish.helpers.infer_publish_config
+  callee: src.markpact.publish.helpers._detect_registry
+  call_type: resolved
+- caller: src.markpact.publish.helpers.infer_publish_config
+  callee: src.markpact.publish.helpers._slugify
+  call_type: resolved
+- caller: src.markpact.publish.helpers.infer_publish_config
+  callee: src.markpact.publish.helpers._build_package_name
+  call_type: resolved
+- caller: src.markpact.publish.helpers.infer_publish_config
+  callee: src.markpact.publish.helpers._get_default_author
+  call_type: resolved
+- caller: src.markpact.publish.helpers.prompt_publish_config
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.github.publish_github_packages
+  callee: SUMD.publish_npm
+  call_type: resolved
+- caller: src.markpact.publish.github.publish_github_packages
+  callee: SUMD.publish_docker
+  call_type: resolved
+- caller: src.markpact.parser.parse_blocks_recursive
+  callee: src.markpact.parser.parse_blocks
+  call_type: resolved
+- caller: src.markpact.publish.docker_pub.generate_dockerfile
+  callee: SUMD._build_description
+  call_type: resolved
+- caller: src.markpact.publish.docker_pub.publish_docker
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.docker_pub.publish_docker
+  callee: src.markpact.publish.docker_pub.generate_dockerfile
+  call_type: resolved
+- caller: scripts.sync_version.sync_versions
+  callee: scripts.sync_version.get_pyproject_version
+  call_type: resolved
+- caller: scripts.sync_version.sync_versions
+  callee: scripts.sync_version.get_bumpversion_version
+  call_type: resolved
+- caller: scripts.sync_version.sync_versions
+  callee: scripts.sync_version.tag_exists
+  call_type: resolved
+- caller: scripts.sync_version.sync_versions
+  callee: scripts.sync_version.get_next_version
+  call_type: resolved
+- caller: scripts.sync_version.sync_versions
+  callee: scripts.sync_version.set_pyproject_version
+  call_type: resolved
+- caller: scripts.sync_version.sync_versions
+  callee: README.print
+  call_type: resolved
+- caller: scripts.sync_version.sync_versions
+  callee: scripts.sync_version.set_bumpversion_version
+  call_type: resolved
+- caller: src.markpact.publish.pypi._build_description
+  callee: src.markpact.publish.pypi._extract_readme_description
+  call_type: resolved
+- caller: src.markpact.publish.pypi.generate_pyproject_toml
+  callee: src.markpact.publish.pypi._build_description
+  call_type: resolved
+- caller: src.markpact.publish.pypi.generate_pyproject_toml
+  callee: src.markpact.publish.pypi.get_license_classifier
+  call_type: resolved
+- caller: src.markpact.publish.pypi._normalize_package_name
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._determine_base_path
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._ensure_build_backend
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._copy_readme
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._print_build_output
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._build_package
+  callee: src.markpact.publish.pypi._run_build_command
+  call_type: resolved
+- caller: src.markpact.publish.pypi._build_package
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._build_package
+  callee: src.markpact.publish.pypi._print_build_output
+  call_type: resolved
+- caller: src.markpact.publish.pypi._build_package
+  callee: src.markpact.publish.pypi._get_build_error_hint
+  call_type: resolved
+- caller: src.markpact.publish.pypi._parse_pypirc_section
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._check_pypi_credentials
+  callee: src.markpact.publish.pypi._setup_env_creds
+  call_type: resolved
+- caller: src.markpact.publish.pypi._check_pypi_credentials
+  callee: src.markpact.publish.pypi._parse_pypirc_section
+  call_type: resolved
+- caller: src.markpact.publish.pypi._check_pypi_credentials
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._upload_to_pypi
+  callee: src.markpact.publish.pypi._setup_upload_env
+  call_type: resolved
+- caller: src.markpact.publish.pypi._upload_to_pypi
+  callee: src.markpact.publish.pypi._build_upload_cmd
+  call_type: resolved
+- caller: src.markpact.publish.pypi._upload_to_pypi
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.publish.pypi._upload_to_pypi
+  callee: SUMD._format_subprocess_failure
+  call_type: resolved
+- caller: src.markpact.publish.pypi._upload_to_pypi
+  callee: src.markpact.publish.pypi._get_upload_error_hint
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: src.markpact.publish.pypi._normalize_package_name
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: src.markpact.publish.pypi._determine_base_path
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: src.markpact.publish.pypi.generate_pyproject_toml
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: src.markpact.publish.pypi._copy_readme
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: src.markpact.publish.pypi._build_package
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: src.markpact.publish.pypi._check_pypi_credentials
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: src.markpact.publish.pypi._upload_to_pypi
+  call_type: resolved
+- caller: src.markpact.publish.pypi.publish_pypi
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.tester.TestSuite.print_summary
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.tester.run_http_test
+  callee: src.markpact.tester.http_request
+  call_type: resolved
+- caller: src.markpact.tester.run_tests_from_block
+  callee: src.markpact.tester.run_http_test
+  call_type: resolved
+- caller: src.markpact.tester.run_service_with_tests
+  callee: README.print
+  call_type: resolved
 - caller: src.markpact.syncer.create_backup
   callee: src.markpact.syncer._backup_dir
   call_type: resolved
 - caller: src.markpact.syncer.create_backup
   callee: src.markpact.syncer._prune_backups
   call_type: resolved
+- caller: src.markpact.syncer.create_backup
+  callee: README.print
+  call_type: resolved
 - caller: src.markpact.syncer.list_backups
   callee: src.markpact.syncer._backup_dir
   call_type: resolved
 - caller: src.markpact.syncer.restore_backup
   callee: src.markpact.syncer.list_backups
+  call_type: resolved
+- caller: src.markpact.syncer.restore_backup
+  callee: README.print
   call_type: resolved
 - caller: src.markpact.syncer.find_untracked_files
   callee: src.markpact.syncer.list_tracked_paths
@@ -2346,6 +3124,9 @@ edges:
 - caller: src.markpact.syncer._collect_untracked_blocks
   callee: src.markpact.syncer._build_block
   call_type: resolved
+- caller: src.markpact.syncer._collect_untracked_blocks
+  callee: README.print
+  call_type: resolved
 - caller: src.markpact.syncer._write_new_blocks
   callee: src.markpact.syncer.create_backup
   call_type: resolved
@@ -2358,68 +3139,38 @@ edges:
 - caller: src.markpact.syncer.add_untracked_blocks
   callee: src.markpact.syncer._write_new_blocks
   call_type: resolved
-- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
-  callee: src.markpact.publish.llm_config._setup_llm_for_publish
+- caller: src.markpact.syncer.print_sync_report
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
-  callee: src.markpact.publish.llm_config._set_provider_api_key_for_publish
+- caller: examples.demo_live_markpact.hdr
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
-  callee: src.markpact.publish.llm_config._call_llm_for_publish_config
+- caller: examples.demo_live_markpact.step
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
-  callee: src.markpact.publish.llm_config._extract_publish_block_from_response
+- caller: examples.demo_live_markpact.ok
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.publish.llm_config.generate_publish_config_with_llm
-  callee: src.markpact.publish.main.parse_publish_block
+- caller: examples.demo_live_markpact.fail
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.cli.publish_cmd._resolve_publish_config
-  callee: src.markpact.publish.helpers.infer_publish_config
+- caller: examples.demo_live_markpact.wait
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.cli.publish_cmd._resolve_publish_config
-  callee: src.markpact.publish.helpers.prompt_publish_config
+- caller: examples.demo_live_markpact.wait_done
+  callee: README.print
   call_type: resolved
-- caller: src.markpact.cli.publish_cmd._resolve_publish_config
-  callee: src.markpact.publish.llm_config.generate_publish_config_with_llm
-  call_type: resolved
-- caller: src.markpact.cli.publish_cmd._print_publish_dry_run
-  callee: src.markpact.publish.version.bump_version
-  call_type: resolved
-- caller: src.markpact.cli.publish_cmd._execute_publish_result
-  callee: src.markpact.publish.version.update_version_in_readme
-  call_type: resolved
-- caller: src.markpact.cli.publish_cmd._handle_publish_mode
-  callee: src.markpact.cli.publish_cmd._determine_bump_type
-  call_type: resolved
-- caller: src.markpact.cli.publish_cmd._handle_publish_mode
-  callee: src.markpact.publish.main.publish
-  call_type: resolved
-- caller: src.markpact.cli.publish_cmd._handle_publish_mode
-  callee: src.markpact.cli.publish_cmd._execute_publish_result
-  call_type: resolved
-- caller: src.markpact.cli.publish_cmd._handle_publish_mode
-  callee: src.markpact.cli.publish_cmd._resolve_publish_config
-  call_type: resolved
-- caller: src.markpact.cli.publish_cmd._handle_publish_mode
-  callee: src.markpact.cli.publish_cmd._print_publish_dry_run
-  call_type: resolved
-- caller: src.markpact.generator.generate_contract
-  callee: src.markpact.generator._configure_litellm
-  call_type: resolved
-- caller: src.markpact.generator.generate_contract
-  callee: src.markpact.generator._set_provider_api_key
-  call_type: resolved
-- caller: src.markpact.generator.generate_contract
-  callee: src.markpact.generator._call_llm_with_config
-  call_type: resolved
-- caller: src.markpact.generator.generate_contract
-  callee: src.markpact.generator._clean_llm_response
-  call_type: resolved
-- caller: src.markpact.generator.generate_contract
-  callee: src.markpact.generator._fix_unclosed_blocks
+- caller: examples.demo_live_markpact.info
+  callee: README.print
   call_type: resolved
 - caller: examples.demo_live_markpact.show_menu
   callee: examples.demo_live_markpact.hdr
+  call_type: resolved
+- caller: examples.demo_live_markpact.show_menu
+  callee: README.print
+  call_type: resolved
+- caller: examples.demo_live_markpact.list_prompts
+  callee: README.print
   call_type: resolved
 - caller: examples.demo_live_markpact._step_generate_contract
   callee: examples.demo_live_markpact.hdr
@@ -2431,10 +3182,13 @@ edges:
   callee: examples.demo_live_markpact.info
   call_type: resolved
 - caller: examples.demo_live_markpact._step_generate_contract
+  callee: README.print
+  call_type: resolved
+- caller: examples.demo_live_markpact._step_generate_contract
   callee: examples.demo_live_markpact.wait
   call_type: resolved
 - caller: examples.demo_live_markpact._step_generate_contract
-  callee: src.markpact.generator.generate_contract
+  callee: SUMD.generate_contract
   call_type: resolved
 - caller: examples.demo_live_markpact._step_generate_contract
   callee: examples.demo_live_markpact.wait_done
@@ -2446,7 +3200,10 @@ edges:
   callee: examples.demo_live_markpact.hdr
   call_type: resolved
 - caller: examples.demo_live_markpact._step_parse_blocks
-  callee: src.markpact.parser.parse_blocks
+  callee: SUMD.parse_blocks
+  call_type: resolved
+- caller: examples.demo_live_markpact._step_parse_blocks
+  callee: README.print
   call_type: resolved
 - caller: examples.demo_live_markpact._step_parse_blocks
   callee: examples.demo_live_markpact.ok
@@ -2458,6 +3215,9 @@ edges:
   callee: examples.demo_live_markpact.hdr
   call_type: resolved
 - caller: examples.demo_live_markpact._step_validate_blocks
+  callee: README.print
+  call_type: resolved
+- caller: examples.demo_live_markpact._step_validate_blocks
   callee: examples.demo_live_markpact.ok
   call_type: resolved
 - caller: examples.demo_live_markpact._step_validate_blocks
@@ -2467,6 +3227,9 @@ edges:
   callee: examples.demo_live_markpact.hdr
   call_type: resolved
 - caller: examples.demo_live_markpact._step_analyze_blocks
+  callee: README.print
+  call_type: resolved
+- caller: examples.demo_live_markpact._step_analyze_blocks
   callee: examples.demo_live_markpact.ok
   call_type: resolved
 - caller: examples.demo_live_markpact._step_sha_integrity
@@ -2474,9 +3237,15 @@ edges:
   call_type: resolved
 - caller: examples.demo_live_markpact._step_sha_integrity
   callee: examples.demo_live_markpact.ok
+  call_type: resolved
+- caller: examples.demo_live_markpact._step_sha_integrity
+  callee: README.print
   call_type: resolved
 - caller: examples.demo_live_markpact._save_outputs
   callee: examples.demo_live_markpact.ok
+  call_type: resolved
+- caller: examples.demo_live_markpact._save_outputs
+  callee: README.print
   call_type: resolved
 - caller: examples.demo_live_markpact._save_outputs
   callee: examples.demo_live_markpact.fail
@@ -2487,11 +3256,17 @@ edges:
 - caller: examples.demo_live_markpact._print_summary
   callee: examples.demo_live_markpact.hdr
   call_type: resolved
+- caller: examples.demo_live_markpact._print_summary
+  callee: README.print
+  call_type: resolved
 - caller: examples.demo_live_markpact._finalize
   callee: examples.demo_live_markpact._print_summary
   call_type: resolved
 - caller: examples.demo_live_markpact._finalize
   callee: examples.demo_live_markpact.ok
+  call_type: resolved
+- caller: examples.demo_live_markpact._finalize
+  callee: README.print
   call_type: resolved
 - caller: examples.demo_live_markpact.run_live
   callee: examples.demo_live_markpact._setup_session
@@ -2501,6 +3276,9 @@ edges:
   call_type: resolved
 - caller: examples.demo_live_markpact.run_live
   callee: examples.demo_live_markpact.step
+  call_type: resolved
+- caller: examples.demo_live_markpact.run_live
+  callee: README.print
   call_type: resolved
 - caller: examples.demo_live_markpact.run_live
   callee: examples.demo_live_markpact._step_generate_contract
@@ -2514,7 +3292,184 @@ edges:
 - caller: examples.demo_live_markpact.main
   callee: examples.demo_live_markpact.list_prompts
   call_type: resolved
+- caller: examples.demo_live_markpact.main
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.packer._detect_run_command
+  callee: src.markpact.packer._detect_file_indicators
+  call_type: resolved
+- caller: src.markpact.packer._detect_run_command
+  callee: src.markpact.packer._detect_framework_from_content
+  call_type: resolved
+- caller: src.markpact.packer._detect_run_command
+  callee: src.markpact.packer._build_run_command
+  call_type: resolved
+- caller: src.markpact.packer._collect_files
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.packer._collect_files
+  callee: src.markpact.packer._should_include
+  call_type: resolved
+- caller: src.markpact.packer._generate_readme_content
+  callee: src.markpact.packer._get_language
+  call_type: resolved
+- caller: src.markpact.packer._generate_readme_content
+  callee: src.markpact.packer._detect_run_command
+  call_type: resolved
+- caller: src.markpact.packer._write_output
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.packer.pack_directory
+  callee: src.markpact.packer._collect_files
+  call_type: resolved
+- caller: src.markpact.packer.pack_directory
+  callee: src.markpact.packer._generate_readme_content
+  call_type: resolved
+- caller: src.markpact.packer.pack_directory
+  callee: src.markpact.packer._write_output
+  call_type: resolved
+- caller: src.markpact.packer.print_pack_report
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v3.RuntimeV3.reconcile
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v3.RuntimeV3._execute_step_with_retry
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v3.RuntimeV3._execute_step
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v3.RuntimeV3._rollback
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2.__init__
+  callee: examples.fastapi-todo.README.setattr
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2.parse
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2.execute
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2._execute_step_with_retry
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2._execute_step_single
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2._rollback
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2._print_summary
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core_v2.RuntimeV2.reset_state
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core.Runtime.__init__
+  callee: examples.fastapi-todo.README.setattr
+  call_type: resolved
+- caller: src.markpact.runtime.core.Runtime.parse
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core.Runtime.execute
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core.Runtime._execute_step
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.runtime.core.Runtime._print_summary
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.generator._configure_litellm
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.generator.generate_contract
+  callee: src.markpact.generator._configure_litellm
+  call_type: resolved
+- caller: src.markpact.generator.generate_contract
+  callee: src.markpact.generator._set_provider_api_key
+  call_type: resolved
+- caller: src.markpact.generator.generate_contract
+  callee: README.print
+  call_type: resolved
+- caller: src.markpact.generator.generate_contract
+  callee: src.markpact.generator._call_llm_with_config
+  call_type: resolved
+- caller: src.markpact.generator.generate_contract
+  callee: src.markpact.generator._clean_llm_response
+  call_type: resolved
+- caller: src.markpact.generator.generate_contract
+  callee: src.markpact.generator._fix_unclosed_blocks
+  call_type: resolved
+- caller: src.markpact.generator.save_contract
+  callee: README.print
+  call_type: resolved
 modules:
+  README:
+  - README.print
+  SUMD:
+  - SUMD._build_description
+  - SUMD._extract_readme_description
+  - SUMD._format_subprocess_failure
+  - SUMD._handle_from_notebook
+  - SUMD._handle_list_examples
+  - SUMD._handle_list_notebook_formats
+  - SUMD._handle_llm_generation
+  - SUMD._handle_markdown_conversion
+  - SUMD._handle_publish_mode
+  - SUMD._parse_blocks_to_state
+  - SUMD.add_untracked_blocks
+  - SUMD.build_and_run_docker
+  - SUMD.bump_version
+  - SUMD.check_docker_available
+  - SUMD.convert_markdown_to_markpact
+  - SUMD.convert_notebook
+  - SUMD.diff_block
+  - SUMD.find_free_port
+  - SUMD.find_untracked_files
+  - SUMD.generate_contract
+  - SUMD.generate_dockerfile
+  - SUMD.generate_publish_config_with_llm
+  - SUMD.get_env_path
+  - SUMD.get_example_prompt
+  - SUMD.get_ssh_manager
+  - SUMD.get_supported_formats
+  - SUMD.handle_config_cli
+  - SUMD.handle_pack_cli
+  - SUMD.handle_sync_cli
+  - SUMD.has_template_placeholders
+  - SUMD.infer_publish_config
+  - SUMD.init_env
+  - SUMD.install_deps
+  - SUMD.list_backups
+  - SUMD.list_example_prompts
+  - SUMD.list_tracked_paths
+  - SUMD.load_env
+  - SUMD.load_secrets
+  - SUMD.parse_blocks
+  - SUMD.parse_blocks_recursive
+  - SUMD.parse_publish_block
+  - SUMD.print_conversion_report
+  - SUMD.print_sync_report
+  - SUMD.prompt_publish_config
+  - SUMD.publish
+  - SUMD.publish_docker
+  - SUMD.publish_github_packages
+  - SUMD.publish_npm
+  - SUMD.publish_pypi
+  - SUMD.resolve_template
+  - SUMD.restore_backup
+  - SUMD.run_cmd
+  - SUMD.run_service_with_tests
+  - SUMD.run_shell_tests
+  - SUMD.run_tests_from_block
+  - SUMD.run_with_auto_fix_llm
+  - SUMD.sync_readme
+  - SUMD.sync_readme_recursive
+  - SUMD.update_version_in_readme
+  - SUMD.wait_for_service
   examples.demo_live_markpact:
   - examples.demo_live_markpact._finalize
   - examples.demo_live_markpact._print_summary
@@ -2536,6 +3491,8 @@ modules:
   - examples.demo_live_markpact.step
   - examples.demo_live_markpact.wait
   - examples.demo_live_markpact.wait_done
+  examples.fastapi-todo.README:
+  - examples.fastapi-todo.README.setattr
   scripts.sync_version:
   - scripts.sync_version.get_bumpversion_version
   - scripts.sync_version.get_next_version
@@ -2577,8 +3534,6 @@ modules:
   src.markpact.cli.helpers:
   - src.markpact.cli.helpers._parse_blocks_to_state
   - src.markpact.cli.helpers._resolve_file_body
-  src.markpact.cli.pack_cmd:
-  - src.markpact.cli.pack_cmd.handle_pack_cli
   src.markpact.cli.publish_cmd:
   - src.markpact.cli.publish_cmd._determine_bump_type
   - src.markpact.cli.publish_cmd._execute_publish_result
@@ -2637,12 +3592,11 @@ modules:
   - src.markpact.docker_runner._start_docker_container
   - src.markpact.docker_runner._stop_docker_container
   - src.markpact.docker_runner.build_and_run_docker
-  - src.markpact.docker_runner.check_docker_available
-  - src.markpact.docker_runner.generate_dockerfile
   - src.markpact.docker_runner.is_port_free
   - src.markpact.docker_runner.run_docker_with_logs
   - src.markpact.docker_runner.run_docker_with_tests
   - src.markpact.docker_runner.stop_existing_container
+  - src.markpact.docker_runner.stream_docker_logs
   src.markpact.generator:
   - src.markpact.generator._call_llm_with_config
   - src.markpact.generator._clean_llm_response
@@ -2650,8 +3604,7 @@ modules:
   - src.markpact.generator._fix_unclosed_blocks
   - src.markpact.generator._set_provider_api_key
   - src.markpact.generator.generate_contract
-  - src.markpact.generator.get_example_prompt
-  - src.markpact.generator.list_example_prompts
+  - src.markpact.generator.save_contract
   src.markpact.notebook_converter:
   - src.markpact.notebook_converter._extract_and_format_deps
   - src.markpact.notebook_converter._extract_description_from_cells
@@ -2668,7 +3621,6 @@ modules:
   - src.markpact.notebook_converter.convert_notebook
   - src.markpact.notebook_converter.detect_format
   - src.markpact.notebook_converter.extract_dependencies
-  - src.markpact.notebook_converter.get_supported_formats
   - src.markpact.notebook_converter.notebook_to_markpact
   - src.markpact.notebook_converter.parse_databricks
   - src.markpact.notebook_converter.parse_jupyter
@@ -2688,6 +3640,7 @@ modules:
   - src.markpact.packer._should_include
   - src.markpact.packer._write_output
   - src.markpact.packer.pack_directory
+  - src.markpact.packer.print_pack_report
   src.markpact.parser:
   - src.markpact.parser.parse_blocks
   - src.markpact.parser.parse_blocks_recursive
@@ -2703,7 +3656,6 @@ modules:
   - src.markpact.publish.helpers._detect_registry
   - src.markpact.publish.helpers._first_heading
   - src.markpact.publish.helpers._first_paragraph
-  - src.markpact.publish.helpers._format_subprocess_failure
   - src.markpact.publish.helpers._get_default_author
   - src.markpact.publish.helpers._is_web_service
   - src.markpact.publish.helpers._slugify
@@ -2716,7 +3668,6 @@ modules:
   - src.markpact.publish.llm_config._setup_llm_for_publish
   - src.markpact.publish.llm_config.generate_publish_config_with_llm
   src.markpact.publish.main:
-  - src.markpact.publish.main.parse_publish_block
   - src.markpact.publish.main.publish
   src.markpact.publish.npm:
   - src.markpact.publish.npm._build_npm_description
@@ -2729,6 +3680,7 @@ modules:
   - src.markpact.publish.pypi._check_pypi_credentials
   - src.markpact.publish.pypi._copy_readme
   - src.markpact.publish.pypi._determine_base_path
+  - src.markpact.publish.pypi._ensure_build_backend
   - src.markpact.publish.pypi._extract_readme_description
   - src.markpact.publish.pypi._get_build_error_hint
   - src.markpact.publish.pypi._get_upload_error_hint
@@ -2742,19 +3694,44 @@ modules:
   - src.markpact.publish.pypi.generate_pyproject_toml
   - src.markpact.publish.pypi.get_license_classifier
   - src.markpact.publish.pypi.publish_pypi
-  src.markpact.publish.version:
-  - src.markpact.publish.version.bump_version
-  - src.markpact.publish.version.update_version_in_readme
   src.markpact.runner:
   - src.markpact.runner.ensure_venv
   - src.markpact.runner.install_deps
   - src.markpact.runner.run_cmd
+  src.markpact.runtime.core:
+  - src.markpact.runtime.core.Runtime.__init__
+  - src.markpact.runtime.core.Runtime._execute_step
+  - src.markpact.runtime.core.Runtime._print_summary
+  - src.markpact.runtime.core.Runtime.execute
+  - src.markpact.runtime.core.Runtime.parse
+  src.markpact.runtime.core_v2:
+  - src.markpact.runtime.core_v2.RuntimeV2.__init__
+  - src.markpact.runtime.core_v2.RuntimeV2._execute_step_single
+  - src.markpact.runtime.core_v2.RuntimeV2._execute_step_with_retry
+  - src.markpact.runtime.core_v2.RuntimeV2._print_summary
+  - src.markpact.runtime.core_v2.RuntimeV2._rollback
+  - src.markpact.runtime.core_v2.RuntimeV2.execute
+  - src.markpact.runtime.core_v2.RuntimeV2.parse
+  - src.markpact.runtime.core_v2.RuntimeV2.reset_state
+  src.markpact.runtime.core_v3:
+  - src.markpact.runtime.core_v3.RuntimeV3._execute_step
+  - src.markpact.runtime.core_v3.RuntimeV3._execute_step_with_retry
+  - src.markpact.runtime.core_v3.RuntimeV3._rollback
+  - src.markpact.runtime.core_v3.RuntimeV3.reconcile
   src.markpact.runtime.executors:
   - src.markpact.runtime.executors.ShellExecutor._run_ssh_persistent
+  src.markpact.runtime.plugins:
+  - src.markpact.runtime.plugins.PluginLoader._extract_plugin_from_module
+  - src.markpact.runtime.plugins.PluginLoader._load_from_directory
+  - src.markpact.runtime.plugins.PluginLoader._load_from_file
+  - src.markpact.runtime.plugins.PluginLoader.load_from_module
+  - src.markpact.runtime.plugins.PluginLoader.load_from_path
   src.markpact.runtime.ssh_manager:
-  - src.markpact.runtime.ssh_manager.get_ssh_manager
-  src.markpact.sandbox:
-  - src.markpact.sandbox.find_free_port
+  - src.markpact.runtime.ssh_manager.SSHSessionManager.close
+  - src.markpact.runtime.ssh_manager.SSHSessionManager.connect
+  src.markpact.runtime.state:
+  - src.markpact.runtime.state.StateManager._load
+  - src.markpact.runtime.state.StateManager._save
   src.markpact.syncer:
   - src.markpact.syncer._backup_dir
   - src.markpact.syncer._build_block
@@ -2768,7 +3745,6 @@ modules:
   - src.markpact.syncer._write_new_blocks
   - src.markpact.syncer.add_untracked_blocks
   - src.markpact.syncer.create_backup
-  - src.markpact.syncer.diff_block
   - src.markpact.syncer.find_untracked_files
   - src.markpact.syncer.list_backups
   - src.markpact.syncer.list_tracked_paths
@@ -2778,23 +3754,526 @@ modules:
   - src.markpact.syncer.sync_readme_recursive
   src.markpact.template:
   - src.markpact.template._find_secrets_file
-  - src.markpact.template.has_template_placeholders
   - src.markpact.template.load_secrets
-  - src.markpact.template.resolve_template
   src.markpact.tester:
+  - src.markpact.tester.TestSuite.print_summary
   - src.markpact.tester.http_request
   - src.markpact.tester.run_http_test
   - src.markpact.tester.run_service_with_tests
-  - src.markpact.tester.run_shell_tests
   - src.markpact.tester.run_tests_from_block
-  - src.markpact.tester.wait_for_service
 entry_points:
+- README.main
+- README.root
+- README.run
+- SUMD._analyze_blocks_for_types
+- SUMD._ascii
+- SUMD._backup_dir
+- SUMD._build_block
+- SUMD._build_docker_image
+- SUMD._build_docker_image_simple
+- SUMD._build_header_suffix
+- SUMD._build_npm_description
+- SUMD._build_package
+- SUMD._build_package_name
+- SUMD._build_run_command
+- SUMD._build_sync_parser
+- SUMD._build_upload_cmd
+- SUMD._call_llm_for_publish_config
+- SUMD._call_llm_with_config
+- SUMD._check_file_type
+- SUMD._check_pypi_credentials
+- SUMD._clean_llm_response
+- SUMD._collect_files
+- SUMD._collect_untracked_blocks
+- SUMD._configure_litellm
+- SUMD._content_sha256
+- SUMD._copy_readme
+- SUMD._detect_build_backend
+- SUMD._detect_deps
+- SUMD._detect_file
+- SUMD._detect_file_indicators
+- SUMD._detect_framework_from_content
+- SUMD._detect_lang
+- SUMD._detect_registry
+- SUMD._detect_run
+- SUMD._detect_run_command
+- SUMD._determine_base_path
+- SUMD._determine_bump_type
+- SUMD._dispatch_subcommand
+- SUMD._ensure_build_backend
+- SUMD._execute_publish_result
+- SUMD._execute_recursive_sync
+- SUMD._execute_single_sync
+- SUMD._extract_and_format_deps
+- SUMD._extract_description_from_cells
+- SUMD._extract_file_hint
+- SUMD._extract_markdown_section
+- SUMD._extract_publish_block_from_response
+- SUMD._fallback_readme
+- SUMD._finalize
+- SUMD._find_docker_port
+- SUMD._find_secrets_file
+- SUMD._first_heading
+- SUMD._first_paragraph
+- SUMD._fix_unclosed_blocks
+- SUMD._generate_file_blocks
+- SUMD._generate_header
+- SUMD._generate_readme_content
+- SUMD._get_build_error_hint
+- SUMD._get_default_author
+- SUMD._get_language
+- SUMD._get_upload_error_hint
+- SUMD._handle_add_mode
+- SUMD._handle_backups_mode
+- SUMD._handle_generation_phase
+- SUMD._handle_list_mode
+- SUMD._handle_missing_mode
+- SUMD._handle_missing_module_error
+- SUMD._handle_port_error
+- SUMD._handle_port_error_simple
+- SUMD._handle_rollback_mode
+- SUMD._is_web_service
+- SUMD._merge_code_files
+- SUMD._normalize_package_name
+- SUMD._parse_main_args
+- SUMD._parse_pypirc_section
+- SUMD._parse_quarto_code_chunks
+- SUMD._parse_quarto_yaml_front_matter
+- SUMD._parse_rmd_code_chunks
+- SUMD._parse_rmd_yaml_front_matter
+- SUMD._pdf_analyze
+- SUMD._pdf_generate
+- SUMD._pdf_parse
+- SUMD._pdf_sha
+- SUMD._pdf_validate
+- SUMD._print_block_changes
+- SUMD._print_build_output
+- SUMD._print_conversion_header
+- SUMD._print_conversion_summary
+- SUMD._print_dry_run_tests
+- SUMD._print_publish_dry_run
+- SUMD._print_summary
+- SUMD._process_block
+- SUMD._process_notebook_cells
+- SUMD._process_readme
+- SUMD._prompt_value
+- SUMD._prune_backups
+- SUMD._read_source_file
+- SUMD._resolve_docker_port
+- SUMD._resolve_file_body
+- SUMD._resolve_paths
+- SUMD._resolve_publish_config
+- SUMD._run_and_print
+- SUMD._run_build_command
+- SUMD._run_docker_container_interactive
+- SUMD._run_docker_tests
+- SUMD._run_http_tests
+- SUMD._run_shell_tests
+- SUMD._run_subprocess
+- SUMD._save_outputs
+- SUMD._set_provider_api_key
+- SUMD._set_provider_api_key_for_publish
+- SUMD._setup_env_creds
+- SUMD._setup_env_with_venv
+- SUMD._setup_env_with_venv_simple
+- SUMD._setup_llm_for_publish
+- SUMD._setup_session
+- SUMD._setup_upload_env
+- SUMD._should_include
+- SUMD._should_skip_first_markdown_cell
+- SUMD._show_diffs
+- SUMD._slugify
+- SUMD._split_test_blocks
+- SUMD._start_docker_container
+- SUMD._step_analyze_blocks
+- SUMD._step_generate_contract
+- SUMD._step_parse_blocks
+- SUMD._step_sha_integrity
+- SUMD._step_validate_blocks
+- SUMD._stop_docker_container
+- SUMD._try_llm_fix
+- SUMD._upload_to_pypi
+- SUMD._write_new_blocks
+- SUMD._write_output
+- SUMD.add_missing_dependency
+- SUMD.create_backup
+- SUMD.detect_block_type
+- SUMD.detect_error_type
+- SUMD.detect_format
+- SUMD.ensure_config_dir
+- SUMD.ensure_publish_block_in_readme
+- SUMD.ensure_venv
+- SUMD.extract_dependencies
+- SUMD.extract_module_name
+- SUMD.extract_version_from_readme
+- SUMD.fail
+- SUMD.fix_port_in_readme
+- SUMD.fix_with_llm
+- SUMD.generate_package_json
+- SUMD.generate_pyproject_toml
+- SUMD.get_bumpversion_version
+- SUMD.get_license_classifier
+- SUMD.get_next_version
+- SUMD.get_pyproject_version
+- SUMD.hdr
+- SUMD.http_request
+- SUMD.info
+- SUMD.is_port_free
+- SUMD.list_prompts
+- SUMD.log
+- SUMD.log_verbose
+- SUMD.main
+- SUMD.notebook_to_markpact
+- SUMD.ok
+- SUMD.parse_databricks
+- SUMD.parse_jupyter
+- SUMD.parse_notebook
+- SUMD.parse_quarto
+- SUMD.parse_rmarkdown
+- SUMD.parse_zeppelin
+- SUMD.root
+- SUMD.run_docker_with_logs
+- SUMD.run_docker_with_tests
+- SUMD.run_http_test
+- SUMD.run_live
+- SUMD.run_with_auto_fix
+- SUMD.save_contract
+- SUMD.save_env
+- SUMD.set_bumpversion_version
+- SUMD.set_config
+- SUMD.set_pyproject_version
+- SUMD.show_menu
+- SUMD.step
+- SUMD.stop_existing_container
+- SUMD.stream_docker_logs
+- SUMD.suggest_filename
+- SUMD.suggest_run_command
+- SUMD.sync_versions
+- SUMD.tag_exists
+- SUMD.test_converter_example
+- SUMD.test_example
+- SUMD.test_notebook_example
+- SUMD.test_publish_example
+- SUMD.wait
+- SUMD.wait_done
+- TODO.x
+- docs.README.generate_readme
+- docs.contract.root
+- docs.llm.create_todo
+- docs.llm.list_todos
+- docs.runtime-v2-improvements.deploy
+- examples.README.add_item
+- examples.README.list_items
+- examples.README.root
+- examples.cli-tool.README.get_category
+- examples.cli-tool.README.organize
 - examples.demo_live_markpact.LiveSession.add_step
 - examples.demo_live_markpact.LiveSession.elapsed
 - examples.demo_live_markpact._ascii
 - examples.demo_live_markpact._save_outputs
 - examples.demo_live_markpact.main
+- examples.docker-publish.README.health
+- examples.docker-publish.README.info
+- examples.docker-publish.README.root
+- examples.electron-desktop.README.createWindow
+- examples.electron-desktop.README.exportHtml
+- examples.fastapi-todo.README.create_todo
+- examples.fastapi-todo.README.delete_todo
+- examples.fastapi-todo.README.get_db
+- examples.fastapi-todo.README.get_todo
+- examples.fastapi-todo.README.list_todos
+- examples.fastapi-todo.README.update_todo
+- examples.flask-blog.README.close_connection
+- examples.flask-blog.README.get_db
+- examples.flask-blog.README.index
+- examples.flask-blog.README.init_db
+- examples.flask-blog.README.new_post
+- examples.flask-blog.README.post
+- examples.go-http-api.README.main
+- examples.kivy-mobile.README.__init__
+- examples.kivy-mobile.README.build
+- examples.kivy-mobile.README.calculate_bmi
+- examples.markdown-converter.sample.add_item
+- examples.markdown-converter.sample.health
+- examples.markdown-converter.sample.list_items
+- examples.npm-publish.README.add
+- examples.npm-publish.README.hello
+- examples.npm-publish.README.multiply
+- examples.pypi-publish.README.add
+- examples.pypi-publish.README.hello
+- examples.pypi-publish.README.main
+- examples.pypi-publish.README.print
+- examples.python-typer-cli.README.add
+- examples.python-typer-cli.README.app
+- examples.python-typer-cli.README.hello
+- examples.react-typescript-spa.README.App
+- examples.rust-axum-api.README.Json
+- examples.streamlit-dashboard.README.generate_sample_data
+- examples.sync-workflow.README.root
 - examples.sync-workflow.src.app.root
+- generated.live.README.health_check
+- project.map.toon._analyze_blocks_for_types
+- project.map.toon._ascii
+- project.map.toon._backup_dir
+- project.map.toon._build_block
+- project.map.toon._build_description
+- project.map.toon._build_docker_image
+- project.map.toon._build_docker_image_simple
+- project.map.toon._build_header_suffix
+- project.map.toon._build_npm_description
+- project.map.toon._build_package
+- project.map.toon._build_package_name
+- project.map.toon._build_run_command
+- project.map.toon._build_sync_parser
+- project.map.toon._build_upload_cmd
+- project.map.toon._call_llm_for_publish_config
+- project.map.toon._call_llm_with_config
+- project.map.toon._check_file_type
+- project.map.toon._check_pypi_credentials
+- project.map.toon._clean_llm_response
+- project.map.toon._collect_files
+- project.map.toon._collect_untracked_blocks
+- project.map.toon._configure_litellm
+- project.map.toon._content_sha256
+- project.map.toon._copy_readme
+- project.map.toon._detect_build_backend
+- project.map.toon._detect_deps
+- project.map.toon._detect_file
+- project.map.toon._detect_file_indicators
+- project.map.toon._detect_framework_from_content
+- project.map.toon._detect_lang
+- project.map.toon._detect_registry
+- project.map.toon._detect_run
+- project.map.toon._detect_run_command
+- project.map.toon._determine_base_path
+- project.map.toon._determine_bump_type
+- project.map.toon._dispatch_subcommand
+- project.map.toon._ensure_build_backend
+- project.map.toon._execute_publish_result
+- project.map.toon._execute_recursive_sync
+- project.map.toon._execute_single_sync
+- project.map.toon._extract_and_format_deps
+- project.map.toon._extract_description_from_cells
+- project.map.toon._extract_file_hint
+- project.map.toon._extract_markdown_section
+- project.map.toon._extract_publish_block_from_response
+- project.map.toon._extract_readme_description
+- project.map.toon._fallback_readme
+- project.map.toon._finalize
+- project.map.toon._find_docker_port
+- project.map.toon._find_secrets_file
+- project.map.toon._first_heading
+- project.map.toon._first_paragraph
+- project.map.toon._fix_unclosed_blocks
+- project.map.toon._format_subprocess_failure
+- project.map.toon._generate_file_blocks
+- project.map.toon._generate_header
+- project.map.toon._generate_readme_content
+- project.map.toon._get_build_error_hint
+- project.map.toon._get_default_author
+- project.map.toon._get_language
+- project.map.toon._get_upload_error_hint
+- project.map.toon._handle_add_mode
+- project.map.toon._handle_backups_mode
+- project.map.toon._handle_docker_mode
+- project.map.toon._handle_from_notebook
+- project.map.toon._handle_generation_phase
+- project.map.toon._handle_list_examples
+- project.map.toon._handle_list_mode
+- project.map.toon._handle_list_notebook_formats
+- project.map.toon._handle_llm_generation
+- project.map.toon._handle_markdown_conversion
+- project.map.toon._handle_missing_mode
+- project.map.toon._handle_missing_module_error
+- project.map.toon._handle_normal_run
+- project.map.toon._handle_port_error
+- project.map.toon._handle_port_error_simple
+- project.map.toon._handle_publish_mode
+- project.map.toon._handle_rollback_mode
+- project.map.toon._handle_test_mode
+- project.map.toon._is_web_service
+- project.map.toon._merge_code_files
+- project.map.toon._normalize_package_name
+- project.map.toon._parse_blocks_to_state
+- project.map.toon._parse_main_args
+- project.map.toon._parse_pypirc_section
+- project.map.toon._parse_quarto_code_chunks
+- project.map.toon._parse_quarto_yaml_front_matter
+- project.map.toon._parse_rmd_code_chunks
+- project.map.toon._parse_rmd_yaml_front_matter
+- project.map.toon._pdf_analyze
+- project.map.toon._pdf_generate
+- project.map.toon._pdf_parse
+- project.map.toon._pdf_sha
+- project.map.toon._pdf_validate
+- project.map.toon._print_block_changes
+- project.map.toon._print_build_output
+- project.map.toon._print_conversion_header
+- project.map.toon._print_conversion_summary
+- project.map.toon._print_dry_run_tests
+- project.map.toon._print_publish_dry_run
+- project.map.toon._print_summary
+- project.map.toon._process_block
+- project.map.toon._process_notebook_cells
+- project.map.toon._process_readme
+- project.map.toon._prompt_value
+- project.map.toon._prune_backups
+- project.map.toon._read_source_file
+- project.map.toon._resolve_docker_port
+- project.map.toon._resolve_file_body
+- project.map.toon._resolve_paths
+- project.map.toon._resolve_publish_config
+- project.map.toon._run_and_print
+- project.map.toon._run_build_command
+- project.map.toon._run_docker_container_interactive
+- project.map.toon._run_docker_tests
+- project.map.toon._run_http_tests
+- project.map.toon._run_shell_tests
+- project.map.toon._run_subprocess
+- project.map.toon._save_outputs
+- project.map.toon._set_provider_api_key
+- project.map.toon._set_provider_api_key_for_publish
+- project.map.toon._setup_env_creds
+- project.map.toon._setup_env_with_venv
+- project.map.toon._setup_env_with_venv_simple
+- project.map.toon._setup_llm_for_publish
+- project.map.toon._setup_session
+- project.map.toon._setup_upload_env
+- project.map.toon._should_include
+- project.map.toon._should_skip_first_markdown_cell
+- project.map.toon._show_diffs
+- project.map.toon._slugify
+- project.map.toon._split_test_blocks
+- project.map.toon._start_docker_container
+- project.map.toon._step_analyze_blocks
+- project.map.toon._step_generate_contract
+- project.map.toon._step_parse_blocks
+- project.map.toon._step_sha_integrity
+- project.map.toon._step_validate_blocks
+- project.map.toon._stop_docker_container
+- project.map.toon._try_llm_fix
+- project.map.toon._upload_to_pypi
+- project.map.toon._write_new_blocks
+- project.map.toon._write_output
+- project.map.toon.add_missing_dependency
+- project.map.toon.add_untracked_blocks
+- project.map.toon.apply_preset
+- project.map.toon.build_and_run_docker
+- project.map.toon.bump_version
+- project.map.toon.check_docker_available
+- project.map.toon.convert_markdown_to_markpact
+- project.map.toon.convert_notebook
+- project.map.toon.create_backup
+- project.map.toon.detect_block_type
+- project.map.toon.detect_error_type
+- project.map.toon.detect_format
+- project.map.toon.diff_block
+- project.map.toon.ensure_config_dir
+- project.map.toon.ensure_publish_block_in_readme
+- project.map.toon.ensure_venv
+- project.map.toon.extract_dependencies
+- project.map.toon.extract_module_name
+- project.map.toon.extract_version_from_readme
+- project.map.toon.fail
+- project.map.toon.find_free_port
+- project.map.toon.find_untracked_files
+- project.map.toon.fix_port_in_readme
+- project.map.toon.fix_with_llm
+- project.map.toon.generate_contract
+- project.map.toon.generate_dockerfile
+- project.map.toon.generate_package_json
+- project.map.toon.generate_publish_config_with_llm
+- project.map.toon.generate_pyproject_toml
+- project.map.toon.get_bumpversion_version
+- project.map.toon.get_env_path
+- project.map.toon.get_example_prompt
+- project.map.toon.get_license_classifier
+- project.map.toon.get_next_version
+- project.map.toon.get_pyproject_version
+- project.map.toon.get_ssh_manager
+- project.map.toon.get_supported_formats
+- project.map.toon.handle_config_cli
+- project.map.toon.handle_pack_cli
+- project.map.toon.handle_sync_cli
+- project.map.toon.has_template_placeholders
+- project.map.toon.hdr
+- project.map.toon.http_request
+- project.map.toon.infer_publish_config
+- project.map.toon.info
+- project.map.toon.init_env
+- project.map.toon.install_deps
+- project.map.toon.is_port_free
+- project.map.toon.list_backups
+- project.map.toon.list_example_prompts
+- project.map.toon.list_prompts
+- project.map.toon.list_providers
+- project.map.toon.list_tracked_paths
+- project.map.toon.load_env
+- project.map.toon.load_secrets
+- project.map.toon.log
+- project.map.toon.log_verbose
+- project.map.toon.main
+- project.map.toon.notebook_to_markpact
+- project.map.toon.ok
+- project.map.toon.pack_directory
+- project.map.toon.parse_blocks
+- project.map.toon.parse_blocks_recursive
+- project.map.toon.parse_databricks
+- project.map.toon.parse_jupyter
+- project.map.toon.parse_notebook
+- project.map.toon.parse_publish_block
+- project.map.toon.parse_quarto
+- project.map.toon.parse_rmarkdown
+- project.map.toon.parse_zeppelin
+- project.map.toon.print_conversion_report
+- project.map.toon.print_pack_report
+- project.map.toon.print_sync_report
+- project.map.toon.prompt_publish_config
+- project.map.toon.publish
+- project.map.toon.publish_docker
+- project.map.toon.publish_github_packages
+- project.map.toon.publish_npm
+- project.map.toon.publish_pypi
+- project.map.toon.resolve_template
+- project.map.toon.restore_backup
+- project.map.toon.root
+- project.map.toon.run_cmd
+- project.map.toon.run_docker_with_logs
+- project.map.toon.run_docker_with_tests
+- project.map.toon.run_http_test
+- project.map.toon.run_live
+- project.map.toon.run_service_with_tests
+- project.map.toon.run_shell_tests
+- project.map.toon.run_tests_from_block
+- project.map.toon.run_with_auto_fix
+- project.map.toon.run_with_auto_fix_llm
+- project.map.toon.save_contract
+- project.map.toon.save_env
+- project.map.toon.set_api_base
+- project.map.toon.set_api_key
+- project.map.toon.set_bumpversion_version
+- project.map.toon.set_config
+- project.map.toon.set_model
+- project.map.toon.set_pyproject_version
+- project.map.toon.show_config
+- project.map.toon.show_menu
+- project.map.toon.step
+- project.map.toon.stop_existing_container
+- project.map.toon.stream_docker_logs
+- project.map.toon.suggest_filename
+- project.map.toon.suggest_run_command
+- project.map.toon.sync_readme
+- project.map.toon.sync_readme_recursive
+- project.map.toon.sync_versions
+- project.map.toon.tag_exists
+- project.map.toon.test_converter_example
+- project.map.toon.test_example
+- project.map.toon.test_notebook_example
+- project.map.toon.test_publish_example
+- project.map.toon.update_version_in_readme
+- project.map.toon.wait
+- project.map.toon.wait_done
+- project.map.toon.wait_for_service
 - scripts.sync_version.sync_versions
 - scripts.test_examples.log
 - scripts.test_examples.log_verbose
@@ -2803,19 +4282,65 @@ entry_points:
 - scripts.test_examples.test_notebook_example
 - scripts.test_examples.test_publish_example
 - src.markpact.auto_fix.run_with_auto_fix
+- src.markpact.auto_fix.run_with_auto_fix_llm
+- src.markpact.cli.config_cmd.handle_config_cli
+- src.markpact.cli.convert_cmd._handle_from_notebook
+- src.markpact.cli.convert_cmd._handle_list_examples
+- src.markpact.cli.convert_cmd._handle_list_notebook_formats
+- src.markpact.cli.convert_cmd._handle_llm_generation
+- src.markpact.cli.convert_cmd._handle_markdown_conversion
+- src.markpact.cli.helpers._parse_blocks_to_state
 - src.markpact.cli.main
+- src.markpact.cli.pack_cmd.handle_pack_cli
+- src.markpact.cli.publish_cmd._handle_publish_mode
+- src.markpact.cli.run_cmd._handle_docker_mode
+- src.markpact.cli.run_cmd._handle_normal_run
+- src.markpact.cli.run_cmd._handle_test_mode
+- src.markpact.cli.sync_cmd.handle_sync_cli
+- src.markpact.config.apply_preset
+- src.markpact.config.init_env
+- src.markpact.config.list_providers
+- src.markpact.config.set_api_base
+- src.markpact.config.set_api_key
+- src.markpact.config.set_model
+- src.markpact.config.show_config
+- src.markpact.converter.convert_markdown_to_markpact
+- src.markpact.converter.print_conversion_report
+- src.markpact.docker_runner.build_and_run_docker
+- src.markpact.docker_runner.check_docker_available
+- src.markpact.docker_runner.generate_dockerfile
 - src.markpact.docker_runner.run_docker_with_logs
 - src.markpact.docker_runner.run_docker_with_tests
 - src.markpact.docker_runner.stream_docker_logs
 - src.markpact.generator.GeneratorConfig.from_env
 - src.markpact.generator.GeneratorConfig.from_file
+- src.markpact.generator.generate_contract
+- src.markpact.generator.get_example_prompt
+- src.markpact.generator.list_example_prompts
 - src.markpact.generator.save_contract
+- src.markpact.notebook_converter.convert_notebook
+- src.markpact.notebook_converter.get_supported_formats
 - src.markpact.packer.PackResult.summary
+- src.markpact.packer.pack_directory
+- src.markpact.packer.print_pack_report
 - src.markpact.parser.Block.get_meta_value
 - src.markpact.parser.Block.get_path
+- src.markpact.publish.docker_pub.publish_docker
+- src.markpact.publish.github.publish_github_packages
+- src.markpact.publish.helpers._format_subprocess_failure
 - src.markpact.publish.helpers.ensure_publish_block_in_readme
+- src.markpact.publish.helpers.infer_publish_config
+- src.markpact.publish.helpers.prompt_publish_config
+- src.markpact.publish.llm_config.generate_publish_config_with_llm
+- src.markpact.publish.main.parse_publish_block
+- src.markpact.publish.main.publish
 - src.markpact.publish.models.PublishConfig.__post_init__
+- src.markpact.publish.npm.publish_npm
+- src.markpact.publish.pypi.publish_pypi
+- src.markpact.publish.version.bump_version
 - src.markpact.publish.version.extract_version_from_readme
+- src.markpact.publish.version.update_version_in_readme
+- src.markpact.runner.install_deps
 - src.markpact.runtime.cli.main
 - src.markpact.runtime.core.Runtime.__init__
 - src.markpact.runtime.core.Runtime._execute_step
@@ -2932,6 +4457,7 @@ entry_points:
 - src.markpact.runtime.ssh_manager.SSHSessionManager.connect
 - src.markpact.runtime.ssh_manager.SSHSessionManager.exec_command
 - src.markpact.runtime.ssh_manager.SSHSessionManager.session
+- src.markpact.runtime.ssh_manager.get_ssh_manager
 - src.markpact.runtime.state.ConditionChecker.__init__
 - src.markpact.runtime.state.ConditionChecker._is_container_running
 - src.markpact.runtime.state.ConditionChecker._is_docker_running
@@ -2957,5 +4483,19 @@ entry_points:
 - src.markpact.sandbox.Sandbox.has_venv
 - src.markpact.sandbox.Sandbox.write_file
 - src.markpact.sandbox.Sandbox.write_requirements
+- src.markpact.sandbox.find_free_port
 - src.markpact.syncer.SyncResult.summary
+- src.markpact.syncer.add_untracked_blocks
+- src.markpact.syncer.diff_block
+- src.markpact.syncer.find_untracked_files
+- src.markpact.syncer.print_sync_report
+- src.markpact.syncer.restore_backup
+- src.markpact.syncer.sync_readme_recursive
+- src.markpact.template.has_template_placeholders
+- src.markpact.template.load_secrets
+- src.markpact.template.resolve_template
 - src.markpact.tester.TestSuite.print_summary
+- src.markpact.tester.run_service_with_tests
+- src.markpact.tester.run_shell_tests
+- url-test.README.generate_short_code
+- url-test.README.get_db
