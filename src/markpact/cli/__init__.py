@@ -26,11 +26,12 @@ from ..sandbox import Sandbox
 from .sync_cmd import handle_sync_cli  # noqa: F401
 from .pack_cmd import handle_pack_cli  # noqa: F401
 from .config_cmd import handle_config_cli  # noqa: F401
+from .portal_cmd import handle_portal_cli  # noqa: F401
 
 
 # ─── Subcommand dispatch ─────────────────────────────────────────────────────
 
-_SUBCOMMANDS = {"config", "pack", "sync"}
+_SUBCOMMANDS = {"config", "pack", "sync", "portal"}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -72,6 +73,8 @@ def _dispatch_subcommand(cmd: str, argv: list[str]) -> int:
         return handle_pack_cli(argv)
     if cmd == "sync":
         return handle_sync_cli(argv)
+    if cmd == "portal":
+        return handle_portal_cli(argv)
     return 1
 
 

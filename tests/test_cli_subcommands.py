@@ -20,6 +20,15 @@ class TestDispatch:
         captured = capsys.readouterr()
         assert "config" in captured.out
 
+    def test_portal_subcommand(self, capsys):
+        """portal subcommand dispatches to markpact.com client."""
+        with pytest.raises(SystemExit) as exc_info:
+            main(["portal", "--help"])
+        assert exc_info.value.code == 0
+        captured = capsys.readouterr()
+        assert "init" in captured.out
+        assert "release" in captured.out
+
     def test_unknown_subcommand_falls_through(self):
         """Unknown first arg is not treated as subcommand."""
         # 'nonexistent' is not in _SUBCOMMANDS, so it's treated as a readme path
